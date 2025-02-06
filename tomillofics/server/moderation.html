@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>google Moderation</title>
+</head>
+<body>
+    <h1>google Moderation</h1>
+    <form action="/check" method="post">
+        <label for="text">Enter text to check:</label>
+        <textarea id="text" name="text" rows="4" cols="50"></textarea>
+        <br>
+        <button type="submit">Check</button>
+    </form>
+    <div id="result"></div>
+
+    <script>
+        document.querySelector("form").addEventListener("submit", async function(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const response = await fetch("/check", {
+                method: "POST",
+                body: new URLSearchParams(formData)
+            });
+            const result = await response.json();
+
+            //{"Death, Harm & Tragedy":1,"Violent":2,"Health":1}
+            document.getElementById("result").innerHTML = "";
+
+            for (const [key, value] of Object.entries(result)) {
+                const div = document.createElement("div");
+                div.textContent = `${key}: ${value}`;
+                document.getElementById("result").appendChild(div);
+            }
+            
+        });
+    </script>
+</body>
+</html>
