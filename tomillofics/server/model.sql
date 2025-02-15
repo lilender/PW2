@@ -11,7 +11,8 @@ CREATE TABLE IF NOT EXISTS `tomillofics`.`User` (
   `password` CHAR(64) NOT NULL,
   `email` VARCHAR(254) NOT NULL UNIQUE,
   `profile_image` BLOB NULL,
-  `mode_pref` TINYINT NOT NULL,
+  `mode_pref` BOOLEAN NOT NULL,
+  `created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`iduser`)
 );
 
@@ -23,6 +24,7 @@ CREATE TABLE IF NOT EXISTS `tomillofics`.`Fic` (
   `created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `title` VARCHAR(50) NOT NULL,
   `description` VARCHAR(254) NOT NULL,
+  `completed` BOOLEAN NOT NULL,
   `img_route` VARCHAR(254),
   `img_type` VARCHAR(10),
   PRIMARY KEY (`idfic`, `iduser`),
@@ -97,6 +99,7 @@ DROP TABLE IF EXISTS `tomillofics`.`Tag` ;
 CREATE TABLE IF NOT EXISTS `tomillofics`.`Tag` (
   `idtag` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL UNIQUE,
+  `erasable` BOOLEAN NOT NULL,
   PRIMARY KEY (`idtag`)
 );
 

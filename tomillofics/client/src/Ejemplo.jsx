@@ -1,8 +1,8 @@
 import 'bootstrap/dist/css/bootstrap.css';
 
 const user = {
-    nombre: "Tomillo",
-    edad: 20,
+    nombre: "Mauricio",
+    edad: "20 casi 21",
     foto: "https://media.gettyimages.com/id/1164046558/es/foto/beb%C3%A9-oveja-de-cerca.jpg?s=612x612&w=gi&k=20&c=0YNIqdrmclc2Of1MMWLxhthDIwvoWzhN68_t3AY3qkU=",
     login: false
 }
@@ -29,5 +29,7 @@ function Ejemplo() {
         </div>
     );
 }
+
+
 
 export default Ejemplo;
