@@ -1,12 +1,12 @@
-import PrimeNavBar from "./components/PrimeNavBar";
-import Banner from "./components/Banner";
 import Welcome from "./components/Welcome";
+import LogIn from "./components/LogIn";
+import Footer from "./components/Footer";
+import SignIn from "./components/SignIn";
 
 function App(){
   return <div>
-            <PrimeNavBar />
-            <Banner />
             <Welcome />
+            <Footer></Footer>
          </div>;
 }
 
