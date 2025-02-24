@@ -1,13 +1,490 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@import url('https://fonts.googleapis.com/css2?family=Gluten&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nabla&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Krona+One&display=swap');
+
+:root {
+  font-family: Montserrat;
+  font-weight: 100;
+  font-size: small;
+
+  color-scheme: light dark;
+  background-color: #EACDBD;
+  color: #000000;
+  font-size: medium;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+body{
+  font-family: Montserrat;
+  background-color: #EACDBD;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.footer{
+  background-color: #1E1E1E;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  color: white;
+  font-family: Montserrat;
+  font-size: 0.7rem;
+  font-weight: 300;
+  .MyTomillo{
+    font-family: Krona One;
+  }
+}
+
+.data-container{
+  width: 80%;
+  margin: 0 auto;
+}
+
+h1 {
+  font-size: large;
+  line-height: 1.1;
+  font-weight: bold;
+}
+
+h2 {
+  font-size: xx-large;
+  line-height: 1.1;
+  font-weight: bold;
+}
+
+.navbar{
+  padding: 0;
+  font-family: 'Gluten';
+  width: 100%;
+  background-color: #EACDBD;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  font-size: small;
+  border-bottom: 0.1rem solid #8C521C;
+  img{
+    width: 3rem;
+    filter: drop-shadow(black 0.01rem 0.01rem 1px);
+  }
+}
+
+.banner-img{
+  width: 100%;
+  height: 20rem;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-content: space-between;
+  overflow: hidden;
+  position: relative;
+  .background{
+    height: 100%;
+    object-fit: cover;
+    flex: 1;
+    margin: 0;
+    padding: 0;
+    border: none;
+    max-width: 100%;
+  }
+  .logo{
+    position: absolute;
+    top: 29%;
+    left: 8%;
+    width: 30%;
+    filter: drop-shadow(black 0.01rem 0.01rem 1px);
+  }
+}
+
+.asset{
+  position: absolute;
+  overflow: hidden;
+  z-index: 100000;
+  top: 10%;
+  left: 66%;
+  width: 25%;
+  filter: drop-shadow(black 0.01rem 0.01rem 1px);
+}
+
+.asset-container{
+  text-align: center;
+  background-color: #261608;
+  img{
+    width: 65%;
+    height: auto; 
+  }
+}
+
+.brown-line{
+  width: 100%;
+  height: 0.1rem;
+  background: #8C521C;
+}
+
+.btn-main{
+  font-family: 'Gluten';
+  font-size: 0.9rem;
+  color: white;
+  background: #5DA84E;
+  border: none;
+  outline: none;
+  appearance: none;
+  box-shadow: none;
+  border-radius: 0.4rem;
+  padding: 0.4rem;
+  width: 100%;
+  transition: .15s ease;
+  &:hover{
+    background-color: rgba(0, 0, 0, 0);
+    border: 0.1rem solid rgb(93, 168, 78);
+    box-shadow: none;
+    outline: none;
+    color: rgb(93, 168, 78);
+    font-size: 1rem;
+  }
+}
+
+.btn-sec{
+  font-family: 'Gluten';
+  font-size: 0.9rem;
+  color: #4C0B0B;
+  background: #5da84e00;
+  border: none;
+  border-radius: 0.4rem;
+  outline: none;
+  appearance: none;
+  box-shadow: none;
+  padding: 0.2rem;
+  width: 100%;
+  transition: .15s ease;
+  &:hover{
+    background-color: #4C0B0B;
+    box-shadow: none;
+    outline: none;
+    color: rgb(255, 255, 255);
+    font-size: 1rem;
+  }
+}
+
+.tomillo-input{
+  p{
+    color: #000000;
+    font-size: 0.7rem;
+    font-weight: 500;
+    margin: 0;
+  }
+  input{
+    padding: 0.3rem;
+    width: 100%;
+    border: none;
+    outline: none;
+    background: #F6E0D4;
+    color: #4C0B0B;
+    border-radius: 0.2rem;
+    transition: .15s ease;
+    &:hover{
+      background: #f8ece6;
+    }
+  }
+}
+
+.TopFanfics{
+  background-color: #261608;
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+  h1{
+    font-size: xx-large;
+    color: white;
+  }
+  .num {
+    font-family: Nabla;
+    font-size: 10rem;
+    color: white;
+  }
+}
+.top-row{
+  padding-left: 10rem;
+  padding-right: 10rem;
+}
+.tops{
+  img{
+    width: 100%;
+    height: auto;
+  }
+  .img-container{
+    border: 0.1rem solid white;
+    width: 25%;
+    height: auto;
+    filter: drop-shadow(#9B4444 0.3rem 0.3rem 0px);
+  }
+
+  .text-container{
+    width: 100%;
+    background-color: #F5EFE9;
+    text-align: left;
+    .title{
+      color: #9B4444;
+      font-weight:900;
+      font-size: x-large;
+    }
+    .author{
+      color: #4C0B0B;
+      font-size: 0.9rem;
+      font-weight: 800;
+    }
+    .description{
+      color: #4C0B0B;
+    }
+  }
+}
+
+.content-slider {
+  width: auto;
+  margin: 0 auto;
+}
+.slider {
+  width: auto;
+  margin: 1rem auto 0;
+  overflow: visible;
+  position: relative;
+
+  ul {
+    margin: 0;
+    padding: 0;
+    position: relative;
+  }
+  li {
+    width: auto;
+    height: 3rem;
+    position: absolute;
+    top: -10rem;
+    list-style: none;
+  }
+  .quote {
+    width: auto;
+    font-style: italic;
+    
+    .source {
+      font-size: large;
+      text-align: right;
+      font-weight: bold;
+    }
+
+    img{
+      width: 100%;
+      height: auto;
+      border-radius: 50%;
+    }
+  }
+
+  li.anim1 {
+    animation: cycle 15s linear infinite;
+  }
+  li.anim2 {
+    animation: cycle2 15s linear infinite;
+  }
+  li.anim3 {
+    animation: cycle3 15s linear infinite;
+  }
+  li.anim4 {
+    animation: cycle4 15s linear infinite;
+  }
+  li.anim5 {
+    animation: cycle5 15s linear infinite;
+  }
+}
+
+.mask {
+  overflow: hidden;
+  height: 7rem;
+}
+
+.slider:hover li {
+  animation-play-state: paused;
+}
+
+@keyframes cycle {
+  0% {
+    top: 0px;
+  }
+  4% {
+    top: 0px;
+  }
+  16% {
+    top: 0px;
+    opacity: 1;
+    z-index: 0;
+  }
+  20% {
+    top: 325px;
+    opacity: 0;
+    z-index: 0;
+  }
+  21% {
+    top: -325px;
+    opacity: 0;
+    z-index: -1;
+  }
+  50% {
+    top: -325px;
+    opacity: 0;
+    z-index: -1;
+  }
+  92% {
+    top: -325px;
+    opacity: 0;
+    z-index: 0;
+  }
+  96% {
+    top: -325px;
+    opacity: 0;
+  }
+  100% {
+    top: 0px;
+    opacity: 1;
+  }
+}
+
+@keyframes cycle2 {
+  0% {
+    top: -325px;
+    opacity: 0;
+  }
+  16% {
+    top: -325px;
+    opacity: 0;
+  }
+  20% {
+    top: 0px;
+    opacity: 1;
+  }
+  24% {
+    top: 0px;
+    opacity: 1;
+  }
+  36% {
+    top: 0px;
+    opacity: 1;
+    z-index: 0;
+  }
+  40% {
+    top: 325px;
+    opacity: 0;
+    z-index: 0;
+  }
+  41% {
+    top: -325px;
+    opacity: 0;
+    z-index: -1;
+  }
+  100% {
+    top: -325px;
+    opacity: 0;
+    z-index: -1;
+  }
+}
+
+@keyframes cycle3 {
+  0% {
+    top: -325px;
+    opacity: 0;
+  }
+  36% {
+    top: -325px;
+    opacity: 0;
+  }
+  40% {
+    top: 0px;
+    opacity: 1;
+  }
+  44% {
+    top: 0px;
+    opacity: 1;
+  }
+  56% {
+    top: 0px;
+    opacity: 1;
+    z-index: 0;
+  }
+  60% {
+    top: 325px;
+    opacity: 0;
+    z-index: 0;
+  }
+  61% {
+    top: -325px;
+    opacity: 0;
+    z-index: -1;
+  }
+  100% {
+    top: -325px;
+    opacity: 0;
+    z-index: -1;
+  }
+}
+
+@keyframes cycle4 {
+  0% {
+    top: -325px;
+    opacity: 0;
+  }
+  56% {
+    top: -325px;
+    opacity: 0;
+  }
+  60% {
+    top: 0px;
+    opacity: 1;
+  }
+  64% {
+    top: 0px;
+    opacity: 1;
+  }
+  76% {
+    top: 0px;
+    opacity: 1;
+    z-index: 0;
+  }
+  80% {
+    top: 325px;
+    opacity: 0;
+    z-index: 0;
+  }
+  81% {
+    top: -325px;
+    opacity: 0;
+    z-index: -1;
+  }
+  100% {
+    top: -325px;
+    opacity: 0;
+    z-index: -1;
+  }
+}
+
+@keyframes cycle5 {
+  0% {
+    top: -325px;
+    opacity: 0;
+  }
+  76% {
+    top: -325px;
+    opacity: 0;
+  }
+  80% {
+    top: 0px;
+    opacity: 1;
+  }
+  84% {
+    top: 0px;
+    opacity: 1;
+  }
+  96% {
+    top: 0px;
+    opacity: 1;
+    z-index: 0;
+  }
+  100% {
+    top: 325px;
+    opacity: 0;
+    z-index: 0;
+  }
 }
