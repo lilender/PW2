@@ -2,7 +2,7 @@ import {BrowserRouter, Routes, Route} from 'react-router-dom';
 import Registro from './Registro';
 import InicioSesion from './InicioSesion';
 import Carrusel from './Carrusel';
-import App from './AppTest';
+import App from './App';
 import LogIn from './components/LogIn';
 import SignUp from './components/SignUp';
 import Ejemplo from './Ejemplo';

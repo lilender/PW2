@@ -26,3 +26,5 @@ yarn-error.log*
 
 # moderation test
 /tomillofics/server/moderation
+
+!tomillofics/client/node_modules
