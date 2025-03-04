@@ -5,7 +5,7 @@ import BTNMain from './BTNMain';
 
 function SignUp(){
     return (
-        <>
+        <div className='back-color'>
             <PrimeNavBar />
             <div className='data-container px-5'>
                 <div className='row align-items-center px-5'>
@@ -24,7 +24,7 @@ function SignUp(){
                     </div>
                 </div>
             </div>
-        </>
+        </div>
     );
 }
 

@@ -6,7 +6,7 @@ import BrownLine from './BrownLine';
 
 function LogIn(){
     return (
-        <>
+        <div className='back-color'>
             <PrimeNavBar />
             <div className='data-container px-5'>
                 <div className='row align-items-center px-5'>
@@ -32,7 +32,7 @@ function LogIn(){
                     </div>
                 </div>
             </div>
-        </>
+        </div>
     );
 }
 

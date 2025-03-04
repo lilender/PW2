@@ -2,7 +2,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 
 function TopFanfics(fanfic){
     return (
-        <div className='col-9 tops justify-content-center p-0'>
+        <div className='col-9 justify-content-center pr-5'> 
             <div className='row'>
                 <div className='col-3 img-container m-0 p-0'>
                     <img className='m-0' src="/img/Mirrors.png" alt="" />
@@ -19,5 +19,5 @@ function TopFanfics(fanfic){
         </div>
     );
 }
-
+//línea 5, clase tops estaba ahí, antes hacia algo ahora no, nota por si se rompe xd
 export default TopFanfics;

@@ -1,21 +1,20 @@
-@import url('https://fonts.googleapis.com/css2?family=Gluten&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Nabla&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Krona+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Gluten:slnt,wght@-13..13,100..900&family=Krona+One&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 
 :root {
-  font-family: Montserrat;
+  font-family: "Montserrat", serif;
   font-weight: 100;
   font-size: small;
 
   color-scheme: light dark;
-  background-color: #EACDBD;
+  background: #EACDBD;
   color: #000000;
-  font-size: medium;
+  font-size: 1rem;
 }
 
 body{
-  font-family: Montserrat;
-  background-color: #EACDBD;
+  font-family: "Montserrat", serif;
+  background: #EACDBD;
   font-size: 0.9rem;
   font-weight: 500;
 }
@@ -26,12 +25,16 @@ body{
   background-position: center;
   background-attachment: fixed;
   color: white;
-  font-family: Montserrat;
+  font-family: "Montserrat", serif;
   font-size: 0.7rem;
   font-weight: 300;
   .MyTomillo{
-    font-family: Krona One;
+    font-family: "Krona One", serif;
   }
+}
+
+.back-color{
+  background-color: #EACDBD;
 }
 
 .data-container{
@@ -42,18 +45,25 @@ body{
 h1 {
   font-size: large;
   line-height: 1.1;
-  font-weight: bold;
+  font-weight: 900;
 }
 
 h2 {
   font-size: xx-large;
   line-height: 1.1;
-  font-weight: bold;
+  font-weight: 900;
 }
 
-.navbar{
+p{
+  font-family: Montserrat;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.prime-navbar{
+  margin: 0;
   padding: 0;
-  font-family: 'Gluten';
+  font-family: "Gluten", serif;
   width: 100%;
   background-color: #EACDBD;
   background-size: cover;
@@ -62,8 +72,59 @@ h2 {
   font-size: small;
   border-bottom: 0.1rem solid #8C521C;
   img{
-    width: 3rem;
-    filter: drop-shadow(black 0.01rem 0.01rem 1px);
+    margin: 0;
+    padding: 0;
+    width: 2.8rem;
+    filter: drop-shadow(black 0.01rem 0.01rem 0.05rem);
+  }
+}
+
+.navbar{
+  margin: 0;
+  padding: 0;
+  font-family: "Gluten", serif;
+  width: 100%;
+  background: #4C0B0B;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  font-size: small;
+  border-bottom: 0.1rem solid #8C521C;
+  img{
+    margin: 0;
+    padding: 0;
+    width: 8.5rem;
+    filter: drop-shadow(black 0.01rem 0.01rem 0.05rem);
+  }
+  .nav-link{
+    color: #dcc0c0;
+    transition: .15s ease;
+    &:hover{
+      color: white;
+    }
+  }
+
+  .nav-link-p{
+    color: #9B4444;
+    transition: .15s ease;
+    &:hover{
+      color: white;
+    }
+  }
+
+  .profile-picture{
+    background: #4C0B0B;
+    border: 0.1rem solid #F6E0D4;
+    border-radius: 50%;
+    width: 2.4rem;
+    height: 2.4rem;
+    display: inline-block;
+    img{
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: auto;
+    }
   }
 }
 
@@ -121,7 +182,7 @@ h2 {
 
 .btn-main{
   font-family: 'Gluten';
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   color: white;
   background: #5DA84E;
   border: none;
@@ -143,7 +204,7 @@ h2 {
 }
 
 .btn-sec{
-  font-family: 'Gluten';
+  font-family: "Gluten", serif;
   font-size: 0.9rem;
   color: #4C0B0B;
   background: #5da84e00;
@@ -166,9 +227,11 @@ h2 {
 
 .tomillo-input{
   p{
-    color: #000000;
-    font-size: 0.7rem;
+    font-family: Montserrat;
+    color: #646464;
+    font-size: 0.75rem;
     font-weight: 500;
+    letter-spacing: 0.01rem;
     margin: 0;
   }
   input{
@@ -198,13 +261,13 @@ h2 {
     font-family: Nabla;
     font-size: 10rem;
     color: white;
+    margin: 0rem;
   }
 }
-.top-row{
-  padding-left: 10rem;
-  padding-right: 10rem;
-}
+
 .tops{
+  padding-left: 6.5rem;
+  padding-right: 6.5rem;
   img{
     width: 100%;
     height: auto;
@@ -294,7 +357,7 @@ h2 {
 
 .mask {
   overflow: hidden;
-  height: 7rem;
+  height: 7.5rem;
 }
 
 .slider:hover li {

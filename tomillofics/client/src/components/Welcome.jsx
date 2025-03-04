@@ -7,7 +7,7 @@ import Banner from './Banner';
 
 function Welcome(){
     return(
-        <>
+        <div className='back-color'>
             <PrimeNavBar />
             <Banner />
             <div className="data-container">
@@ -43,23 +43,25 @@ function Welcome(){
                         </div>
                     </div>
                 </div>
-                <div className='TopFanfics row mt-5 justify-content-center text-center'>
-                    <h1 className="m-3 mt-5">TOP Fanfics del momento</h1>
-                    <div className='row m-5 top-row'>
-                        <p className='col-3 num m-0 p-0'>#1</p>
-                        <TopFanfics title="Mirrors" author='Lilender' description='Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vel dolor eros. Aenean sed mi nisi. Aliquam eu nisl eget libero lobortis posuere. Praesent semper, urna tristique porttitor tincidunt, velit enim vehicula nulla, vitae gravida ipsum nulla ut risus. Nam et turpis iaculis, congue eros tincidunt, fermentum elit.'/>
-                    </div>
-                    <div className='row m-5 top-row'>
-                        <TopFanfics title="Hasta el último beso" author='Lilender' description='Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vel dolor eros. Aenean sed mi nisi. Aliquam eu nisl eget libero lobortis posuere. Praesent semper, urna tristique porttitor tincidunt, velit enim vehicula nulla, vitae gravida ipsum nulla ut risus. Nam et turpis iaculis, congue eros tincidunt, fermentum elit.'/>
-                        <p className='col-3 num'>#2</p>
-                    </div>
-                    <div className='row m-5 top-row'>
-                        <p className='col-3 num'>#3</p>
-                        <TopFanfics title="Sunflowers" author='RMills' description='Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vel dolor eros. Aenean sed mi nisi. Aliquam eu nisl eget libero lobortis posuere. Praesent semper, urna tristique porttitor tincidunt, velit enim vehicula nulla, vitae gravida ipsum nulla ut risus. Nam et turpis iaculis, congue eros tincidunt, fermentum elit.'/>
+                <div className='TopFanfics mt-5 p-2 justify-content-center text-center'>
+                    <h1 className="m-5">TOP Fanfics del momento</h1>
+                    <div className="tops m-3 mb-0">
+                        <div className="row m-4">
+                            <p className='col-3 num'>#1</p>
+                            <TopFanfics title="Mirrors" author='Lilender' description='Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vel dolor eros. Aenean sed mi nisi. Aliquam eu nisl eget libero lobortis posuere. Praesent semper, urna tristique porttitor tincidunt, velit enim vehicula nulla, vitae gravida ipsum nulla ut risus. Nam et turpis iaculis, congue eros tincidunt, fermentum elit.'/>
+                        </div>
+                        <div className='row m-5'>
+                            <TopFanfics title="Hasta el último beso" author='Lilender' description='Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vel dolor eros. Aenean sed mi nisi. Aliquam eu nisl eget libero lobortis posuere. Praesent semper, urna tristique porttitor tincidunt, velit enim vehicula nulla, vitae gravida ipsum nulla ut risus. Nam et turpis iaculis, congue eros tincidunt, fermentum elit.'/>
+                            <p className='col-3 num'>#2</p>
+                        </div>
+                        <div className='row m-5'>
+                            <p className='col-3 num'>#3</p>
+                            <TopFanfics title="Sunflowers" author='RMills' description='Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vel dolor eros. Aenean sed mi nisi. Aliquam eu nisl eget libero lobortis posuere. Praesent semper, urna tristique porttitor tincidunt, velit enim vehicula nulla, vitae gravida ipsum nulla ut risus. Nam et turpis iaculis, congue eros tincidunt, fermentum elit.'/>
+                        </div>
                     </div>
                 </div>
             </div>
-        </>
+        </div>
     );
 }
 

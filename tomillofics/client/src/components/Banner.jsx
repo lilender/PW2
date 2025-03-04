@@ -3,7 +3,9 @@ import 'bootstrap/dist/css/bootstrap.css';
 function Banner(){
     return(
         <>
-            <img className="asset m-2 col-6 z-3 position-absolute" src="/img/asset1.png" alt="" />
+            <div className='col-6 '>
+                <img className="asset m-1 z-3 position-absolute" src="/img/asset1.png" alt="" />
+            </div>
             <div className="banner-img">
                 <img className="background" src="/img/banner.png" alt="" />
                 <div className="row">
