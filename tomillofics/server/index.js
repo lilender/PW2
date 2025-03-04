@@ -22,27 +22,6 @@ const db = mysql.createConnection(
     }
 )
 
-/*app.post("/createUser", (request, response)=>{
-        const name = request.body.name;
-        const email = request.body.email;
-        const password = request.body.password;
-
-        db.query('INSERT INTO User(username, email, password, mode_pref) VALUES(?,?,?,?)',
-            [name, email, password, 0],
-            (error, data)=>{
-                if(error){
-                    console.log(error);
-                } else {
-                    console.log(data);
-                    console.log("Query successful");
-                }
-            }
-        );
-
-        response.send("Data received");
-    }
-)*/
-
 const temp = multer.memoryStorage();
 const file = multer({
     storage: temp,
@@ -56,7 +35,65 @@ const file = multer({
     }
 })
 
-app.post("/createUser", file.single('image'), /*el nombre de como lo estoy mandando desde el form */ 
+app.post("/createUser", file.none(),
+(request, response)=>{
+    const username = request.body.username;
+    const email = request.body.email;
+    const password = request.body.password;
+    db.query('INSERT INTO User(username, email, password, mode_pref) VALUES(?,?,?,?)',
+        [username, email, password, 0],
+        (error, data)=>{
+            if(error){
+                console.log(error);
+                response.send({
+                    message: error,
+                })
+            } else {
+                console.log(data);
+                response.send({
+                    message: "Success"
+                })
+            }
+        }
+    );
+}
+)
+
+app.post("/signinUser", (request, response)=>{
+    const username = request.body.username;
+    const password = request.body.password;
+
+    db.query('SELECT * FROM User WHERE username = ? AND password = ?',
+        [username, password],
+        (error, data)=>{
+            if(error){
+                console.log(error);
+                response.send({
+                    message: error,
+                })
+            } else {
+                console.log(data);
+                if(data.length == 0){
+                    response.send({
+                        message: "User not found"
+                    })
+                } else {
+                    response.json({
+                        message: "Success",
+                        iduser: data[0].iduser,
+                        username: data[0].username,
+                        profile_image: data[0].profile_image
+                    })
+                }
+                console.log("Query successful");
+            }
+        }
+    );
+
+}
+)
+
+app.post("/testCreateUser", file.single('image'), /*el nombre de como lo estoy mandando desde el form */ 
 (request, response)=>{
     const name = request.body.name;
     const email = request.body.email;
@@ -82,7 +119,7 @@ app.post("/createUser", file.single('image'), /*el nombre de como lo estoy manda
 }
 )
 
-app.post("/signinUser", (request, response)=>{
+app.post("/signinUserTest", (request, response)=>{
         const email = request.body.email;
         const password = request.body.password;
 

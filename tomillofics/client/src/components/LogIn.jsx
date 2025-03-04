@@ -1,10 +1,43 @@
 import 'bootstrap/dist/css/bootstrap.css';
 import PrimeNavBar from './PrimeNavBar';
-import Input from './Input';
 import BTNMain from './BTNMain';
 import BrownLine from './BrownLine';
+import { useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 function LogIn(){
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+
+    const nav = useNavigate();
+
+    const sendData=()=>{
+        axios.post("http://localhost:3001/signinUser", 
+            {
+                username: username,
+                password: password
+            }
+        ).then(resp => {
+            if (resp.data.message === "Success") {
+                localStorage.setItem("iduser", resp.data.iduser);
+                localStorage.setItem("username", resp.data.username);
+                localStorage.setItem("profile_image", resp.data.profile_image);
+                nav("/Dashboard");
+            } else {
+                alert(resp.data.message);
+            }
+        }).catch(
+            (error)=>{
+                console.log(error)
+            }
+        )
+    }
+
+    const toSignUp=()=>{
+        nav("/SignUp");
+    }
+
     return (
         <div className='back-color'>
             <PrimeNavBar />
@@ -15,10 +48,16 @@ function LogIn(){
                     </div>
                     <div className='col-6 px-5'>
                         <h2 className='m-4'>Inicia Sesión</h2>
-                        <Input content="Ingrese nombre de usuario" type={1}/>
-                        <Input content="Ingrese contraseña" type={2}/>
+                        <div className="tomillo-input m-4">
+                            <p>Ingrese nombre de usuario</p>
+                            <input onChange={e=>setUsername(e.target.value)} type="text" />
+                        </div>
+                        <div className="tomillo-input m-4">
+                            <p>Ingrese contraseña</p>
+                            <input onChange={e=>setPassword(e.target.value)} type="password" />
+                        </div>
                         <div className='m-4'>
-                            <BTNMain content='Iniciar sesión' type={1}></BTNMain>
+                            <BTNMain onClick={sendData} content='Iniciar sesión' type={1}></BTNMain>
                         </div>
                         <div className='row justify-content-center text-center'>
                             <div className='w-75 m-4'>
@@ -26,7 +65,7 @@ function LogIn(){
                             </div>
                             <p className='mt-4 mb-0'>¿No tienes una cuenta? ¡Registrate ahora!</p>
                             <div className='m-4 mt-0 w-50'>
-                                <BTNMain content='Crear cuenta' type={2}></BTNMain>
+                                <BTNMain onClick={toSignUp} content='Crear cuenta' type={2}></BTNMain>
                             </div>
                         </div>
                     </div>

@@ -6,6 +6,7 @@ import App from './App';
 import LogIn from './components/LogIn';
 import SignUp from './components/SignUp';
 import Ejemplo from './Ejemplo';
+import Dashboard from './components/Dashboard';
 
 function Rutas () {
     return (
@@ -18,6 +19,7 @@ function Rutas () {
                 <Route path="/LogIn" element={<LogIn/>}></Route>
                 <Route path="/SignUp" element={<SignUp/>}></Route>
                 <Route path="/Card" element={<Ejemplo/>}></Route>
+                <Route path="/Dashboard" element={<Dashboard/>}></Route>
             </Routes>
         </BrowserRouter>
     );

@@ -1,8 +1,15 @@
 import 'bootstrap/dist/css/bootstrap.css';
 import { Link } from 'react-router-dom';
 import BTNMain from './BTNMain';
+import { useState } from 'react';
 
 function NavBar(){
+    const storedImage = localStorage.getItem("profile_image");
+
+    const profile_image = storedImage && storedImage !== "null" && storedImage !== "undefined"
+    ? `data:image/jpg;base64,${storedImage}`
+    : "/img/tomilloprofile.png";
+
     return (
         <>
             <nav className="navbar navbar-expand-lg">
@@ -14,7 +21,7 @@ function NavBar(){
                         <span className="navbar-toggler-icon"></span>
                     </button>
                     <div className="collapse navbar-collapse row justify-content-end" id="navbarSupportedContent">
-                        <form class="d-flex col-9 p-2 ps-5">
+                        <form className="d-flex col-9 p-2 ps-5">
                             <div className='row input-group'>
                                 <input class="form-control col-10" type="search" placeholder="Search" aria-label="Search"/>
                                 <BTNMain content='Buscar' type={3}></BTNMain>
@@ -28,7 +35,7 @@ function NavBar(){
                                 <li className="nav-item col-md-4 offset-md-4 p-0 m-0 me-2">
                                 <Link to="" className="nav-link nav-link-p m-0 p-0 align-self-center">
                                     <span className='profile-picture align-self-center me-2 p-1'>
-                                        <img src="/img/tomilloprofile.png" alt="" />
+                                        <img src={profile_image} alt="" />
                                     </span>
                                     Tu perfil</Link>
                                 </li>
