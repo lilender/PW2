@@ -1,9 +1,9 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-/tomillofics/client/node_modules
 /tomillofics/server/node_modules
-/node_modules
+/tomillofics/client/
+
 /.pnp
 .pnp.js
 
@@ -26,5 +26,3 @@ yarn-error.log*
 
 # moderation test
 /tomillofics/server/moderation
-
-!tomillofics/client/node_modules
