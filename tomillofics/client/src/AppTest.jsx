@@ -1,4 +1,4 @@
-import './App.css';
+import './index.css';
 import React, {useState} from 'react'
 import 'bootstrap/dist/css/bootstrap.css';
 import Registro from './Registro';

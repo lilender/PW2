@@ -1,7 +1,7 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-#/tomillofics/client/node_modules
+/tomillofics/client/node_modules
 /tomillofics/server/node_modules
 /node_modules
 /.pnp
