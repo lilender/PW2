@@ -16,13 +16,12 @@ function InicioSesion (){
                 email: email,
                 password: password
             }
-        ).then(response => {
-            const data = response.data;
-            if (data.message === "Success") {
-                alert("your username is " + data.username);
-                nav("/Carrusel");
+        ).then(resp => {
+            if (resp.data.message === "Success") {
+                alert("your username is " + resp.data.username);
+                nav("/Card");
             } else {
-                alert(data.message);
+                alert(resp.data.message);
             }
         }).catch(
             (error)=>{

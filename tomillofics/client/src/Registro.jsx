@@ -1,6 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.css';
 import { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 //hooks
 //useState: devuelve un valor de estado actual y una funcion que permite actualizarlo
@@ -11,17 +12,38 @@ function Registro (){
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [image, setImage] = useState(null);
+    const nav = useNavigate();
 
     const sendData=()=>{
-        axios.post("http://localhost:3001/createUser", 
+
+        const data = new FormData();
+        data.append("name", name);
+        data.append("email", email);
+        data.append("password", password);
+        data.append("image", image);
+
+        /*axios.post("http://localhost:3001/createUser", 
             {
                 name: name,
                 email: email,
                 password: password
             }
+        )*/
+        axios.post("http://localhost:3001/createUser", 
+            data, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            }
         ).then(
-            ()=>{
-                alert("data sent")
+            (resp)=>{
+                if(resp.data.message === "Registered"){
+                    alert("Registrado");
+                    nav("/InicioSesion");
+                } else {
+                    alert(resp.data.message)
+                }
             }
         ).catch(
             (error)=>{
@@ -47,6 +69,11 @@ function Registro (){
                 <input onChange={e=>setPassword(e.target.value)} type="password" className="form-control" id="inputPassword"/>
             </div>
             
+            <div class="mb-3">
+                <label for="inputFile" className="form-label">File</label>
+                <input onChange={e=>setImage(e.target.files[0])} type="file" className="form-control" id="inputFile"/>
+            </div>
+
             <button onClick={sendData} type="button" className="btn btn-primary">Submit</button>
         </div>
     );

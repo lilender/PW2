@@ -3,6 +3,7 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const mysql = require('mysql');
+const multer = require('multer');
 
 app.use(cors());
 app.use(express.json());
@@ -21,7 +22,7 @@ const db = mysql.createConnection(
     }
 )
 
-app.post("/createUser", (request, response)=>{
+/*app.post("/createUser", (request, response)=>{
         const name = request.body.name;
         const email = request.body.email;
         const password = request.body.password;
@@ -40,6 +41,45 @@ app.post("/createUser", (request, response)=>{
 
         response.send("Data received");
     }
+)*/
+
+const temp = multer.memoryStorage();
+const file = multer({
+    storage: temp,
+    fileFilter: (req, file, callback) => {
+        const mimetypes = ["image/png", "image/jpeg", "image/jpg"];
+        if(mimetypes.includes(file.mimetype)){
+            callback(null, true);
+        } else {
+            return callback(new Error("Invalid file type"));
+        }
+    }
+})
+
+app.post("/createUser", file.single('image'), /*el nombre de como lo estoy mandando desde el form */ 
+(request, response)=>{
+    const name = request.body.name;
+    const email = request.body.email;
+    const password = request.body.password;
+    const img64 = request.file.buffer.toString('base64');
+
+    db.query('INSERT INTO User(username, email, password, profile_image, mode_pref) VALUES(?,?,?,?,?)',
+        [name, email, password, img64, 0],
+        (error, data)=>{
+            if(error){
+                console.log(error);
+                response.send({
+                    message: error,
+                })
+            } else {
+                console.log(data);
+                response.send({
+                    message: "Registered"
+                })
+            }
+        }
+    );
+}
 )
 
 app.post("/signinUser", (request, response)=>{
@@ -56,7 +96,7 @@ app.post("/signinUser", (request, response)=>{
                     })
                 } else {
                     console.log(data);
-                    if(data.length == 0){ //use > instead
+                    if(data.length == 0){
                         response.send({
                             message: "User not found"
                         })
@@ -72,5 +112,29 @@ app.post("/signinUser", (request, response)=>{
             }
         );
 
+    }
+)
+
+app.get("/getUser", (request, response)=>{
+        db.query('SELECT * FROM User',
+            (error, data)=>{
+                if(error){
+                    console.log(error);
+                    response.send({
+                        message: error,
+                    })
+                } else {
+                    console.log(data);
+                    if(data.length == 0){
+                        response.send({
+                            message: "No users"
+                        })
+                    } else {
+                        response.json(data);
+                        console.log("Query successful");
+                    }
+                }
+            }
+        );
     }
 )
