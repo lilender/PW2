@@ -249,6 +249,31 @@ p{
   }
 }
 
+.input-group{
+  width: 100%;
+  .form-control{
+    font-family: Montserrat;
+    font-size: 0.8rem;
+    padding: 0.3rem;
+    width: 100%;
+    border: none;
+    outline: none;
+    background: #F6E0D4;
+    color: #4C0B0B;
+    border-radius: 0.2rem;
+    transition: .15s ease;
+    &:hover{
+      background: #f8ece6;
+    }
+  }
+}
+
+.main-carusel{
+  background: #F6E0D4;
+  border-bottom-right-radius: 0.5rem;
+  border-bottom-left-radius: 0.5rem;
+}
+
 .TopFanfics{
   background-color: #261608;
   border-top-left-radius: 1rem;

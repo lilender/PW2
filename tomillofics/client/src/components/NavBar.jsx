@@ -23,7 +23,7 @@ function NavBar(){
                     <div className="collapse navbar-collapse row justify-content-end" id="navbarSupportedContent">
                         <form className="d-flex col-9 p-2 ps-5">
                             <div className='row input-group'>
-                                <input class="form-control col-10" type="search" placeholder="Search" aria-label="Search"/>
+                                <input class="form-control col-12" type="search" aria-label="Search"/>
                                 <BTNMain content='Buscar' type={3}></BTNMain>
                             </div>
                         </form>
