@@ -75,7 +75,7 @@ function LogIn(){
                                 <BrownLine></BrownLine>
                             </div>
                             <p className='mt-4 mb-0'>¿No tienes una cuenta? ¡Registrate ahora!</p>
-                            <div className='m-4 mt-0'>
+                            <div className='m-4 mt-0 w-50'>
                                 <BTNMain onClick={toSignUp} content='Crear cuenta' type={2}></BTNMain>
                             </div>
                         </div>
