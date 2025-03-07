@@ -4,6 +4,7 @@ import BTNMain from './BTNMain';
 import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2'
 
 function SignUp(){
     const [username, setUsername] = useState('');
@@ -15,8 +16,29 @@ function SignUp(){
 
     const sendData=()=>{
 
+        if(username === '' || email === '' || password === '' || password2 === ''){
+            Swal.fire("Por favor llene todos los campos");
+            return;
+        }
+        
+        if(username.length < 4){
+            Swal.fire("Nombre de usuario muy corto");
+            return;
+        }
+        if(email.length < 4){
+            Swal.fire("Correo muy corto");
+            return;
+        }
+        if(!email.includes('@')){
+            Swal.fire("Correo inválido");
+            return;
+        }
+        if(password.length < 4){
+            Swal.fire("Contraseña muy corta");
+            return;
+        }
         if(password !== password2){
-            alert("Las contraseñas no coinciden");
+            Swal.fire("Las contraseñas no coinciden");
             return;
         }
 
@@ -34,10 +56,15 @@ function SignUp(){
         ).then(
             (resp)=>{
                 if(resp.data.message === "Success"){
-                    alert("Registrado");
+                    Swal.fire("Registrado");
                     nav("/LogIn");
                 } else {
-                    alert(resp.data.message)
+                    if (resp.data.message === 'ER_DUP_ENTRY') {
+                        Swal.fire("El usuario ya existe");
+                    }
+                    else {
+                        Swal.fire("Error desconocido. Contacte a soporte");
+                    }
                 }
             }
         ).catch(

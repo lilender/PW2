@@ -5,6 +5,7 @@ import BrownLine from './BrownLine';
 import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2'
 
 function LogIn(){
     const [username, setUsername] = useState('');
@@ -13,6 +14,11 @@ function LogIn(){
     const nav = useNavigate();
 
     const sendData=()=>{
+        if(username === '' || password === ''){
+            Swal.fire("Por favor llene todos los campos");
+            return;
+        }
+
         axios.post("http://localhost:3001/signinUser", 
             {
                 username: username,
@@ -25,7 +31,12 @@ function LogIn(){
                 localStorage.setItem("profile_image", resp.data.profile_image);
                 nav("/Dashboard");
             } else {
-                alert(resp.data.message);
+                if(resp.data.message === "User not found"){
+                    Swal.fire("Usuario o contraseña incorrectos");
+                }
+                else {
+                    Swal.fire("Error desconocido. Contacte a soporte");
+                }
             }
         }).catch(
             (error)=>{
@@ -64,7 +75,7 @@ function LogIn(){
                                 <BrownLine></BrownLine>
                             </div>
                             <p className='mt-4 mb-0'>¿No tienes una cuenta? ¡Registrate ahora!</p>
-                            <div className='m-4 mt-0 w-50'>
+                            <div className='m-4 mt-0'>
                                 <BTNMain onClick={toSignUp} content='Crear cuenta' type={2}></BTNMain>
                             </div>
                         </div>

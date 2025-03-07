@@ -46,7 +46,7 @@ app.post("/createUser", file.none(),
             if(error){
                 console.log(error);
                 response.send({
-                    message: error,
+                    message: error.code,
                 })
             } else {
                 console.log(data);
@@ -69,7 +69,7 @@ app.post("/signinUser", (request, response)=>{
             if(error){
                 console.log(error);
                 response.send({
-                    message: error,
+                    message: error.code,
                 })
             } else {
                 console.log(data);

@@ -53,6 +53,7 @@ CREATE TABLE IF NOT EXISTS `tomillofics`.`Chapter` (
   `idfic` INT UNSIGNED NOT NULL,
   `idchapter` INT UNSIGNED NOT NULL,
   `created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `title` VARCHAR(50) NOT NULL,
   `text` VARCHAR(65535) NOT NULL,
   PRIMARY KEY (`idfic`, `idchapter`),
   CONSTRAINT `fk_Chapter_Fic1`
