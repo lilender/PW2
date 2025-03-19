@@ -120,10 +120,12 @@ p{
     height: 2.4rem;
     display: inline-block;
     img{
-      margin: 0;
-      padding: 0;
+      max-height: 100%;
+      max-width: 100%;
       width: 100%;
-      height: auto;
+      border-radius: 50%;
+      vertical-align: middle;
+      margin: 0;
     }
   }
 }
@@ -178,6 +180,80 @@ p{
   width: 100%;
   height: 0.1rem;
   background: #8C521C;
+}
+
+.brown-line-two{
+  padding: 0;
+  margin: 0 auto;
+  width: 85%;
+  height: 0.2rem;
+  background: #4C0B0B;
+}
+
+.MainCarrousel{
+  background: #F6E0D4;
+  border-bottom-right-radius: 3rem;
+  border-bottom-left-radius: 3rem;
+}
+
+.carrusel-img{
+  background: #261608;
+  border-radius: 50%;
+  width: 12rem;
+  height: 12rem;
+  display: inline-block;
+  position: relative;
+  img{
+    border-bottom-left-radius: 20%;
+    border-bottom-right-radius: 20%;
+    position: absolute;
+    top: -25%;
+    left: 12%;
+    margin: 0;
+    padding: 0;
+    width: 75%;
+    height: auto;
+  }
+}
+
+.carrusel-data{
+  .profile-picture{
+    background: #4C0B0B;
+    border: 0.1rem solid #4C0B0B;
+    border-radius: 50%;
+    width: 4rem;
+    height: 4rem;
+    display: inline-block;
+    img{
+      max-height: 100%;
+      max-width: 100%;
+      width: 100%;
+      border-radius: 50%;
+      vertical-align: middle;
+      margin: 0;
+    }
+  }
+}
+
+.title{
+  color: #9B4444;
+  font-weight:900;
+  font-size: x-large;
+}
+.author{
+  color: #4C0B0B;
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+.description{
+  color: #4C0B0B;
+  background: none;
+  outline: none;
+  border: none;
+  font-size: smaller;
+  font-family: Montserrat;
+  font-weight: 500;
+  resize: none;
 }
 
 .btn-main{
@@ -282,13 +358,41 @@ p{
     font-size: xx-large;
     color: white;
   }
-  .num {
-    font-family: Nabla;
-    font-size: 10rem;
-    color: white;
-    margin: 0rem;
+}
+
+.num {
+  font-family: Nabla;
+  font-size: 10rem;
+  color: white;
+  margin: 0rem;
+}
+
+.cover-link{
+    background: #F6E0D4;
+    border-radius: 0.4rem;
+    height: 330px;
+    width: 150px;
+  .cover{
+    border: 0.1rem solid #261608;
+    background: #261608;
+    border-radius: 0.5rem;
+    height: 300px;
+    width: 193px;
+    display: inline-block;
+    padding: 0;
+    text-align: center;
+    img{
+      vertical-align: middle;
+      border-radius: 0.4rem;
+      margin: 0 auto;
+      padding: 0;
+      width: 100%;
+      height: auto;
+    }
   }
 }
+
+
 
 .tops{
   padding-left: 6.5rem;
