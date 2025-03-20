@@ -28,7 +28,7 @@ function NavBar(){
                             </div>
                         </form>
                         <ul className="col-3 align-self-center p-0 m-0">
-                            <div className='row justify-content-end'>
+                            <div className='row justify-content-end m-0 p-0'>
                                 <li className="nav-item col-6 m-0 me-4 p-0 align-self-center">
                                     <Link to="" className="nav-link m-0 p-0 ms-5 row justify-content-end">Crear tu historia</Link>
                                 </li>

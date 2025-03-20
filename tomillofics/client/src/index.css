@@ -239,6 +239,8 @@ p{
   color: #9B4444;
   font-weight:900;
   font-size: x-large;
+  line-height: 1;
+
 }
 .author{
   color: #4C0B0B;
@@ -254,6 +256,17 @@ p{
   font-family: Montserrat;
   font-weight: 500;
   resize: none;
+}
+
+.brown-banner{
+  background: #261608;
+  width: 100%;
+  height: 15%;
+  padding: 0;
+  margin: 0 auto;
+  display: flex;
+  overflow: hidden;
+  position: relative;
 }
 
 .btn-main{
@@ -371,7 +384,9 @@ p{
     background: #F6E0D4;
     border-radius: 0.4rem;
     height: 330px;
-    width: 150px;
+    width: 203px;
+    cursor: pointer;
+    text-align: center;
   .cover{
     border: 0.1rem solid #261608;
     background: #261608;
