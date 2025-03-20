@@ -7,7 +7,7 @@ import CoverLink from './CoverLink';
 
 function Dashboard(){
     return (
-        <div className='back-color'>
+        <div className='back-color pb-5'>
             <NavBar></NavBar>
             <div className='data-container'>
                 <Carrusel></Carrusel>
