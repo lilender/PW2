@@ -286,6 +286,17 @@ p{
   .results{
     color: #F1AE89;
   }
+  .section{
+    color: #EACDBD;
+    font-family: Montserrat;
+    font-weight: 600;
+  }
+  .categories{
+    color: #F1AE89;
+    font-style: italic;
+    text-align: start;
+    line-height: 1.1
+  }
 }
 
 .btn-main{
@@ -341,6 +352,15 @@ p{
     font-weight: 500;
     letter-spacing: 0.01rem;
     margin: 0;
+  }
+  .light-text{
+    font-family: Montserrat;
+    color: #F1AE89;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.01rem;
+    margin: 0;
+    text-align: start;
   }
   input{
     padding: 0.3rem;
@@ -426,7 +446,134 @@ p{
   }
 }
 
+/*Radiooos*/
+.radio {
+    position: relative;
+    display: inline-flex;
+    height: 1.2rem;
+    width: 1.2rem;
+    background-color: #eee;
+    border-radius: 50%;
+    outline: none;
+    cursor: pointer;
+    -webkit-appearance: none;
+	  -moz-appearance: none;
 
+    &::after{
+        content: "";
+        position: absolute;
+        display: none;
+        background: #9B4444;
+        outline: none;
+    }
+}
+
+.bulgy-radios {
+    width: 100%;
+    background: none;
+    vertical-align: middle;
+    label {
+      background-color: #00000000;
+      cursor: pointer;
+      user-select: none;
+      &:hover input:not(:checked) ~ .radio {
+        opacity: 0.8;
+      }
+    }
+    input {
+      cursor: pointer;
+      height: 0;
+      width: 0;
+      left: -2000px;
+      &:checked {
+        ~ .radio {
+          background-color: #9B4444;
+          box-shadow: 0rem 0rem 0.1rem 0.15rem #9B4444;
+          transition: all .3s;
+          margin: 0.3rem;
+          &::after {
+            opacity: 1;
+          }
+        }
+        ~ .label {
+          span {
+            animation: bulge .5s forwards;
+          }
+          @for $i from 1 to 20 {
+            span:nth-child(#{$i}) { animation-delay: $i * 0.025s; }
+          }
+        }
+      }
+    }
+  }
+  @keyframes bulge {
+    50% {
+      transform: rotate(4deg);
+      font-size: 1.5em;
+    }
+    100% {
+      transform: rotate(0);
+      font-size: 1em;
+    }
+  }
+
+  .checkbox {
+    position: relative;
+    height: 20px !important;
+    width: 20px !important;
+    border: 0.1rem solid #eee;
+    border-radius: 0.1rem;
+    outline: none;
+    cursor: pointer;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+    &::after {
+        position: absolute;
+        display: none;
+        width: 0.5rem;
+        height: 0.25rem;
+        border: solid #9B4444;
+        border-width: 0 0.2rem 0.2rem 0;
+        transform: rotate(45deg);
+        left: 0.25rem;
+        top: 0.3rem;
+        transition: all .3s;
+    }
+}
+
+.bulgy-checkboxes {
+    width: 100%;
+    background: none;
+
+    label {
+        background-color: #00000000;
+        cursor: pointer;
+        user-select: none;
+
+        &:hover input:not(:checked) ~ .checkbox {
+            opacity: 0.8;
+        }
+    }
+
+    input {
+        cursor: pointer;
+        height: 0;
+        width: 0;
+        left: -2000px;
+
+        &:checked {
+            ~ .checkbox {
+                background-color: #9B4444;
+                box-shadow: 0rem 0rem 0.1rem 0.15rem #9B4444;
+                transition: all .3s;
+                margin: 0.5rem;
+                border: 0;
+
+            }
+        }
+    }
+}
 
 .tops{
   padding-left: 6.5rem;
