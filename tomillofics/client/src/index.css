@@ -299,6 +299,74 @@ p{
   }
 }
 
+.fanfic-front{
+  background: #F6E0D4;
+  border-top: 0.1rem solid #000000;
+  border-bottom: 0.1rem solid #000000;
+  border-right: 0.1rem solid #000000;
+  width: 100%;
+  height: auto;
+  .cover{
+    border: 0.1rem solid #261608;
+    background: #261608;
+    border-radius: 0.2rem;
+    width: 100%;
+    height: auto;
+    display: inline-block;
+    padding: 0;
+    text-align: center;
+    img{
+      vertical-align: middle;
+      border-radius: 0.1rem;
+      margin: 0 auto;
+      padding: 0;
+      width: 100%;
+      height: auto;
+    }
+  }
+}
+
+.tag-main, .tag-warning, .tag, .tag-plus {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.3rem;
+  text-align: center;
+  white-space: nowrap;
+  max-width: fit-content;
+}
+
+.tag-main {
+  background: #56834E;
+}
+
+.tag-warning {
+  background: #9B4444;
+}
+
+.tag, .tag-plus {
+  background: #4C0B0B;
+}
+
+.tag-main p, .tag-warning p, .tag p, .tag-plus p {
+  font-size: small;
+  font-weight: 700;
+  color: #EACDBD;
+  margin: 0;
+  padding: 0;
+}
+
+.tag-plus{
+  cursor: pointer;
+}
+
+.d-flex.p-0.m-0.justify-content-start {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.01rem;
+}
+
+
 .btn-main{
   font-family: 'Gluten';
   font-size: 0.8rem;
