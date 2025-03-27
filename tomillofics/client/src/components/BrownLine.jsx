@@ -1,7 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.css';
 
 function BrownLine(props){
-    if (props.type === 1){
+    if (props.type == 1){
         return(
             <div className="brown-line"></div>
         );

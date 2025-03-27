@@ -103,7 +103,6 @@ p{
       color: white;
     }
   }
-
   .nav-link-p{
     color: #9B4444;
     transition: .15s ease;
@@ -111,7 +110,6 @@ p{
       color: white;
     }
   }
-
   .profile-picture{
     background: #4C0B0B;
     border: 0.1rem solid #F6E0D4;
@@ -154,6 +152,40 @@ p{
     left: 8%;
     width: 30%;
     filter: drop-shadow(black 0.01rem 0.01rem 1px);
+  }
+  .profile-picture{
+    background: #4C0B0B;
+    border: 0.1rem solid #F6E0D4;
+    border-radius: 50%;
+    width: 100%;
+    height: auto;
+    display: inline-block;
+    img{
+      max-height: 100%;
+      max-width: 100%;
+      width: 100%;
+      border-radius: 50%;
+      vertical-align: middle;
+      margin: 0;
+    }
+  }
+  .username{
+    color: #9B4444;
+    font-weight:900;
+    font-size: xx-large;
+    line-height: 1;
+  }
+  .number-fics{
+    color: #F6E0D4;
+    font-weight:900;
+    font-size: large;
+    line-height: 1;
+    letter-spacing: 0.1rem;
+  }
+  .text{
+    color: #F1AE89;
+    line-height: 1;
+    font-size: small;
   }
 }
 
@@ -240,7 +272,6 @@ p{
   font-weight:900;
   font-size: x-large;
   line-height: 1;
-
 }
 .author{
   color: #4C0B0B;
@@ -299,11 +330,8 @@ p{
   }
 }
 
-.fanfic-front{
+.fanfic-front, .fanfic-front-two, .fic-content{
   background: #F6E0D4;
-  border-top: 0.05rem solid #000000;
-  border-bottom: 0.05rem solid #000000;
-  border-right: 0.1rem solid #000000;
   width: 100%;
   height: auto;
   .cover{
@@ -323,6 +351,60 @@ p{
       width: 100%;
       height: auto;
     }
+  }
+  .date{
+    font-style: italic;
+    font-weight: 600;
+  }
+}
+
+.fanfic-front-two{
+  border-top: 0.1rem solid #000000;
+}
+
+.fanfic-front{
+  border-top: 0.05rem solid #000000;
+  border-bottom: 0.05rem solid #000000;
+  border-right: 0.1rem solid #000000;
+}
+
+.fic-content{
+  .title:hover{
+    color: #cd8a66;
+    cursor: pointer;
+  }
+  .author:hover{
+    color: #F1AE89;
+    cursor: pointer;
+  }
+}
+
+.chapters-container{
+  background: #4c0b0b31;
+  flex-grow: 1; 
+  overflow-y: auto;
+  height: 23rem;
+  min-height: calc(100%);
+  text-align: start;
+  border-radius: 0.3rem;
+  &::-webkit-scrollbar{
+    width: 0.4rem;
+  }
+  &::-webkit-scrollbar-track{
+    background: #011a2e;
+    border-radius: 1rem;
+  }
+  &::-webkit-scrollbar-thumb{
+    background: #9B4444;
+    border-radius: 1rem;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: #011a2e;
+  }
+  .chapter{
+    background: #EACDBD;
+    font-size: medium;
+    border-bottom: 0.1rem solid #000000;
   }
 }
 
@@ -351,7 +433,7 @@ p{
 .tag-main p, .tag-warning p, .tag p, .tag-plus p {
   font-size: small;
   font-weight: 700;
-  color: #EACDBD;
+  color: #f4d9cb;
   margin: 0;
   padding: 0;
 }
@@ -365,6 +447,7 @@ p{
     margin:0.2rem;
   }
   .page-link{
+    
     background: #EACDBD;
     color: #9B4444;
     font-weight: 800;
@@ -382,7 +465,9 @@ p{
       color: white;
     }
   }
-  .page-link.active, .active > .page-link {
+  .page-link.active, .active > .page-link, .page-link:focus {
+    box-shadow: none;
+    color: white;
     background: #4C0B0B;
     border: none;
   }
