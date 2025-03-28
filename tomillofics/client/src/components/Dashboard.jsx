@@ -2,8 +2,8 @@ import 'bootstrap/dist/css/bootstrap.css';
 import NavBar from './NavBar';
 import Carrusel from './Carrusel';
 import CarruselCovers from './CarruselCovers';
-import BrownLine from './BrownLine';
-import CoverLink from './CoverLink';
+//import BrownLine from './BrownLine';
+//import CoverLink from './CoverLink';
 import CoversRow from './CoversRow';
 
 function Dashboard(){

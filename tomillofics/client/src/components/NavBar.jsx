@@ -1,7 +1,6 @@
 import 'bootstrap/dist/css/bootstrap.css';
 import { Link } from 'react-router-dom';
 import BTNMain from './BTNMain';
-import { useState } from 'react';
 
 function NavBar(){
     const storedImage = localStorage.getItem("profile_image");
@@ -14,9 +13,9 @@ function NavBar(){
         <>
             <nav className="navbar navbar-expand-lg">
                 <div className="container-fluid">
-                    <a className="navbar-brand"> 
+                    <div className="navbar-brand"> 
                         <img src="/img/TomilloFics.png" alt="a"/>
-                    </a>
+                    </div>
                     <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                         <span className="navbar-toggler-icon"></span>
                     </button>

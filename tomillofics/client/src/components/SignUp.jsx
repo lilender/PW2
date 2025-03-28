@@ -98,7 +98,7 @@ function SignUp(){
                             <input onChange={e=>setPassword2(e.target.value)} type="password" />
                         </div>
                         <div className='m-4'>
-                            <BTNMain onClick={sendData} content='Crear cuenta' type={1}></BTNMain>
+                            <BTNMain onClick={sendData} content='Crear cuenta' type={'1'}></BTNMain>
                         </div>
                     </div>
                     <div className='asset-container col-6'>

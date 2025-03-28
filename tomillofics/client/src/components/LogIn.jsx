@@ -68,15 +68,15 @@ function LogIn(){
                             <input onChange={e=>setPassword(e.target.value)} type="password" />
                         </div>
                         <div className='m-4'>
-                            <BTNMain onClick={sendData} content='Iniciar sesión' type={1}></BTNMain>
+                            <BTNMain onClick={sendData} content='Iniciar sesión' type={'1'}></BTNMain>
                         </div>
                         <div className='row justify-content-center text-center'>
                             <div className='w-75 m-4'>
-                                <BrownLine type={1}></BrownLine>
+                                <BrownLine type={'1'}></BrownLine>
                             </div>
                             <p className='mt-4 mb-0'>¿No tienes una cuenta? ¡Registrate ahora!</p>
                             <div className='m-4 mt-0 w-50'>
-                                <BTNMain onClick={toSignUp} content='Crear cuenta' type={2}></BTNMain>
+                                <BTNMain onClick={toSignUp} content='Crear cuenta' type={'2'}></BTNMain>
                             </div>
                         </div>
                     </div>

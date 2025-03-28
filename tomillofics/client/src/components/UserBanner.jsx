@@ -8,7 +8,7 @@ function UserBanner(props){
     ? `data:image/jpg;base64,${storedImage}`
     : "/img/tomilloprofile.png";
 
-    if(props.type == 1){
+    if(props.type === '1'){
         return(
             <div className='row justify-content-center banner-img p-0 m-0'>
                 <img className="background" src="/img/banner.png" alt="" />

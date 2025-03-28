@@ -4,6 +4,7 @@ import NavBar from './NavBar';
 import BrownLine from './BrownLine';
 import BTNMain from './BTNMain';
 import ChapterDrop from './ChapterDrop';
+import CommentSection from './CommentsSection';
 
 function Chapter(){
     const [fontSize, setFontSize] = useState(16);
@@ -31,6 +32,7 @@ function Chapter(){
 
 
     return(
+        <>
         <div className={`back-color ${isDarkMode ? 'dark' : 'light'}`}>
             <NavBar></NavBar>
             <div className='data-container px-5'>
@@ -68,6 +70,9 @@ function Chapter(){
                 </div>
             </div>
         </div>
+        <CommentSection></CommentSection>
+        </>
+
     );
 }
 

@@ -1,7 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.css';
 
 function KudosComents(props){
-    if(props.type == 1){
+    if(props.type === '1'){
         return(
             <div className='d-flex justify-content-start align-items-center'>
                 <p className='m-1 ms-0'>{props.number}</p> 

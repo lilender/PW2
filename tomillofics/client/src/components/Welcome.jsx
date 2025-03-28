@@ -16,7 +16,7 @@ function Welcome(){
                     <p className="mt-1">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vel dolor eros. Aenean sed mi nisi. Aliquam eu nisl eget libero lobortis posuere. Praesent semper, urna tristique porttitor tincidunt, velit enim vehicula nulla, vitae gravida ipsum nulla ut risus. Nam et turpis iaculis, congue eros tincidunt, fermentum elit.</p>
                 </div>
                 <div className="col-3">
-                    <BTNMain content='Comienza a leer' type={1}></BTNMain>
+                    <BTNMain content='Comienza a leer' type={'1'}></BTNMain>
                 </div>
                 <div className="col-8">
                     <div className="content-slider">

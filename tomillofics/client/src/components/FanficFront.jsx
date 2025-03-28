@@ -1,9 +1,9 @@
 import 'bootstrap/dist/css/bootstrap.css';
 import FicData from './FicData';
-import Tag from './Tag';
+//import Tag from './Tag';
 
 function FanficFront(props){
-    if(props.type == 1){
+    if(props.type === '1'){
         return(
             <div className='fanfic-front row justify-content-center py-3'>
                 <div className='col-3 align-self-center'>
