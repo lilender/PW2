@@ -175,3 +175,76 @@ app.get("/getUser", (request, response)=>{
         );
     }
 )
+
+
+app.post("/modifyUserTest", file.none(),
+(request, response)=>{
+    const username = request.body.name;
+    const email = request.body.email;
+    const iduser = request.body.iduser;
+    db.query('UPDATE User SET username = ?, email = ? WHERE iduser = ?',
+        [username, email, iduser],
+        (error, data)=>{
+            if(error){
+                console.log(error);
+                response.send({
+                    message: error.code,
+                })
+            } else {
+                console.log(data);
+                response.send({
+                    message: "Success"
+                })
+            }
+        }
+    );
+}
+)
+
+app.put('/modificar/:idU',
+    (request, response)=>{
+        const username = request.body.newName;
+        const email = request.body.newCorreo;
+        const iduser = request.params.idU;
+        db.query('UPDATE User SET username = ?, email = ? WHERE iduser = ?',
+            [username, email, iduser],
+            (error, data)=>{
+                if(error){
+                    console.log(error);
+                    response.send({
+                        message: error.code,
+                    })
+                } else {
+                    console.log(data);
+                    response.send({
+                        message: "Success"
+                    })
+
+                    /**which is better response.json is better */
+                }
+            }
+        );
+    }
+)
+
+app.delete('/eliminar/:idU',
+    (request, response)=>{
+        const iduser = request.params.idU;
+        db.query('DELETE FROM User WHERE iduser = ?',
+            [iduser],
+            (error, data)=>{
+                if(error){
+                    console.log(error);
+                    response.send({
+                        message: error.code,
+                    })
+                } else {
+                    console.log(data);
+                    response.json({
+                        message: "Success"
+                    });
+                }
+            }
+        );        
+    }
+)
