@@ -2,7 +2,7 @@
 
 # dependencies
 /tomillofics/server/node_modules
-/tomillofics/client/
+/tomillofics/client/node_modules
 
 /.pnp
 .pnp.js
