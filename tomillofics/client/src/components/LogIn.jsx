@@ -72,7 +72,7 @@ function LogIn(){
                         </div>
                         <div className='row justify-content-center text-center'>
                             <div className='w-75 m-4'>
-                                <BrownLine></BrownLine>
+                                <BrownLine type={1}></BrownLine>
                             </div>
                             <p className='mt-4 mb-0'>¿No tienes una cuenta? ¡Registrate ahora!</p>
                             <div className='m-4 mt-0 w-50'>

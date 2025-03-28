@@ -23,12 +23,12 @@ function NavBar(){
                     <div className="collapse navbar-collapse row justify-content-end" id="navbarSupportedContent">
                         <form className="d-flex col-9 p-2 ps-5">
                             <div className='row input-group'>
-                                <input class="form-control col-10" type="search" placeholder="Search" aria-label="Search"/>
-                                <BTNMain content='Buscar' type={3}></BTNMain>
+                                <input class="form-control col-12" type="search" aria-label="Search"/>
+                                <BTNMain type='5' content="/img/buscar.png"></BTNMain>
                             </div>
                         </form>
                         <ul className="col-3 align-self-center p-0 m-0">
-                            <div className='row justify-content-end'>
+                            <div className='row justify-content-end m-0 p-0'>
                                 <li className="nav-item col-6 m-0 me-4 p-0 align-self-center">
                                     <Link to="" className="nav-link m-0 p-0 ms-5 row justify-content-end">Crear tu historia</Link>
                                 </li>
