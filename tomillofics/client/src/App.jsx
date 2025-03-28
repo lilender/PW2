@@ -6,10 +6,23 @@ import Dashboard from './components/Dashboard';
 import Search from './components/Search';
 import UserOnline from './components/UserOnline';
 import FicContent from './components/FicContent';
+import Chapter from './components/Chapter';
+import CommentsSection from './components/CommentsSection';
 
 function App() {
     return (
         <div>
+            <Chapter></Chapter>
+            <CommentsSection></CommentsSection>
+            <Footer></Footer>
+        </div>
+    );
+}
+
+export default App;
+
+
+/*
             <FicContent 
                 coversrc='/img/Mirrors (5).png'
                 fictittle='Néctar de la noche'
@@ -38,9 +51,4 @@ function App() {
                     { type: '4', content: '+'}
                 ]}
             />
-            <Footer></Footer>
-        </div>
-    );
-}
-
-export default App;
+*/

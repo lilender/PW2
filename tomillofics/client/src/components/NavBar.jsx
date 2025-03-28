@@ -24,7 +24,7 @@ function NavBar(){
                         <form className="d-flex col-9 p-2 ps-5">
                             <div className='row input-group'>
                                 <input class="form-control col-12" type="search" aria-label="Search"/>
-                                <BTNMain content='Buscar' type={3}></BTNMain>
+                                <BTNMain type='5' content="/img/buscar.png"></BTNMain>
                             </div>
                         </form>
                         <ul className="col-3 align-self-center p-0 m-0">

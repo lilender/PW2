@@ -222,6 +222,14 @@ p{
   background: #4C0B0B;
 }
 
+.vertical-brown-line{
+  padding: 0;
+  margin: 0 auto;
+  height: 85%;
+  width: 0.15rem;
+  background: #4C0B0B;
+}
+
 .MainCarrousel{
   background: #F6E0D4;
   border-bottom-right-radius: 3rem;
@@ -330,7 +338,7 @@ p{
   }
 }
 
-.fanfic-front, .fanfic-front-two, .fic-content{
+.fanfic-front, .fanfic-front-two, .fic-content, .back-color-chapter{
   background: #F6E0D4;
   width: 100%;
   height: auto;
@@ -356,6 +364,18 @@ p{
     font-style: italic;
     font-weight: 600;
   }
+  .chapter-title{
+    color: #9B4444;
+    font-size: larger;
+    font-weight:900;
+    line-height: 1;
+  }
+  .chapter-text{
+    p{
+      font-size:inherit;
+      line-height: 1.3;
+    }
+  }
 }
 
 .fanfic-front-two{
@@ -373,6 +393,18 @@ p{
     color: #cd8a66;
     cursor: pointer;
   }
+  .author:hover{
+    color: #F1AE89;
+    cursor: pointer;
+  }
+  .content{
+    color: #9B4444;
+    font-weight:900;
+    font-size: large;
+    line-height: 1;
+  }
+}
+.back-color-chapter{
   .author:hover{
     color: #F1AE89;
     cursor: pointer;
@@ -447,9 +479,8 @@ p{
     margin:0.2rem;
   }
   .page-link{
-    
-    background: #EACDBD;
-    color: #9B4444;
+    background: #eacdbd00;
+    color: #b14d4d;
     font-weight: 800;
     font-family: Montserrat;
     border: none;
@@ -480,7 +511,7 @@ p{
 }
 
 
-.btn-main{
+.btn-main, .btn-main-img{
   font-family: 'Gluten';
   font-size: 0.8rem;
   color: white;
@@ -500,6 +531,13 @@ p{
     outline: none;
     color: rgb(93, 168, 78);
     font-size: 1rem;
+  }
+}
+
+.btn-main-img{
+  width: 10% !important;
+  img{
+    width: 1.5rem;
   }
 }
 
@@ -788,6 +826,104 @@ p{
       color: #4C0B0B;
     }
   }
+}
+
+.chapter-drop{
+  color: #4C0B0B;
+  font-family: Gluten;
+  font-size: smaller;
+  font-weight: 400;
+  .dropdown-menu{
+    background: #4C0B0B;
+    font-family: Krona One;
+    font-size: smaller;
+    .dropdown-item{
+      color: #F1AE89;
+    }
+  }
+}
+
+.comments-section{
+  background: #261608;
+}
+.title-light{
+  color: #F6E0D4;
+  font-weight:900;
+  font-size: x-large;
+}
+.comment{
+  border: 0.1rem solid #F1AE89;
+  border-radius: 0.3rem;
+  width: 90%;
+  p{
+    color: #F1AE89;
+    padding: 0;
+    margin: 0;
+  }
+}
+
+.comment-textarea{
+  margin: 0;
+  color: #4C0B0B;
+  background: #F6E0D4;
+  border-radius: 0.3rem;
+  outline: none;
+  border: none;
+  font-size: smaller;
+  font-family: Montserrat;
+  font-weight: 500;
+  resize: none;
+  width: 90%;
+  height: 9rem;
+}
+
+button.profile{
+  margin: 0.5rem;
+  outline: none;
+  background: #4C0B0B;
+  border-radius: 50%;
+  height: 2.9rem;
+  width: 2.9rem;
+  border: 0.1rem solid #9B4444;
+  padding: 0.2rem;
+  img {
+      height: auto;
+      width: 90%;
+  }
+}
+
+/*Cosas del modo oscuro*/
+.back-color.light, .dark .chapter-text, .back-color-chapter.light{
+  transition: all 0.3s ease-in-out;
+}
+
+.back-color.dark {
+  background: #402418;
+}
+
+.chapter-text {
+  transition: all 0.3s ease-in-out;
+}
+
+.back-color-chapter.dark {
+  transition: all 0.3s ease-in-out;
+  background: #261608d5;
+  color: #F6E0D4;
+}
+
+.dark .btn-sec, .dark .author {
+  transition: all 0.3s ease-in-out;
+  color: #F6E0D4;
+}
+
+.dark .title, .dark .chapter-title{
+  transition: all 0.3s ease-in-out;
+  color: #F1AE89;
+}
+
+.dark .vertical-brown-line {
+  transition: all 0.3s ease-in-out;
+  background: #F6E0D4;
 }
 
 .content-slider {
