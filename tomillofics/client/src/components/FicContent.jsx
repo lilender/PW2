@@ -42,7 +42,7 @@ function FicContent(props){
                         <div className="p-0 m-0 mb-3">
                             <div className="chapters-container d-flex flex-column align-items-start">
                             {props.chapters?.map((contentchapter, index) => (
-                                <ContentChapter key={index} content={contentchapter.content} />
+                                <ContentChapter key={index} type={true} content={contentchapter.content} />
                             ))}
                             </div>
                         </div>

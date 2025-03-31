@@ -8,12 +8,12 @@ import UserOnline from './components/UserOnline';
 import FicContent from './components/FicContent';
 import Chapter from './components/Chapter';
 import CommentsSection from './components/CommentsSection';
+import NewFic from './components/NewFic';
 
 function App() {
     return (
         <div>
-            <Chapter></Chapter>
-            <CommentsSection></CommentsSection>
+            <NewFic></NewFic>
             <Footer></Footer>
         </div>
     );
@@ -33,13 +33,13 @@ export default App;
                 coments='900'
                 publisheddate='17 de julio de 2022'
                 chapters={[
-                    { content: 'Una vez en invierno' },
-                    { content: 'Una vez en invierno' },
-                    { content: 'Una vez en invierno' },
-                    { content: 'Una vez en invierno' },
-                    { content: 'Una vez en invierno' },
-                    { content: 'Una vez en invierno' },
-                    { content: 'Una vez en invierno'}
+                    { content: '1. Una vez en invierno' },
+                    { content: '2. Una vez en invierno' },
+                    { content: '3. Una vez en invierno' },
+                    { content: '4. Una vez en invierno' },
+                    { content: '5. Una vez en invierno' },
+                    { content: '6. Una vez en invierno' },
+                    { content: '7. Una vez en invierno'}
                 ]}
                 tags={[
                     { type: '1', content: 'Completada' },
