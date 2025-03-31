@@ -338,8 +338,7 @@ p{
   }
 }
 
-.fanfic-front, .fanfic-front-two, .fic-content, .back-color-chapter{
-  background: #F6E0D4;
+.fanfic-front, .fanfic-front-two, .fic-content, .back-color-chapter, .new-fic{
   width: 100%;
   height: auto;
   .cover{
@@ -375,7 +374,34 @@ p{
       font-size:inherit;
       line-height: 1.3;
     }
+    textarea{
+      padding: 0.3rem;
+      width: 100%;
+      min-height: 20rem;
+      border: none;
+      outline: none;
+      resize: vertical;
+      border-radius: 0.2rem;
+      transition: .15s ease;
+      overflow: hidden;
+      resize: none;
+      line-height: 1.3;
+    }
   }
+  .saving{
+    font-family: Montserrat;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+  }
+}
+
+.fanfic-front, .fanfic-front-two, .fic-content, .back-color-chapter{
+  background: #F6E0D4;
+}
+
+.new-fic{
+  background: #EBBFAA;
 }
 
 .fanfic-front-two{
@@ -404,6 +430,16 @@ p{
     line-height: 1;
   }
 }
+
+.new-fic{
+  .content{
+    color: #9B4444;
+    font-weight:900;
+    font-size: x-large;
+    line-height: 1;
+  }
+}
+
 .back-color-chapter{
   .author:hover{
     color: #F1AE89;
@@ -440,7 +476,7 @@ p{
   }
 }
 
-.tag-main, .tag-warning, .tag, .tag-plus {
+.tag-main, .tag-warning, .tag, .tag-plus, .tag-add{
   display: flex;
   align-items: center;
   justify-content: center;
@@ -458,11 +494,11 @@ p{
   background: #9B4444;
 }
 
-.tag, .tag-plus {
+.tag, .tag-add {
   background: #4C0B0B;
 }
 
-.tag-main p, .tag-warning p, .tag p, .tag-plus p {
+.tag-main p, .tag-warning p, .tag p, .tag-plus p, .tag-add p {
   font-size: small;
   font-weight: 700;
   color: #f4d9cb;
@@ -472,6 +508,7 @@ p{
 
 .tag-plus{
   cursor: pointer;
+  background: #4c0b0bc4;
 }
 
 .pagination{
@@ -541,6 +578,13 @@ p{
   }
 }
 
+.btn-main-img.edit{
+  width: 90% !important;
+  img{
+    width: 1.5rem;
+  }
+}
+
 .btn-sec{
   font-family: "Gluten", serif;
   font-size: 0.9rem;
@@ -581,7 +625,7 @@ p{
     margin: 0;
     text-align: start;
   }
-  input{
+  input, textarea{
     padding: 0.3rem;
     width: 100%;
     border: none;
@@ -593,6 +637,18 @@ p{
     &:hover{
       background: #f8ece6;
     }
+  }
+  textarea{
+    resize: none;
+  }
+}
+
+.tomillo-input.dark{
+  p{
+    color: #000000;
+  }
+  input{
+    color: #000;
   }
 }
 
@@ -736,61 +792,57 @@ p{
     }
   }
 
-  .checkbox {
-    position: relative;
-    height: 20px !important;
-    width: 20px !important;
-    border: 0.1rem solid #eee;
-    border-radius: 0.1rem;
-    outline: none;
-    cursor: pointer;
-    -webkit-appearance: none;
-    -moz-appearance: none;
+.checkbox {
+  position: relative;
+  height: 20px !important;
+  width: 20px !important;
+  border: 0.1rem solid #eee;
+  border-radius: 0.1rem;
+  outline: none;
+  cursor: pointer;
+  -webkit-appearance: none;
+  -moz-appearance: none;
 
-    &::after {
-        position: absolute;
-        display: none;
-        width: 0.5rem;
-        height: 0.25rem;
-        border: solid #9B4444;
-        border-width: 0 0.2rem 0.2rem 0;
-        transform: rotate(45deg);
-        left: 0.25rem;
-        top: 0.3rem;
-        transition: all .3s;
-    }
+  &::after {
+      position: absolute;
+      display: none;
+      width: 0.5rem;
+      height: 0.25rem;
+      border: solid #9B4444;
+      border-width: 0 0.2rem 0.2rem 0;
+      transform: rotate(45deg);
+      left: 0.25rem;
+      top: 0.3rem;
+      transition: all .3s;
+  }
 }
 
 .bulgy-checkboxes {
     width: 100%;
     background: none;
-
     label {
-        background-color: #00000000;
-        cursor: pointer;
-        user-select: none;
-
-        &:hover input:not(:checked) ~ .checkbox {
-            opacity: 0.8;
-        }
+      background-color: #00000000;
+      cursor: pointer;
+      user-select: none;
+      &:hover input:not(:checked) ~ .checkbox {
+          opacity: 0.8;
+      }
     }
-
     input {
-        cursor: pointer;
-        height: 0;
-        width: 0;
-        left: -2000px;
+      cursor: pointer;
+      height: 0;
+      width: 0;
+      left: -20000px;
 
-        &:checked {
-            ~ .checkbox {
-                background-color: #9B4444;
-                box-shadow: 0rem 0rem 0.1rem 0.15rem #9B4444;
-                transition: all .3s;
-                margin: 0.5rem;
-                border: 0;
-
-            }
+      &:checked {
+        ~ .checkbox {
+            background-color: #9B4444;
+            box-shadow: 0rem 0rem 0.1rem 0.15rem #9B4444;
+            transition: all .3s;
+            margin: 0.5rem;
+            border: 0;
         }
+      }
     }
 }
 
@@ -833,6 +885,35 @@ p{
   font-family: Gluten;
   font-size: smaller;
   font-weight: 400;
+  .dropdown-menu{
+    background: #4C0B0B;
+    font-family: Krona One;
+    font-size: smaller;
+    .dropdown-item{
+      color: #F1AE89;
+    }
+  }
+}
+
+.dark .chapter-drop{
+  color: #F6E0D4;
+  font-family: Gluten;
+  font-size: smaller;
+  font-weight: 400;
+}
+
+.category-drop{
+  padding: 0.3rem;
+  width: 100%;
+  border: none;
+  outline: none;
+  background: #F6E0D4;
+  color: #4C0B0B;
+  font-family: Montserrat;
+  font-size: small;
+  border-radius: 0.2rem;
+  transition: .15s ease;
+  margin: 0;
   .dropdown-menu{
     background: #4C0B0B;
     font-family: Krona One;
@@ -895,6 +976,20 @@ button.profile{
 /*Cosas del modo oscuro*/
 .back-color.light, .dark .chapter-text, .back-color-chapter.light{
   transition: all 0.3s ease-in-out;
+}
+
+.chapter-text.dark{
+  textarea{
+    background: #261608b6;
+    color: #F6E0D4;
+  }
+}
+
+.chapter-text.light{
+  textarea{
+    background: #F6E0D4;
+    color: #402418;
+  }
 }
 
 .back-color.dark {
