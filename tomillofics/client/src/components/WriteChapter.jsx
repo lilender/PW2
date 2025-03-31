@@ -1,11 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import NavBar from './NavBar';
 import BrownLine from './BrownLine';
 import BTNMain from './BTNMain';
 import ChapterDrop from './ChapterDrop';
 
-function Chapter(){
+function WriteChapter(){
     const [fontSize, setFontSize] = useState(16);
 
     const [isDarkMode, setIsDarkMode] = useState(() => {
@@ -29,6 +29,68 @@ function Chapter(){
         setFontSize(prevSize => Math.max(prevSize - 2, 12));
     };
 
+    //Cosas del textarea :v
+    const [content, setContent] = useState('');
+    const textareaRef = useRef(null);
+
+    const adjustTextareaHeight = () => {
+        const textarea = textareaRef.current;
+        if (textarea) {
+            textarea.style.height = 'auto';
+            textarea.style.height = textarea.scrollHeight + 'px';
+        }
+    };
+
+    useEffect(() => {
+        adjustTextareaHeight();
+    }, [content]);
+
+    //autoguardado
+    const [saving, setSaving] = useState(false);
+    let saveTimeout = useRef(null);
+
+    useEffect(() => {
+        const savedContent = localStorage.getItem('chapterContent');
+        if (savedContent) {
+            setContent(savedContent);
+        }
+    }, []);
+
+    useEffect(() => {
+        if (content) {
+            setSaving(true);
+
+            clearTimeout(saveTimeout.current);
+            saveTimeout.current = setTimeout(() => {
+                localStorage.setItem('chapterContent', content);
+                setSaving(false);
+            }, 1500);
+        }
+    }, [content]);
+
+    const handleInputChange = (event) => {
+        setContent(event.target.value);
+    };
+
+    const handleKeyDown = (event) => {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            const cursorPos = textareaRef.current.selectionStart;
+            const beforeText = content.slice(0, cursorPos);
+            const afterText = content.slice(cursorPos);
+
+            const lastChar = beforeText.slice(1);
+            const newText = lastChar === '\n' ? '\n\n' : '\n\n';
+
+            setContent(beforeText + newText + afterText);
+
+            // Mueve el cursor a la nueva posición
+            setTimeout(() => {
+                textareaRef.current.selectionStart = cursorPos + newText.length;
+                textareaRef.current.selectionEnd = cursorPos + newText.length;
+            }, 0);
+        }
+    };
 
     return(
         <div className={`back-color ${isDarkMode ? 'dark' : 'light'}`}>
@@ -39,11 +101,23 @@ function Chapter(){
                     <h1 className='author row justify-content-center align-items-center mt-1'>By Lilender</h1>
                     <h1 className='chapter-title row justify-content-center align-items-center mt-2 mb-3'>Capítulo 1. Una vez en invierno</h1>
                     <BrownLine type='1'></BrownLine>
-                    <div className='chapter-text mt-3' style={{ fontSize: `${fontSize}px` }}>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam vel congue felis. Nunc erat metus, dapibus in sollicitudin eget, suscipit et leo. Nam a dignissim diam. Aenean consequat, est porta molestie ultrices, purus velit varius mauris, in blandit nunc ante nec dolor. Praesent in ultricies diam, nec dapibus diam. Integer sit amet dui turpis. Ut mollis, nulla id aliquet lobortis, quam justo viverra odio, eu tincidunt urna mi pulvinar lacus. Praesent et lobortis lorem. Nunc ultricies erat in rhoncus laoreet. Maecenas rutrum bibendum lobortis. Sed dignissim, orci sit amet tempor ullamcorper, tellus arcu iaculis ante, eu mollis turpis eros nec libero. Aenean egestas enim a egestas feugiat. In bibendum sit amet dui at vestibulum. Phasellus ut nisi tellus. Suspendisse tempus ultrices posuere.</p>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit...</p>
+                    <div className={`chapter-text ${isDarkMode ? 'dark' : 'light'} mt-3`} style={{ fontSize: `${fontSize}px` }}>
+                        <textarea
+                            ref={textareaRef}
+                            name="chapter"
+                            id="chapter-editor"
+                            value={content}
+                            onChange={handleInputChange}
+                            onKeyDown={handleKeyDown}
+                            placeholder="Escribe tu capítulo aquí..."
+                        ></textarea>
                     </div>
                     <BrownLine type='1'></BrownLine>
+                    <div className='row justify-content-center align-items-center p-1 mt-3 mb-0'>
+                        <p className='saving' style={{ color: saving ? 'green' : 'gray' }}>
+                            {saving ? 'Guardando...' : 'Guardado'}
+                        </p>
+                    </div>
                     <div className='row justify-content-center align-items-center p-1 px-2 mt-3 mb-0'>
                         <div className='d-flex w-25 justify-content-center align-items-center m-0'>
                             <BTNMain type='4' content="/img/a-left.png"></BTNMain>
@@ -71,4 +145,4 @@ function Chapter(){
     );
 }
 
-export default Chapter;
+export default WriteChapter;

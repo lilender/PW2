@@ -9,11 +9,12 @@ import FicContent from './components/FicContent';
 import Chapter from './components/Chapter';
 import CommentsSection from './components/CommentsSection';
 import NewFic from './components/NewFic';
+import WriteChapter from './components/WriteChapter';
 
 function App() {
     return (
         <div>
-            <NewFic></NewFic>
+            <WriteChapter></WriteChapter>
             <Footer></Footer>
         </div>
     );

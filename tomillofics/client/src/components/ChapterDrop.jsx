@@ -1,9 +1,10 @@
 import 'bootstrap/dist/css/bootstrap.css';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 
-function ChapterDrop(){
+function ChapterDrop(props){
+    const theme = props.theme;
     return(
-        <NavDropdown className='mx-3 chapter-drop d-flex justify-content-center'
+        <NavDropdown className={`mx-3 chapter-drop ` + {theme} + `d-flex justify-content-center`}
             id="nav-dropdown-dark-example"
             title="Seleccionar capítulo "
             menuVariant="dark"
