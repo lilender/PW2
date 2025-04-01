@@ -4,6 +4,9 @@
 /tomillofics/server/node_modules
 /tomillofics/client/node_modules
 
+#env
+/tomillofics/server/.env
+
 /.pnp
 .pnp.js
 
