@@ -19,7 +19,7 @@ function Tag(props){
                 <p className='m-1 mx-2 p-0'>{props.content}</p>
             </div>
         );
-    }else if(props.type == 5){
+    }else if(props.type === '5'){
         return(
             <div className='tag-add m-1 ms-0'>
                 <p className='m-1 mx-2 p-0'>{props.content}</p>

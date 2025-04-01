@@ -19,7 +19,7 @@ function LogIn(){
             return;
         }
 
-        axios.post("http://localhost:3001/signinUser", 
+        axios.post("http://localhost:3001/loginUser", 
             {
                 username: username,
                 password: password
@@ -29,10 +29,13 @@ function LogIn(){
                 localStorage.setItem("iduser", resp.data.iduser);
                 localStorage.setItem("username", resp.data.username);
                 localStorage.setItem("profile_image", resp.data.profile_image);
+                localStorage.setItem("mode_pref", resp.data.mode_pref);
                 nav("/Dashboard");
             } else {
-                if(resp.data.message === "User not found"){
-                    Swal.fire("Usuario o contraseña incorrectos");
+                if(resp.data.message === "ER_WRONG_PASS"){
+                    Swal.fire("Contraseña incorrecta");
+                } else if (resp.data.message === "ER_NOT_FOUND"){
+                    Swal.fire("Usuario no encontrado");
                 }
                 else {
                     Swal.fire("Error desconocido. Contacte a soporte");

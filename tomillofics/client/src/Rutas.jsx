@@ -24,8 +24,8 @@ function Rutas () {
                 <Route path="/SignUp" element={<SignUp/>}></Route>
                 <Route path="/LogIn" element={<LogIn/>}></Route>
                 <Route path="/Search" element={<Search/>}></Route>
-                <Route path="/Profile" element={<Profile/>}></Route>
-                <Route path="/Fic" element={<FicContent/>}></Route>
+                <Route path="/Profile/:id" element={<Profile/>}></Route>
+                <Route path="/Fic/:id" element={<FicContent/>}></Route>
                 <Route path="/Chapter" element={<Chapter/>}></Route>
 
                 <Route path="/InicioSesion" element={<InicioSesion/>}></Route>

@@ -25,7 +25,7 @@ function BTNMain(props){
                 {<button onClick={props.onClick} className="btn-main w-25 p-0"><img src={props.content} alt="Logo" /></button>}
             </>
         ); 
-    }else if(props.type == 6){
+    }else if(props.type === '6'){
         return (
             <>
                 {<button onClick={props.onClick} className="btn-main-img edit p-1"><img src={props.content} alt="Logo" /></button>}

@@ -59,8 +59,10 @@ function SignUp(){
                     Swal.fire("Registrado");
                     nav("/LogIn");
                 } else {
-                    if (resp.data.message === 'ER_DUP_ENTRY') {
-                        Swal.fire("El usuario ya existe");
+                    if (resp.data.message === 'ER_DUP_USERNAME') {
+                        Swal.fire("El nombre de usuario ya existe");
+                    } else if (resp.data.message === 'ER_DUP_EMAIL') {
+                        Swal.fire("El correo ya existe");
                     }
                     else {
                         Swal.fire("Error desconocido. Contacte a soporte");

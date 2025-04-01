@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS `tomillofics`.`User` (
   `username` VARCHAR(25) NOT NULL UNIQUE,
   `password` CHAR(64) NOT NULL,
   `email` VARCHAR(254) NOT NULL UNIQUE,
-  `profile_image` mediumtext NULL,
+  `profile_image` MEDIUMTEXT NULL,
   `mode_pref` BOOLEAN NOT NULL,
   `created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`iduser`)
