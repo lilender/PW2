@@ -15,6 +15,9 @@ CREATE PROCEDURE sp_update_users (
 )
 BEGIN
     DECLARE pass CHAR(64);
+    IF in_option = 'info' THEN
+        SELECT iduser, username, email, profile_image, mode_pref FROM User WHERE iduser = in_iduser;
+    END IF;
     IF in_option = 'login' THEN
         SET pass = (SELECT password FROM User WHERE BINARY username = in_username);
 
@@ -35,14 +38,17 @@ BEGIN
     IF in_option = 'update' THEN
         UPDATE User
         SET
-            username = in_username,
-            password = SHA2(in_password, 256),
-            email = in_email,
-            profile_image = in_profile_image,
-            mode_pref = in_mode_pref
+            username = COALESCE(in_username, username),
+            email = COALESCE(in_email, email),
+            profile_image = COALESCE(in_profile_image, profile_image),
+            mode_pref = COALESCE(in_mode_pref, mode_pref)
         WHERE iduser = in_iduser; 
     END IF;
-
+    IF in_option = 'update_pass' THEN
+        UPDATE User
+        SET password = SHA2(in_password, 256)
+        WHERE iduser = in_iduser; 
+    END IF;
 
 END$$
 

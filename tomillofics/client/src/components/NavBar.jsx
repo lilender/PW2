@@ -3,14 +3,18 @@ import { Link } from 'react-router-dom';
 import BTNMain from './BTNMain';
 import { useNavigate } from 'react-router-dom';
 
-function NavBar(){
-    const storedImage = localStorage.getItem("profile_image");
-
+function NavBar({profileImage}){
+    
     const nav = useNavigate();
 
-    const profile_image = storedImage && storedImage !== "null" && storedImage !== "undefined"
-    ? `data:image/jpg;base64,${storedImage}`
-    : "/img/tomilloprofile.png";
+    const iduser = localStorage.getItem("iduser");
+
+    if(!profileImage ){
+        const storedImage = localStorage.getItem("profile_image");
+        profileImage = storedImage && storedImage !== "null" && storedImage !== "undefined"
+        ? `data:image/jpg;base64,${storedImage}`
+        : "/img/tomilloprofile.png";
+    }
 
     const toSearch=()=>{
         nav("/Search");
@@ -39,9 +43,9 @@ function NavBar(){
                                     <Link to="/Fic" className="nav-link m-0 p-0 ms-5 row justify-content-end">Crear tu historia</Link>
                                 </li>
                                 <li className="nav-item col-md-4 offset-md-4 p-0 m-0 me-2">
-                                <Link to="/Profile" className="nav-link nav-link-p m-0 p-0 align-self-center">
+                                <Link to={`/Profile/${encodeURIComponent(iduser)}`} className="nav-link nav-link-p m-0 p-0 align-self-center">
                                     <span className='profile-picture align-self-center me-2 p-1'>
-                                        <img src={profile_image} alt="" />
+                                        <img src={profileImage} alt="" />
                                     </span>
                                     Tu perfil</Link>
                                 </li>

@@ -20,6 +20,24 @@ function NewFic(){
         setChapters([...chapters, newChapter]);
     };
 
+    const uploadCover = () => {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*';
+        input.onchange = (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    const imgElement = document.querySelector('.cover img');
+                    imgElement.src = reader.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        };
+        input.click();
+    }
+    
     return(
         <div className='back-color'>
             <NavBar></NavBar>
@@ -33,7 +51,7 @@ function NewFic(){
                         </div>
                         <div className='row justify-content-center p-1 px-5'>
                             <div className='w-50'>
-                                <BTNMain content='Subir portada' type={2}></BTNMain>
+                                <BTNMain onClick={uploadCover} content='Subir portada' type={'2'}></BTNMain>
                             </div>
                         </div>
                     </div>
@@ -54,7 +72,7 @@ function NewFic(){
                         <div className='row justify-content-center align-items-center'>
                             <h1 className='content col-9 m-0 mt-0'>Contenido</h1>
                             <div className='col-3 w-25 p-0 m-0 pe-3'>
-                                <BTNMain content='Agregar capítulo' type={2} onClick={handleAddChapter}></BTNMain>
+                                <BTNMain content='Agregar capítulo' type={'2'} onClick={handleAddChapter}></BTNMain>
                             </div>
                         </div>
                         <div className="p-0 m-0 mb-3">
@@ -69,7 +87,7 @@ function NewFic(){
                 <div className='row justify-content-center new-fic p-3'>
                     <BrownLine type='1'></BrownLine>
                     <div className='px-5 w-25'>
-                        <BTNMain content='Publicar historia' type={1}></BTNMain>
+                        <BTNMain content='Publicar historia' type={'1'}></BTNMain>
                     </div>
                 </div>
             </div>

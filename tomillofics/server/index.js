@@ -106,12 +106,10 @@ app.post("/loginUser", (request, response)=>{
 }
 )
 
-app.post("/updateUser", (request, response)=>{
-    const username = request.body.username;
-    const password = request.body.password;
-
-    db.query('CALL sp_update_users("login", ?, ?, null, null, null, null)',
-        [username, password],
+app.get("/userInfo", (request, response)=>{
+    const iduser = request.query.iduser;
+    db.query('CALL sp_update_users("info", null, null, null, null, null, ?)',
+        [iduser],
         (error, data)=>{
             if(error){
                 console.log(error);
@@ -130,6 +128,7 @@ app.post("/updateUser", (request, response)=>{
                         message: "Success",
                         iduser: data[0][0].iduser,
                         username: data[0][0].username,
+                        email: data[0][0].email,
                         profile_image: data[0][0].profile_image,
                         mode_pref: data[0][0].mode_pref
                     })
@@ -137,6 +136,60 @@ app.post("/updateUser", (request, response)=>{
             }
         }
     );
+}
+)
+
+app.post("/updateUser", file.single('image'),
+(request, response)=>{
+    const username = request.body.username;
+    const email = request.body.email;
+    const password = request.body.password;
+    const iduser = request.body.iduser;
+    const img64 = request.file ? request.file.buffer.toString('base64') : null;
+    const mode_pref = request.body.mode_pref;
+
+    db.query('CALL sp_update_users("update", ?, null, ?, ?, ?, ?)',
+        [username, email, img64, mode_pref, iduser],
+        (error, data)=>{
+            if(error){
+                console.log(error);
+                if(error.code === 'ER_DUP_ENTRY'){
+                    if(error.sqlMessage.includes("username")){
+                        response.json({
+                            message: "ER_DUP_USERNAME"
+                        })
+                    }
+                    else if(error.sqlMessage.includes("email")){
+                        response.json({
+                            message: "ER_DUP_EMAIL"
+                        })
+                    }
+                } else {
+                    response.json({
+                        message: error.code,
+                    })
+                }
+            } else {
+                db.query('CALL sp_update_users("update", null, ?, null, null, null, ?)',
+                    [password, iduser],
+                    (error, data)=>{
+                        if(error){
+                            console.log(error);
+                            response.json({
+                                message: error.code,
+                            })
+                        } else {
+                            response.json({
+                                message: "Success"
+                            })
+                        }
+                    }
+                );
+            }
+        }
+    );
+    
+
 }
 )
 

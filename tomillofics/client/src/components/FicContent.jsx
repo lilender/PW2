@@ -6,7 +6,12 @@ import ContentChapter from './ContentChapter';
 import BTNMain from './BTNMain';
 import KudosComents from './KudosComents';
 
+import { useParams } from "react-router-dom";
+
 function FicContent(props){
+    const { id: encodedId } = useParams();
+    const id = decodeURIComponent(encodedId);
+
     return(
         <div className='back-color'>
             <NavBar></NavBar>

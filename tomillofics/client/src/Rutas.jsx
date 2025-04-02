@@ -8,6 +8,7 @@ import SignUp from './components/SignUp';
 import Search from './components/Search';
 import Profile from './components/UserOnline';
 import FicContent from './components/FicContent';
+import NewFic from './components/NewFic';
 import Chapter from './components/Chapter';
 //testing
 //import App from './App';
@@ -25,6 +26,7 @@ function Rutas () {
                 <Route path="/LogIn" element={<LogIn/>}></Route>
                 <Route path="/Search" element={<Search/>}></Route>
                 <Route path="/Profile/:id" element={<Profile/>}></Route>
+                <Route path="/Fic" element={<NewFic/>}></Route>
                 <Route path="/Fic/:id" element={<FicContent/>}></Route>
                 <Route path="/Chapter" element={<Chapter/>}></Route>
 
