@@ -1,25 +1,37 @@
 import { useState } from 'react';
+import { useEffect } from 'react';
 import Tag from './Tag';
-import 'bootstrap/dist/css/bootstrap.css';
+import axios from 'axios';
+import { useFic } from "./FicContext";
 
 function CategorySelector() {
     const [query, setQuery] = useState('');
-    const [selectedCategories, setSelectedCategories] = useState([]);
-    const existingCategories = ['Fantasía', 'Romance', 'Acción', 'Misterio', 'Drama'];
+    const [categories, setCategories] = useState([]);
+    const { fic, setFic } = useFic();
 
-    const filteredCategories = existingCategories.filter(category => 
-        category.toLowerCase().includes(query.toLowerCase())
-    );
+    useEffect(() => {
+        axios.get(`http://localhost:3001/userTags?text=${query}&ntags=${5}`)
+            .then(resp => {
+                if (resp.data.message === "Success") {
+                    setCategories(resp.data.tags);
+                } else {
+                    alert("Error al cargar las categorías");
+                }
+            })
+            .catch(error => {
+                console.error("Error fetching categories:", error);
+            });
+    }, [query]);
 
     const handleTagClick = (category) => {
-        if (!selectedCategories.includes(category)) {
-            setSelectedCategories(prevCategories => [...prevCategories, category]);
+        if (!fic.tags.includes(category)) {
+            setFic({...fic, tags: [...fic.tags, category]});
         }
         setQuery('');
     };
 
     const handleRemoveTag = (category) => {
-        setSelectedCategories(prevCategories => prevCategories.filter(c => c !== category));
+        setFic({...fic, tags: fic.tags.filter(c => c.name !== category.name)});
     };
 
     return (
@@ -36,15 +48,15 @@ function CategorySelector() {
 
             {/* Mostrar categorías sugeridas */}
             <div className='d-flex p-0 m-0 mt-1 justify-content-start'>
-                {filteredCategories.length > 0 ? (
-                    filteredCategories.map((category, index) => (
-                        <div key={index} onClick={() => handleTagClick(category)} style={{ cursor: 'pointer' }}>
-                            <Tag type='4' content={category} />
+                {categories.length > 0 ? (
+                    categories.map((cat) => (
+                        <div key={cat.idtag} onClick={() => handleTagClick(cat)} style={{ cursor: 'pointer' }}>
+                            <Tag type='4' content={cat.name} />
                         </div>
                     ))
                 ) : (
                     query && 
-                    <div onClick={() => handleTagClick(query)} style={{ cursor: 'pointer' }}>
+                    <div onClick={() => handleTagClick({idtag: 0, name: query})} style={{ cursor: 'pointer' }}>
                         <Tag type='4' content={query} />
                     </div>
                 )}
@@ -52,9 +64,9 @@ function CategorySelector() {
 
             {/* Mostrar categorías seleccionadas con delete btn xd */}
             <div className='d-flex p-0 m-0 mt-1 justify-content-start'>
-                {selectedCategories.map((category, index) => (
-                    <div key={index} onClick={() => handleRemoveTag(category)} style={{ cursor: 'pointer' }}>
-                        <Tag type='5' content={`${category} ✖`} />
+                {fic.tags.map((cat) => (
+                    <div key={cat.idtag} onClick={() => handleRemoveTag(cat)} style={{ cursor: 'pointer' }}>
+                        <Tag type='5' content={`${cat.name} ✖`} />
                     </div>
                 ))}
             </div>

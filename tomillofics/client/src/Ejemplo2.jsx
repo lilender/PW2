@@ -3,6 +3,11 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 //import axios from 'axios';
 
+//use search params
+///perfil?id=13&nombre=xxx
+//use params
+///perfil/id
+
 function Modificar({ver, id, userInfo, hideFun, modFun}){
     const [name, setName] = useState(userInfo.username);
     const [email, setEmail] = useState(userInfo.email);

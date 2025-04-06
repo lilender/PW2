@@ -9,9 +9,9 @@ function ChapterDrop(props){
             title="Seleccionar capítulo "
             menuVariant="dark"
         >
-            <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-            <NavDropdown.Item href="#action/3.2"> Another action </NavDropdown.Item>
-            <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
+            {props.chapters.map((chapter) => (
+                <NavDropdown.Item onClick={ () => {props.chapterChange(parseInt(chapter.id))} }>{ ` ${chapter.id}. ` + chapter.title}</NavDropdown.Item>
+            ))}
         </NavDropdown>
     );
 }

@@ -38,7 +38,18 @@ function UserOnline(){
                 Swal.fire('Error', 'No se pudo obtener la información del usuario.', 'error');
             }
         }
-    );  
+        );
+
+        axios.get(`http://localhost:3001/userWrittenFics?iduser=${id}&nfics=5&npage=0`)
+        .then(resp => {
+            if (resp.data.message === "Success") {
+                console.log(resp.data.fics);
+            } else {
+                Swal.fire('Error', 'No se pudo obtener la información de los fics.', 'error');
+            }
+        }
+        );
+    
     }, [id]);
 
     useEffect(() => {

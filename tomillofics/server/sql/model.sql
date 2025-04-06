@@ -117,3 +117,17 @@ CREATE TABLE IF NOT EXISTS `tomillofics`.`FicTag` (
     FOREIGN KEY (`idfic`)
     REFERENCES `tomillofics`.`Fic` (`idfic`)
 );
+
+INSERT INTO Tag (name, erasable) VALUES ("Tóxico", 0);
+INSERT INTO Tag (name, erasable) VALUES ("Insulto", 0);
+INSERT INTO Tag (name, erasable) VALUES ("Blasfemia", 0);
+INSERT INTO Tag (name, erasable) VALUES ("Despectivo", 0);
+INSERT INTO Tag (name, erasable) VALUES ("Sexual", 0);
+INSERT INTO Tag (name, erasable) VALUES ("Muerte, daño y tragedia", 0);
+INSERT INTO Tag (name, erasable) VALUES ("Violento", 0);
+INSERT INTO Tag (name, erasable) VALUES ("Armas", 0);
+INSERT INTO Tag (name, erasable) VALUES ("Salud", 0);
+INSERT INTO Tag (name, erasable) VALUES ("Religión y creencias", 0);
+INSERT INTO Tag (name, erasable) VALUES ("Drogas ilícitas", 0);
+INSERT INTO Tag (name, erasable) VALUES ("Guerra y conflicto", 0);
+INSERT INTO Tag (name, erasable) VALUES ("Política", 0);

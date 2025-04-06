@@ -42,6 +42,14 @@ function UserBanner({profileImage,userData, changed,type}){
                 `,
                 showCancelButton: true,
                 confirmButtonText: 'Guardar',
+                didOpen: () => {
+                    const inputs = document.querySelectorAll('input');
+                    inputs.forEach(input => {
+                        input.addEventListener('input', () => {
+                            Swal.resetValidationMessage();
+                        });
+                    });
+                },
                 preConfirm: () => {
                     const name = document.getElementById('inputName').value;
                     const email = document.getElementById('inputEmail').value;
@@ -49,35 +57,54 @@ function UserBanner({profileImage,userData, changed,type}){
                     const password2 = document.getElementById('inputPassword2').value;
                     const file = document.getElementById('inputFile').files[0];
                     const mode = document.querySelector('input[name="mode"]:checked')?.value;
-        
+            
                     if (!name || name.length < 4) {
                         Swal.showValidationMessage('El nombre de usuario es obligatorio y debe tener al menos 4 caracteres.');
-                        return;
+                        return false;
                     }
                     if (email && (email.length < 4 || !email.includes('@'))) {
-                        Swal.fire("Correo inválido");
-                        return;
+                        Swal.showValidationMessage('Correo inválido');
+                        return false;
                     }
                     if (password && password.length < 4) {
-                        Swal.fire("Contraseña muy corta");
-                        return;
+                        Swal.showValidationMessage('Contraseña muy corta');
+                        return false;
                     }
                     if (password && password !== password2) {
-                        Swal.fire("Las contraseñas no coinciden");
-                        return;
+                        Swal.showValidationMessage('Las contraseñas no coinciden');
+                        return false;
                     }
                     if (file) {
                         const validImageTypes = ['image/jpeg', 'image/png', 'image/gif'];
                         if (!validImageTypes.includes(file.type)) {
-                            Swal.fire("Formato de imagen no válido");
-                            return;
+                            Swal.showValidationMessage('Formato de imagen no válido');
+                            return false;
                         }
                         if (file.size > 16777215) { // MEDIUMTEXT = 16MB
-                            Swal.fire("La imagen es demasiado grande (máx. 16MB)");
-                            return;
+                            Swal.showValidationMessage('La imagen es demasiado grande (máx. 16MB)');
+                            return false;
                         }
+            
+                        return new Promise((resolve) => {
+                            const reader = new FileReader();
+                            reader.readAsDataURL(file);
+            
+                            reader.onload = function (e) {
+                                const img = new Image();
+                                img.src = e.target.result;
+            
+                                img.onload = function () {
+                                    if (img.width !== img.height) {
+                                        Swal.showValidationMessage('La imagen debe ser cuadrada (mismo ancho y alto).');
+                                        resolve(false);
+                                    } else {
+                                        resolve({ name, email, password, file, mode });
+                                    }
+                                };
+                            };
+                        });
                     }
-        
+            
                     return { name, email, password, file, mode };
                 }
             }).then((result) => {

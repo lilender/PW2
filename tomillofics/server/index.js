@@ -5,9 +5,12 @@ const app = express();
 const cors = require('cors');
 const mysql = require('mysql');
 const multer = require('multer');
+const path = require('path');
 
 app.use(cors());
 app.use(express.json());
+
+app.use('/public', express.static(path.join(__dirname, 'public')));
 
 app.listen(3001, ()=>{
     console.log("Server listening on port 3001");
@@ -23,6 +26,13 @@ const db = mysql.createConnection(
     }
 )
 
+const fs = require('fs');
+
+const uploadPath = path.join(__dirname, 'public', 'uploads');
+if (!fs.existsSync(uploadPath)) {
+    fs.mkdirSync(uploadPath, { recursive: true });
+}
+
 const temp = multer.memoryStorage();
 const file = multer({
     storage: temp,
@@ -35,6 +45,30 @@ const file = multer({
         }
     }
 })
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        const uploadPath = path.join(__dirname, 'public', 'uploads');
+        cb(null, uploadPath);
+    },
+    filename: (req, file, cb) => {
+        const uniqueName = Date.now() + '-' + file.originalname;
+        cb(null, uniqueName);
+    }
+});
+const upload = multer({
+    storage: storage,
+    fileFilter: (req, file, callback) => {
+        const mimetypes = ["image/png", "image/jpeg", "image/jpg"];
+        if (mimetypes.includes(file.mimetype)) {
+            callback(null, true);
+        } else {
+            return callback(new Error("Invalid file type"));
+        }
+    }
+});
+
+//user
 
 app.post("/createUser", file.none(),
 (request, response)=>{
@@ -71,7 +105,6 @@ app.post("/createUser", file.none(),
     );
 }
 )
-
 app.post("/loginUser", (request, response)=>{
     const username = request.body.username;
     const password = request.body.password;
@@ -105,7 +138,6 @@ app.post("/loginUser", (request, response)=>{
     );
 }
 )
-
 app.get("/userInfo", (request, response)=>{
     const iduser = request.query.iduser;
     db.query('CALL sp_update_users("info", null, null, null, null, null, ?)',
@@ -138,7 +170,6 @@ app.get("/userInfo", (request, response)=>{
     );
 }
 )
-
 app.post("/updateUser", file.single('image'),
 (request, response)=>{
     const username = request.body.username;
@@ -188,14 +219,201 @@ app.post("/updateUser", file.single('image'),
             }
         }
     );
-    
+}
+)
 
+//tags
+app.get("/staticTags", (request, response)=>{
+    const text = request.query.text;
+    const ntags = request.query.ntags;
+    db.query('CALL sp_update_tags("static", null, ?, null, ?)',
+        [text, ntags],
+        (error, data)=>{
+            if(error){
+                console.log(error);
+                response.json({
+                    message: error.code,
+                })
+            } else {
+                console.log(data[0]);
+                if(data[0].error){
+                    response.json({
+                        message: data[0].error,
+                    })
+                }
+                else {
+                    response.json({
+                        message: "Success",
+                        tags: data[0]
+                    })
+                }
+            }
+        }
+    );
+}
+)
+app.get("/userTags", (request, response)=>{
+    const text = request.query.text;
+    const ntags = request.query.ntags;
+    db.query('CALL sp_update_tags("user", null, ?, null, ?)',
+        [text, ntags],
+        (error, data)=>{
+            if(error){
+                console.log(error);
+                response.json({
+                    message: error.code,
+                })
+            } else {
+                console.log(data[0]);
+                if(data[0].error){
+                    response.json({
+                        message: data[0].error,
+                    })
+                }
+                else {
+                    response.json({
+                        message: "Success",
+                        tags: data[0]
+                    })
+                }
+            }
+        }
+    );
+}
+)
+app.post("/createTag", (request, response)=>{
+    const name = request.body.name;
+    db.query('CALL sp_update_tags("create", null, ?, null, null)',
+        [name],
+        (error, data)=>{
+            if(error){
+                console.log(error);
+                response.json({
+                    message: error.code,
+                })
+            } else {
+                console.log(data[0][0]);
+                response.json({
+                    message: "Success",
+                    idtag: data[0][0].idtag,
+                })
+            }
+        }
+    );
+}
+)
+app.post("/tagFic", (request, response)=>{
+    const idtag = request.body.idtag;
+    const idfic = request.body.idfic;
+    db.query('CALL sp_update_tags("tagfic", ?, null, ?, null)',
+        [idtag, idfic],
+        (error, data)=>{
+            if(error){
+                console.log(error);
+                response.json({
+                    message: error.code,
+                })
+            } else {
+                response.json({
+                    message: "Success"
+                })
+            }
+        }
+    );
+}
+)
+
+//fics
+app.get("/userWrittenFics", (request, response)=>{
+    const iduser = request.query.iduser;
+    const nfics = request.query.nfics;
+    const npage = request.query.npage;
+
+    db.query('CALL sp_get_fics("user", ?, ?, ?)',
+        [iduser, nfics, npage],
+        (error, data)=>{
+            if(error){
+                console.log(error);
+                response.json({
+                    message: error.code,
+                })
+            } else {
+                console.log(data[0][0]);
+                if(data[0][0].error){
+                    response.json({
+                        message: data[0][0].error,
+                    })
+                }
+                else {
+                    response.json({
+                        message: "Success",
+                        fics: data[0][0]
+                    })
+                }
+            }
+        }
+    );
+}
+)
+
+//fic
+app.post("/createFic", upload.single('cover'), (req, res) => {
+    const title = req.body.title;
+    const description = req.body.description;
+    const iduser = req.body.iduser;
+    const completed = req.body.completed;
+
+    console.log("Request file:", req.file);
+    
+    const img_route = req.file ? `/uploads/${req.file.filename}` : null;
+
+    db.query('CALL sp_update_fics("create", ?, ?, ?, ?, ?, null)',
+        [iduser, title, description, img_route, completed],
+        (error, data) => {
+            if (error) {
+                console.log(error);
+                res.json({ 
+                    message: error.code 
+                });
+            } else {
+                console.log(data[0][0]);
+                res.json({ 
+                    message: "Success",
+                    idfic: data[0][0].idfic
+                });
+            }
+        }
+    );
+}
+)
+
+//chapters
+app.post("/createChapter", (request, response)=>{
+    const title = request.body.title;
+    const text = request.body.text;
+    const idfic = request.body.idfic;
+    const idchapter = request.body.idchapter;
+
+    db.query('CALL sp_update_chapters("create", ?, ?, ?, ?)',
+        [title, text, idfic, idchapter],
+        (error, data)=>{
+            if(error){
+                console.log(error);
+                response.json({
+                    message: error.code,
+                })
+            } else {
+                response.json({
+                    message: "Success"
+                })
+            }
+        }
+    );
 }
 )
 
 
-
-
+//tests
 
 app.post("/testCreateUser", file.single('image'), /*el nombre de como lo estoy mandando desde el form */ 
 (request, response)=>{

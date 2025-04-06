@@ -4,12 +4,20 @@ import NavBar from './NavBar';
 import BrownLine from './BrownLine';
 import BTNMain from './BTNMain';
 import ChapterDrop from './ChapterDrop';
+import { useFic } from "./FicContext";
+import { useParams } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 
 function WriteChapter(){
+    const nav = useNavigate();
+    const { fic, updateChapter } = useFic();
+    const { id: encodedId } = useParams();
+    const id = decodeURIComponent(encodedId);
+
     const [fontSize, setFontSize] = useState(16);
 
     const [isDarkMode, setIsDarkMode] = useState(() => {
-        return localStorage.getItem('darkMode') === 'true';
+        return localStorage.getItem('mode_pref') === '0';
     });
 
     useEffect(() => {
@@ -30,85 +38,48 @@ function WriteChapter(){
     };
 
     //Cosas del textarea :v
-    const [content, setContent] = useState('');
     const textareaRef = useRef(null);
-
-    const adjustTextareaHeight = () => {
-        const textarea = textareaRef.current;
-        if (textarea) {
-            textarea.style.height = 'auto';
-            textarea.style.height = textarea.scrollHeight + 'px';
-        }
-    };
-
-    useEffect(() => {
-        adjustTextareaHeight();
-    }, [content]);
 
     //autoguardado
     const [saving, setSaving] = useState(false);
     let saveTimeout = useRef(null);
 
-    useEffect(() => {
-        const savedContent = localStorage.getItem('chapterContent');
-        if (savedContent) {
-            setContent(savedContent);
-        }
-    }, []);
-
-    useEffect(() => {
-        if (content) {
-            setSaving(true);
-
-            clearTimeout(saveTimeout.current);
-            saveTimeout.current = setTimeout(() => {
-                localStorage.setItem('chapterContent', content);
-                setSaving(false);
-            }, 1500);
-        }
-    }, [content]);
-
     const handleInputChange = (event) => {
-        setContent(event.target.value);
+        const textarea = textareaRef.current;
+        textarea.style.height = 'auto';
+        textarea.style.height = textarea.scrollHeight + 'px';
+
+        updateChapter(id, { ...fic.chapters[id - 1], text: event.target.value });
+        setSaving(true);
+
+        clearTimeout(saveTimeout.current);
+        saveTimeout.current = setTimeout(() => {
+            //localStorage.setItem('chapterContent', content);
+            setSaving(false);
+        }, 1500);
     };
 
-    const handleKeyDown = (event) => {
-        if (event.key === 'Enter') {
-            event.preventDefault();
-            const cursorPos = textareaRef.current.selectionStart;
-            const beforeText = content.slice(0, cursorPos);
-            const afterText = content.slice(cursorPos);
-
-            const lastChar = beforeText.slice(1);
-            const newText = lastChar === '\n' ? '\n\n' : '\n\n';
-
-            setContent(beforeText + newText + afterText);
-
-            // Mueve el cursor a la nueva posición
-            setTimeout(() => {
-                textareaRef.current.selectionStart = cursorPos + newText.length;
-                textareaRef.current.selectionEnd = cursorPos + newText.length;
-            }, 0);
-        }
-    };
+    const handleChapterChange = (chapter) => {
+        nav("/Chapter/" + chapter);
+    }
 
     return(
         <div className={`back-color ${isDarkMode ? 'dark' : 'light'}`}>
             <NavBar></NavBar>
             <div className='data-container px-5'>
                 <div className={`back-color-chapter ${isDarkMode ? 'dark' : 'light'} row justify-content-center px-5`}>
-                    <h1 className='title row justify-content-center align-items-center mt-3 mb-0'>Hasta el último beso</h1>
-                    <h1 className='author row justify-content-center align-items-center mt-1'>By Lilender</h1>
-                    <h1 className='chapter-title row justify-content-center align-items-center mt-2 mb-3'>Capítulo 1. Una vez en invierno</h1>
+                    <h1 className='title row justify-content-center align-items-center mt-3 mb-0'>Hasta el último beso (posdata, puedes poner un boton pa regresar a la pag del fic?)</h1>
+                    <h1 className='author row justify-content-center align-items-center mt-1'>By {localStorage.getItem("username")}</h1>
+                    <input type="text" value={fic.chapters[id - 1].title} onChange={(e) => updateChapter(id, { ...fic.chapters[id - 1], title: e.target.value }) }></input>
+                    <h1 className='chapter-title row justify-content-center align-items-center mt-2 mb-3'>hola itzel puedes cambiar el coso este de arriba? jiji (y quitar este)</h1>
                     <BrownLine type='1'></BrownLine>
                     <div className={`chapter-text ${isDarkMode ? 'dark' : 'light'} mt-3`} style={{ fontSize: `${fontSize}px` }}>
                         <textarea
                             ref={textareaRef}
                             name="chapter"
                             id="chapter-editor"
-                            value={content}
+                            value={fic.chapters[id - 1].text}
                             onChange={handleInputChange}
-                            onKeyDown={handleKeyDown}
                             placeholder="Escribe tu capítulo aquí..."
                         ></textarea>
                     </div>
@@ -120,9 +91,13 @@ function WriteChapter(){
                     </div>
                     <div className='row justify-content-center align-items-center p-1 px-2 mt-3 mb-0'>
                         <div className='d-flex w-25 justify-content-center align-items-center m-0'>
-                            <BTNMain type='4' content="/img/a-left.png"></BTNMain>
-                            <ChapterDrop theme={isDarkMode ? 'dark' : 'light'}></ChapterDrop>
-                            <BTNMain type='4' content="/img/a-right.png"></BTNMain>
+                            {id > 1 && (
+                                <BTNMain onClick={()=>handleChapterChange(parseInt(id) - 1)} type='4' content="/img/a-left.png"></BTNMain>
+                            )}
+                            <ChapterDrop chapterChange={handleChapterChange} chapters={fic.chapters} theme={isDarkMode ? 'dark' : 'light'}></ChapterDrop>
+                            {id < fic.chapters.length && (
+                                <BTNMain onClick={()=>handleChapterChange(parseInt(id) + 1)} type='4' content="/img/a-right.png"></BTNMain>
+                            )}
                         </div>
                     </div>
                     <div className='row justify-content-center w-25 m-0'>
