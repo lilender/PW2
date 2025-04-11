@@ -17,7 +17,8 @@ function NavBar({profileImage}){
     }
 
     const toSearch=()=>{
-        nav("/Search");
+        const searchValue = document.querySelector("input[type='search']").value;
+        nav(`/Search?text=${searchValue}`);
     }
 
     return (

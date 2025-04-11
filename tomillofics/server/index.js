@@ -70,7 +70,6 @@ const upload = multer({
 });
 
 //user
-
 app.post("/createUser", file.none(),
 (request, response)=>{
     const username = request.body.username;
@@ -359,7 +358,7 @@ app.post("/tagFic", (request, response)=>{
 }
 )
 
-//fics
+//get fics
 app.get("/userWrittenFics", (request, response)=>{
     const iduser = request.query.iduser;
     const nfics = request.query.nfics;
@@ -423,6 +422,8 @@ app.get("/filteredFics", (request, response)=>{
     );
 }
 )
+
+//fic info
 app.get("/ficBasicInfo", (request, response)=>{
     const idfic = request.query.idfic;
     db.query('CALL sp_get_fics("basic", null, null, null, ?, null, null)',
@@ -503,6 +504,89 @@ app.get("/ficInfoWTag", (request, response)=>{
                         tags: tagsWithType
                     })
                 }
+            }
+        }
+    );
+}
+)
+app.get("/ficCompleteInfo", (request, response)=>{
+    const idfic = request.query.idfic;
+    const iduser = request.query.iduser;
+    db.query('CALL sp_get_fics("complete", ?, null, null, ?, null, null)',
+        [iduser, idfic],
+        (error, data)=>{
+            if(error){
+                console.log(error);
+                response.json({
+                    message: error.code,
+                })
+            } else {
+                console.log(data[0][0]);
+                if(data[0][0].error){
+                    response.json({
+                        message: data[0][0].error,
+                    })
+                }
+                else {
+                    const tags = data[0][0].tags.split(',');
+                    const tagsWithType = tags.map(tag => {
+                        /*if(tag.includes('romance')){
+                            return {type: 'romance', content: tag};
+                        } else if(tag.includes('action')){
+                            return {type: 'action', content: tag};
+                        } else if(tag.includes('drama')){
+                            return {type: 'drama', content: tag};
+                        } else if(tag.includes('comedy')){
+                            return {type: 'comedy', content: tag};
+                        } else {
+                            return {type: 'other', content: tag};
+                        }
+                            { type: '1', content: 'Completada' },
+                            { type: '2', content: 'Contenido sexual' },
+                            { type: '3', content: 'Amor' },
+                            { type: '3', content: 'Time travel' },
+                            { type: '3', content: 'Enemies to lovers' },
+                            { type: '3', content: 'Drama' },
+                            { type: '4', content: '+'}
+                            */
+                        return {type: '3', content: tag};
+                    }
+                    );
+                    response.json({
+                        message: "Success",
+                        title: data[0][0].title,
+                        iduser: data[0][0].iduser,
+                        username: data[0][0].username,
+                        description: data[0][0].description,
+                        img_route: data[0][0].img_route,
+                        tags: tagsWithType,
+                        nfavs: data[0][0].nfavs,
+                        ncomments: data[0][0].ncomments,
+                        nviews: data[0][0].nviews,
+                        saved: data[0][0].saved
+                    })
+                }
+            }
+        }
+    );
+}
+)
+app.post("/saveFic", (request, response)=>{
+    console.log(request.body);
+    const iduser = request.body.iduser;
+    const idfic = request.body.idfic;
+    db.query('CALL sp_get_fics("save", ?, null, null, ?, null, null)',
+        [iduser, idfic],
+        (error, data)=>{
+            if(error){
+                //console.log(error);
+                response.json({
+                    message: error.code,
+                })
+            } else {
+                response.json({
+                    message: "Success"
+                })
             }
         }
     );

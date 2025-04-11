@@ -1,25 +1,7 @@
 import FanficFront from './FanficFront';
 import Pags from './Pagination';
-import { useEffect } from 'react';
-import axios from 'axios';
-import { useState } from 'react';
-import Swal from 'sweetalert2';
 
-function SearchResults(){
-    const [searchFics, setSearchFics] = useState([]);
-
-    useEffect(() => {
-        axios.get(`http://localhost:3001/filteredFics?text=${""}&nfics=5&npage=0&idtags=${""}`)
-        .then(resp => {
-            if (resp.data.message === "Success") {
-                setSearchFics(resp.data.fics);
-            } else {
-                Swal.fire('Error', 'No se pudo obtener la información de los fics.', 'error');
-            }
-        }
-        );
-    }, []);
-    
+function SearchResults({searchFics}){
     return(
         <div className='col-8'>
             {
