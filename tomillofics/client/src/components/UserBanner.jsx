@@ -164,9 +164,13 @@ function UserBanner({profileImage,userData, changed,type}){
                             </div>
                             <div className='col-7 align-self-center m-0 ps-4'>
                                 <h1 className='username m-0'>{userData.username}</h1>
-                                <h2 className='number-fics mb-5'>2 historias publicadas</h2>
-                                <p className='text mb-1'>25 historias guardadas como favoritos</p>
-                                <p className='text m-0'>Escribiendo historias desde 1999</p>
+                                <h2 className='number-fics mb-5'>{userData.written_fics} historias publicadas</h2>
+                                <p className='text mb-1'>{userData.saved_fics} historias guardadas como favoritos</p>
+                                <p className='text m-0'>Escribiendo historias desde {new Date(userData.created).toLocaleDateString('en-GB', {
+                                    day: '2-digit',
+                                    month: 'long',
+                                    year: 'numeric'
+                                    }) }</p>
                             </div>
                             <div className='col-2 align-self-end m-0 p-0'>
                                 <BTNMain onClick={handleForm} content='Editar perfil' type={'1'}></BTNMain>
@@ -190,8 +194,13 @@ function UserBanner({profileImage,userData, changed,type}){
                             </div>
                             <div className='col-9 align-self-center m-0 ps-4'>
                                 <h1 className='username m-0'>{userData.username}</h1>
-                                <h2 className='number-fics mb-5'>2 historias publicadas</h2>
-                                <p className='text m-0'>Escribiendo historias desde 1999</p>
+                                <h2 className='number-fics mb-5'>{userData.written_fics} historias publicadas</h2>
+                                <p className='text m-0'>Escribiendo historias desde {new Date(userData.created).toLocaleDateString('en-GB', {
+                                    day: '2-digit',
+                                    month: 'long',
+                                    year: 'numeric'
+                                    }) }
+                                </p>
                             </div>
                         </div>
                     </div>

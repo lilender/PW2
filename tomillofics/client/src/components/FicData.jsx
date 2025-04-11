@@ -1,4 +1,3 @@
-import 'bootstrap/dist/css/bootstrap.css';
 import Tag from './Tag';
 
 function FicData(props){

@@ -27,6 +27,7 @@ const db = mysql.createConnection(
 )
 
 const fs = require('fs');
+const { title } = require('process');
 
 const uploadPath = path.join(__dirname, 'public', 'uploads');
 if (!fs.existsSync(uploadPath)) {
@@ -162,7 +163,42 @@ app.get("/userInfo", (request, response)=>{
                         username: data[0][0].username,
                         email: data[0][0].email,
                         profile_image: data[0][0].profile_image,
-                        mode_pref: data[0][0].mode_pref
+                        written_fics: data[0][0].written_fics,
+                        saved_fics: data[0][0].saved_fics,
+                        mode_pref: data[0][0].mode_pref,
+                        created: data[0][0].created
+                    })
+                }
+            }
+        }
+    );
+}
+)
+app.get("/userPublicInfo", (request, response)=>{
+    const iduser = request.query.iduser;
+    db.query('CALL sp_update_users("public", null, null, null, null, null, ?)',
+        [iduser],
+        (error, data)=>{
+            if(error){
+                console.log(error);
+                response.json({
+                    message: error.code,
+                })
+            } else {
+                console.log(data[0][0]);
+                if(data[0][0].error){
+                    response.json({
+                        message: data[0][0].error,
+                    })
+                }
+                else {
+                    response.json({
+                        message: "Success",
+                        iduser: data[0][0].iduser,
+                        username: data[0][0].username,
+                        profile_image: data[0][0].profile_image,
+                        written_fics: data[0][0].written_fics,
+                        created: data[0][0].created
                     })
                 }
             }
@@ -329,8 +365,68 @@ app.get("/userWrittenFics", (request, response)=>{
     const nfics = request.query.nfics;
     const npage = request.query.npage;
 
-    db.query('CALL sp_get_fics("user", ?, ?, ?)',
+    db.query('CALL sp_get_fics("user", ?, ?, ?, null, null, null)',
         [iduser, nfics, npage],
+        (error, data)=>{
+            if(error){
+                console.log(error);
+                response.json({
+                    message: error.code,
+                })
+            } else {
+                console.log(data[0]);
+                if(data[0].error){
+                    response.json({
+                        message: data[0].error,
+                    })
+                }
+                else {
+                    response.json({
+                        message: "Success",
+                        fics: data[0]
+                    })
+                }
+            }
+        }
+    );
+}
+)
+app.get("/filteredFics", (request, response)=>{
+    const nfics = request.query.nfics;
+    const npage = request.query.npage;
+    const text = request.query.text;
+    const idtags = request.query.idtags;
+
+    db.query('CALL sp_get_fics("filtered", null, ?, ?, null, ?, ?)',
+        [nfics, npage, text, idtags],
+        (error, data)=>{
+            if(error){
+                console.log(error);
+                response.json({
+                    message: error.code,
+                })
+            } else {
+                console.log(data[0]);
+                if(data[0].error){
+                    response.json({
+                        message: data[0].error,
+                    })
+                }
+                else {
+                    response.json({
+                        message: "Success",
+                        fics: data[0]
+                    })
+                }
+            }
+        }
+    );
+}
+)
+app.get("/ficBasicInfo", (request, response)=>{
+    const idfic = request.query.idfic;
+    db.query('CALL sp_get_fics("basic", null, null, null, ?, null, null)',
+        [idfic],
         (error, data)=>{
             if(error){
                 console.log(error);
@@ -347,7 +443,8 @@ app.get("/userWrittenFics", (request, response)=>{
                 else {
                     response.json({
                         message: "Success",
-                        fics: data[0][0]
+                        title: data[0][0].title,
+                        img_route: data[0][0].img_route,
                     })
                 }
             }
@@ -355,7 +452,62 @@ app.get("/userWrittenFics", (request, response)=>{
     );
 }
 )
-
+app.get("/ficInfoWTag", (request, response)=>{
+    const idfic = request.query.idfic;
+    db.query('CALL sp_get_fics("tagged", null, null, null, ?, null, null)',
+        [idfic],
+        (error, data)=>{
+            if(error){
+                console.log(error);
+                response.json({
+                    message: error.code,
+                })
+            } else {
+                console.log(data[0][0]);
+                if(data[0][0].error){
+                    response.json({
+                        message: data[0][0].error,
+                    })
+                }
+                else {
+                    const tags = data[0][0].tags.split(',');
+                    const tagsWithType = tags.map(tag => {
+                        /*if(tag.includes('romance')){
+                            return {type: 'romance', content: tag};
+                        } else if(tag.includes('action')){
+                            return {type: 'action', content: tag};
+                        } else if(tag.includes('drama')){
+                            return {type: 'drama', content: tag};
+                        } else if(tag.includes('comedy')){
+                            return {type: 'comedy', content: tag};
+                        } else {
+                            return {type: 'other', content: tag};
+                        }
+                            { type: '1', content: 'Completada' },
+                            { type: '2', content: 'Contenido sexual' },
+                            { type: '3', content: 'Amor' },
+                            { type: '3', content: 'Time travel' },
+                            { type: '3', content: 'Enemies to lovers' },
+                            { type: '3', content: 'Drama' },
+                            { type: '4', content: '+'}
+                            */
+                        return {type: '3', content: tag};
+                    }
+                    );
+                    response.json({
+                        message: "Success",
+                        title: data[0][0].title,
+                        username: data[0][0].username,
+                        description: data[0][0].description,
+                        img_route: data[0][0].img_route,
+                        tags: tagsWithType
+                    })
+                }
+            }
+        }
+    );
+}
+)
 //fic
 app.post("/createFic", upload.single('cover'), (req, res) => {
     const title = req.body.title;

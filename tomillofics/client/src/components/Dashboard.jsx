@@ -12,14 +12,8 @@ function Dashboard(){
             <NavBar></NavBar>
             <div className='data-container'>
                 <Carrusel></Carrusel>
-                <CoversRow header='Mis historias'
-                covers={[
-                    { src: '/img/Mirrors (5).png', content: 'Néctar de la noche'},
-                    { src: '/img/Mirrors (6).png', content: 'El crepúsculo de la...'},
-                    { src: '/img/Mirrors (7).png', content: 'La tierra del más allá'},
-                    { src: '/img/Mirrors (8).png', content: 'Clouds'},
-                    { src: '/img/Mirrors (9).png', content: 'Dreams'}
-                ]}></CoversRow>
+                <CoversRow header='Últimas lecturas'
+                fics={[]}></CoversRow>
                 <h1 className='title m-0 mt-5 p-0'>Tu bliblioteca</h1>
             </div>
             <div className='brown-banner row justify-content-center w-100 m-0 p-0 mt-4 px-5'>

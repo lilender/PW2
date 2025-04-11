@@ -16,7 +16,18 @@ CREATE PROCEDURE sp_update_users (
 BEGIN
     DECLARE pass CHAR(64);
     IF in_option = 'info' THEN
-        SELECT iduser, username, email, profile_image, mode_pref FROM User WHERE iduser = in_iduser;
+        SELECT User.iduser, username, email, profile_image, COUNT(Fic.idfic) AS written_fics, COUNT(Favorites.idfic) AS saved_fics, mode_pref, User.created 
+        FROM User 
+        LEFT JOIN Fic ON User.iduser = Fic.iduser
+        LEFT JOIN Favorites ON User.iduser = Favorites.iduser
+        WHERE User.iduser = in_iduser;
+    END IF;
+    IF in_option = 'public' THEN
+        SELECT User.iduser, username, profile_image, COUNT(Fic.idfic) AS written_fics, User.created 
+        FROM User
+        LEFT JOIN Fic ON User.iduser = Fic.iduser
+        LEFT JOIN Favorites ON User.iduser = Favorites.iduser
+        WHERE User.iduser = in_iduser;
     END IF;
     IF in_option = 'login' THEN
         SET pass = (SELECT password FROM User WHERE BINARY username = in_username);

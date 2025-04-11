@@ -1,4 +1,3 @@
-import 'bootstrap/dist/css/bootstrap.css';
 import RadioButtons from './RadioButtons';
 import CheckBoxes from './CheckBoxes';
 

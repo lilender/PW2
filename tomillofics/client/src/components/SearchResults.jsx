@@ -1,91 +1,37 @@
-import 'bootstrap/dist/css/bootstrap.css';
 import FanficFront from './FanficFront';
 import Pags from './Pagination';
+import { useEffect } from 'react';
+import axios from 'axios';
+import { useState } from 'react';
+import Swal from 'sweetalert2';
 
 function SearchResults(){
+    const [searchFics, setSearchFics] = useState([]);
+
+    useEffect(() => {
+        axios.get(`http://localhost:3001/filteredFics?text=${""}&nfics=5&npage=0&idtags=${""}`)
+        .then(resp => {
+            if (resp.data.message === "Success") {
+                setSearchFics(resp.data.fics);
+            } else {
+                Swal.fire('Error', 'No se pudo obtener la información de los fics.', 'error');
+            }
+        }
+        );
+    }, []);
+    
     return(
         <div className='col-8'>
-            <FanficFront src="/img/Mirrors (5).png" title="Néctar de la noche" author="Lilender"
-                description="Un fanfic increíble sobre amor y viajes en el tiempo." type='true'
-                tags={[
-                    { type: '1', content: 'Completada' },
-                    { type: '2', content: 'Contenido sexual' },
-                    { type: '3', content: 'Amor' },
-                    { type: '3', content: 'Time travel' },
-                    { type: '3', content: 'Enemies to lovers' },
-                    { type: '3', content: 'Drama' },
-                    { type: '4', content: '+'}
-                ]}> </FanficFront>
-
-            <FanficFront src="/img/Mirrors (2).png" title="Néctar de la noche" author="Lilender"
-                description="Un fanfic increíble sobre amor y viajes en el tiempo." type='true'
-                tags={[
-                    { type: '1', content: 'En progreso' },
-                    { type: '2', content: 'Contenido sexual' },
-                    { type: '3', content: 'Amor' },
-                    { type: '3', content: 'Time travel' },
-                    { type: '3', content: 'Enemies to lovers' },
-                    { type: '3', content: 'Drama' },
-                    { type: '4', content: '+'}
-                ]}> </FanficFront>
-
-            <FanficFront src="/img/Mirrors (9).png" title="Néctar de la noche" author="Lilender"
-                description="Un fanfic increíble sobre amor y viajes en el tiempo." type='true'
-                tags={[
-                    { type: '1', content: 'Completada' },
-                    { type: '2', content: 'Contenido sexual' },
-                    { type: '3', content: 'Amor' },
-                    { type: '3', content: 'Time travel' },
-                    { type: '3', content: 'Enemies to lovers' },
-                    { type: '3', content: 'Drama' },
-                    { type: '4', content: '+'}
-                ]}> </FanficFront>
-
-            <FanficFront src="/img/Mirrors (11).png" title="Néctar de la noche" author="Lilender"
-                description="Un fanfic increíble sobre amor y viajes en el tiempo." type='true'
-                tags={[
-                    { type: '1', content: 'Completada' },
-                    { type: '2', content: 'Contenido sexual' },
-                    { type: '3', content: 'Amor' },
-                    { type: '3', content: 'Time travel' },
-                    { type: '3', content: 'Enemies to lovers' },
-                    { type: '3', content: 'Drama' },
-                    { type: '4', content: '+'}
-                ]}> </FanficFront>
-
-            <FanficFront src="/img/Mirrors (12).png" title="Néctar de la noche" author="Lilender"
-                description="Un fanfic increíble sobre amor y viajes en el tiempo." type='true'
-                tags={[
-                    { type: '1', content: 'Completada' },
-                    { type: '2', content: 'Contenido sexual' },
-                    { type: '3', content: 'Amor' },
-                    { type: '3', content: 'Time travel' },
-                    { type: '3', content: 'Enemies to lovers' },
-                    { type: '3', content: 'Drama' },
-                    { type: '4', content: '+'}
-                ]}> </FanficFront>
-            <FanficFront src="/img/Mirrors (13).png" title="Néctar de la noche" author="Lilender"
-                description="Un fanfic increíble sobre amor y viajes en el tiempo." type='true'
-                tags={[
-                    { type: '1', content: 'Completada' },
-                    { type: '2', content: 'Contenido sexual' },
-                    { type: '3', content: 'Amor' },
-                    { type: '3', content: 'Time travel' },
-                    { type: '3', content: 'Enemies to lovers' },
-                    { type: '3', content: 'Drama' },
-                    { type: '4', content: '+'}
-                ]}> </FanficFront>
-            <FanficFront src="/img/Mirrors (14).png" title="Néctar de la noche" author="Lilender"
-                description="Un fanfic increíble sobre amor y viajes en el tiempo." type='true'
-                tags={[
-                    { type: '1', content: 'Completada' },
-                    { type: '2', content: 'Contenido sexual' },
-                    { type: '3', content: 'Amor' },
-                    { type: '3', content: 'Time travel' },
-                    { type: '3', content: 'Enemies to lovers' },
-                    { type: '3', content: 'Drama' },
-                    { type: '4', content: '+'}
-                ]}> </FanficFront>
+            {
+            Array.isArray(searchFics) && searchFics.length > 0 ?
+            searchFics.map((fic) => (
+                    <FanficFront key={fic.idfic} idfic={fic.idfic} type='1'></FanficFront>
+                ))
+                :
+                <div className='col-12 text-center'>
+                    <p>No hay fics disponibles.</p>
+                </div>
+            }
             <Pags></Pags>
         </div>
     );

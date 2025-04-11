@@ -701,6 +701,13 @@ p{
     width: 203px;
     cursor: pointer;
     text-align: center;
+    p {
+        text-overflow: ellipsis;
+        width: 100%;
+        display: block;
+        overflow: hidden;
+        white-space: nowrap;
+    }
   .cover{
     border: 0.1rem solid #261608;
     background: #261608;
