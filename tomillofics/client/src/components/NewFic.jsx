@@ -105,7 +105,8 @@ function NewFic(){
         ).then(
             () => {
                 fic.tags.forEach((tag) => {
-                    if (tag.idtag === 0){
+                    console.log(tag.idtag);
+                    if ( parseInt(tag.idtag) === 0){
                         axios.post("http://localhost:3001/createTag", {
                             name: tag.name
                         }).then(
@@ -139,6 +140,23 @@ function NewFic(){
                                         console.log(error)
                                     }
                                 )
+                            }
+                        )
+                    } else {
+                        axios.post("http://localhost:3001/tagFic", {
+                            idtag: tag.idtag,
+                            idfic: fic.id
+                        }).then(
+                            (resp)=>{
+                                if(resp.data.message === "Success"){
+                                    console.log("Tag added to fic")
+                                } else {
+                                    console.log("Error adding tag to fic")
+                                }
+                            }
+                        ).catch(
+                            (error)=>{
+                                console.log(error)
                             }
                         )
                     }

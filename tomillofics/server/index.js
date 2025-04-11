@@ -340,6 +340,8 @@ app.post("/createTag", (request, response)=>{
 app.post("/tagFic", (request, response)=>{
     const idtag = request.body.idtag;
     const idfic = request.body.idfic;
+    console.log(idtag, idfic);
+    
     db.query('CALL sp_update_tags("tagfic", ?, null, ?, null)',
         [idtag, idfic],
         (error, data)=>{
