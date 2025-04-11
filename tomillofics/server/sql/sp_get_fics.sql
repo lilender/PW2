@@ -39,6 +39,35 @@ BEGIN
         JOIN Tag ON FicTag.idtag = Tag.idtag
         WHERE Fic.idfic = in_idfic;
     END IF;
+    IF in_option = 'complete' THEN
+        SELECT 
+        Fic.title, 
+        Fic.iduser, 
+        User.username, 
+        Fic.description, 
+        Fic.img_route,
+        GROUP_CONCAT(Tag.name) AS tags,
+        COUNT(Favorites.iduser) AS nfavs,
+        COUNT(Comment.idcomment) AS ncomments,
+        COUNT(Views.iduser) AS nviews,
+        MAX(CASE WHEN Favorites.iduser = in_iduser THEN 1 ELSE 0 END) AS saved
+        FROM Fic
+        JOIN User ON Fic.iduser = User.iduser
+        LEFT JOIN FicTag ON Fic.idfic = FicTag.idfic
+        LEFT JOIN Tag ON FicTag.idtag = Tag.idtag
+        LEFT JOIN Favorites ON Fic.idfic = Favorites.idfic
+        LEFT JOIN Comment ON Fic.idfic = Comment.idfic
+        LEFT JOIN Views ON Fic.idfic = Views.idfic
+        WHERE Fic.idfic = in_idfic
+        ;
+    END IF;
+    IF in_option = 'save' THEN
+        IF EXISTS (SELECT * FROM Favorites WHERE iduser = in_iduser AND idfic = in_idfic) THEN
+            DELETE FROM Favorites WHERE iduser = in_iduser AND idfic = in_idfic;
+        ELSE
+            INSERT INTO Favorites (iduser, idfic) VALUES (in_iduser, in_idfic);
+        END IF;
+    END IF;
 END$$
 
 DELIMITER ;
