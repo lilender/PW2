@@ -14,36 +14,36 @@ function UserBanner({profileImage,userData, changed,type}){
                 html: `
                     <div class="mb-3">
                         <label for="inputName" class="form-label">Nombre de usuario</label>
-                        <input type="text" id="inputName" class="form-control" value="${userData.username || ''}"/>
+                        <input type="text" id="inputName" class="userBanner form-control" value="${userData.username || ''}"/>
                     </div>
                     <div class="mb-3">
                         <label for="inputEmail" class="form-label">Correo electrónico</label>
-                        <input type="email" id="inputEmail" class="form-control" value="${userData.email || ''}" placeholder="Dejar vacío para no cambiar"/>
+                        <input type="email" id="inputEmail" class="userBanner form-control" value="${userData.email || ''}" placeholder="Dejar vacío para no cambiar"/>
                     </div>
                     <div class="mb-3">
                         <label for="inputPassword" class="form-label">Nueva contraseña</label>
-                        <input type="password" id="inputPassword" class="form-control" placeholder="Dejar vacío para no cambiar"/>
+                        <input type="password" id="inputPassword" class="userBanner form-control" placeholder="Dejar vacío para no cambiar"/>
                     </div>
                     <div class="mb-3">
                         <label for="inputPassword2" class="form-label">Confirmar contraseña</label>
-                        <input type="password" id="inputPassword2" class="form-control" placeholder="Dejar vacío para no cambiar"/>
+                        <input type="password" id="inputPassword2" class="userBanner form-control" placeholder="Dejar vacío para no cambiar"/>
                     </div>
                     <div class="mb-3">
                         <label for="inputFile" class="form-label">Imagen de perfil</label>
-                        <input type="file" id="inputFile" class="form-control"/>
+                        <input type="file" id="inputFile" class="userBanner form-control"/>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Modo</label>
                         <div>
-                            <input type="radio" name="mode" value="0" id="dark" ${String(userData.mode_pref) === '0' ? 'checked' : ''}/> <label for="dark">Oscuro</label>
-                            <input type="radio" name="mode" value="1" id="light" ${String(userData.mode_pref) === '1' ? 'checked' : ''}/> <label for="light">Claro</label>
+                            <input type="radio" class="userBanner" name="mode" value="0" id="dark" ${String(userData.mode_pref) === '0' ? 'checked' : ''}/> <label for="dark">Oscuro</label>
+                            <input type="radio" class="userBanner" name="mode" value="1" id="light" ${String(userData.mode_pref) === '1' ? 'checked' : ''}/> <label for="light">Claro</label>
                         </div>
                     </div>
                 `,
                 showCancelButton: true,
                 confirmButtonText: 'Guardar',
                 didOpen: () => {
-                    const inputs = document.querySelectorAll('input');
+                    const inputs = document.querySelectorAll('.userBanner');
                     inputs.forEach(input => {
                         input.addEventListener('input', () => {
                             Swal.resetValidationMessage();

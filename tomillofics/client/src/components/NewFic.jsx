@@ -67,6 +67,14 @@ function NewFic(){
             });
             return;
         } 
+        if (fic.tags.length === 0) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Por favor, agrega al menos una etiqueta antes de publicar.'
+            });
+            return;
+        }
         if (fic.chapters.length === 0) {
             Swal.fire({
                 icon: 'error',
@@ -183,26 +191,28 @@ function NewFic(){
                     )
                 })
             }
-        )
-
-        Swal.fire({
-            icon: 'success',
-            title: 'Éxito',
-            text: 'Tu historia ha sido publicada con éxito.'
-        });
-
-        setFic({
-            id: 0,
-            title: "",
-            description: "",
-            completed: false,
-            img_route: "/img/default-cover.png",
-            file: null,
-            tags: [],
-            chapters: [],
-        });
+        ).then(
+            () => {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Éxito',
+                    text: 'Tu historia ha sido publicada con éxito.'
+                });
         
-        nav(`/Profile/${encodeURIComponent(localStorage.getItem("iduser"))}`);
+                setFic({
+                    id: 0,
+                    title: "",
+                    description: "",
+                    completed: false,
+                    img_route: "/img/default-cover.png",
+                    file: null,
+                    tags: [],
+                    chapters: [],
+                });
+                
+                nav(`/Profile/${encodeURIComponent(localStorage.getItem("iduser"))}`);
+            }
+        )
     }
 
     return(

@@ -42,6 +42,17 @@ body{
   margin: 0 auto;
 }
 
+.special-input{
+    background: none;
+    border: none;
+    outline: none;
+    text-align: center;
+    width: 100%;
+    color: #9B4444;
+    font-size: x-large;
+    font-weight: 800;
+}
+
 h1 {
   font-size: large;
   line-height: 1.1;
