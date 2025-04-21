@@ -1,11 +1,29 @@
-import 'bootstrap/dist/css/bootstrap.css';
 import TopFanfics from './TopFanfics';
 import Carusel from './Carusel';
 import BTNMain from './BTNMain';
 import PrimeNavBar from './PrimeNavBar';
 import Banner from './Banner';
+import { useState } from 'react';
+import { useEffect } from 'react';
+import axios from 'axios';
+import Swal from 'sweetalert2';
 
 function Welcome(){
+
+    const [topFics, setTopFics] = useState([]);
+
+    useEffect(() => {
+        axios.get(`http://localhost:3001/favoriteFics`)
+        .then(resp => {
+            if (resp.data.message === "Success") {
+                setTopFics(resp.data.fics);
+            } else {
+                Swal.fire('Error', 'No se pudo obtener la información de los fics.', 'error');
+            }
+        }
+        );
+    }, []);
+
     return(
         <div className='back-color'>
             <PrimeNavBar />
@@ -43,23 +61,29 @@ function Welcome(){
                         </div>
                     </div>
                 </div>
-                <div className='TopFanfics mt-5 p-2 justify-content-center text-center'>
-                    <h1 className="m-5">TOP Fanfics del momento</h1>
-                    <div className="tops m-3 mb-0">
-                        <div className="row m-4">
-                            <p className='col-3 num'>#1</p>
-                            <TopFanfics title="Mirrors" author='Lilender' description='Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vel dolor eros. Aenean sed mi nisi. Aliquam eu nisl eget libero lobortis posuere. Praesent semper, urna tristique porttitor tincidunt, velit enim vehicula nulla, vitae gravida ipsum nulla ut risus. Nam et turpis iaculis, congue eros tincidunt, fermentum elit.'/>
-                        </div>
-                        <div className='row m-5'>
-                            <TopFanfics title="Hasta el último beso" author='Lilender' description='Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vel dolor eros. Aenean sed mi nisi. Aliquam eu nisl eget libero lobortis posuere. Praesent semper, urna tristique porttitor tincidunt, velit enim vehicula nulla, vitae gravida ipsum nulla ut risus. Nam et turpis iaculis, congue eros tincidunt, fermentum elit.'/>
-                            <p className='col-3 num'>#2</p>
-                        </div>
-                        <div className='row m-5'>
-                            <p className='col-3 num'>#3</p>
-                            <TopFanfics title="Sunflowers" author='RMills' description='Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vel dolor eros. Aenean sed mi nisi. Aliquam eu nisl eget libero lobortis posuere. Praesent semper, urna tristique porttitor tincidunt, velit enim vehicula nulla, vitae gravida ipsum nulla ut risus. Nam et turpis iaculis, congue eros tincidunt, fermentum elit.'/>
+                {
+                    Array.isArray(topFics) && topFics.length > 0 ?
+                    <div className='TopFanfics mt-5 p-2 justify-content-center text-center'>
+                        <h1 className="m-5">TOP Fanfics del momento</h1>
+                        <div className="tops m-3 mb-0">
+                            <div className="row m-4">
+                                <p className='col-3 num'>#1</p>
+                                <TopFanfics id={topFics[0].idfic}/>
+                            </div>
+                            <div className='row m-5'>
+                                <TopFanfics id={topFics[1].idfic}/>
+                                <p className='col-3 num'>#2</p>
+                            </div>
+                            <div className='row m-5'>
+                                <p className='col-3 num'>#3</p>
+                                <TopFanfics id={topFics[2].idfic}/>
+                            </div>
                         </div>
                     </div>
-                </div>
+                    :
+                    <></>
+                }
+                
             </div>
         </div>
     );

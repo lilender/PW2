@@ -1,5 +1,3 @@
-import 'bootstrap/dist/css/bootstrap.css';
-
 function CarruselData(props){
     return (
         <div className='col-6 carrusel-data m-0 p-0 pt-5 px-4'>
@@ -15,7 +13,7 @@ function CarruselData(props){
                 </div>
             </div>
             <div className='row'>
-                <textarea className='description p-0 m-3 col-11' name="" id="" readOnly rows={6}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vel dolor eros. Aenean sed mi nisi. Aliquam eu nisl eget libero lobortis posuere. Praesent semper, urna tristique porttitor tincidunt, velit enim vehicula nulla, vitae gravida ipsum nulla ut risus. Nam et turpis iaculis, congue eros tincidunt, fermentum elit. </textarea>
+                <textarea className='description p-0 m-3 col-11' name="" id="" readOnly rows={6}>{props.description}</textarea>
             </div>
         </div>
     );

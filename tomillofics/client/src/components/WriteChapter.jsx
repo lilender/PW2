@@ -1,5 +1,4 @@
 import { useState, useRef, useEffect } from 'react';
-import 'bootstrap/dist/css/bootstrap.css';
 import NavBar from './NavBar';
 import BrownLine from './BrownLine';
 import BTNMain from './BTNMain';

@@ -1,4 +1,3 @@
-import 'bootstrap/dist/css/bootstrap.css';
 import NavBar from './NavBar';
 import FicData from './FicData';
 import BrownLine from './BrownLine';
@@ -15,6 +14,7 @@ function FicContent(){
     const { id: encodedId } = useParams();
     const id = decodeURIComponent(encodedId);
     const [ficInfo, setFicInfo] = useState([]);
+    const [editable, setEditable] = useState(false);
 
     const iduser = localStorage.getItem("iduser");
 
@@ -23,6 +23,12 @@ function FicContent(){
             .then(resp => {
                 if (resp.data.message === "Success") {
                     setFicInfo(resp.data);
+                    if(parseInt(resp.data.iduser) === parseInt(iduser)){
+                        setEditable(false);
+                    }
+                    else{
+                        setEditable(true);
+                    }
                 } else {
                     Swal.fire('Error', 'No se pudo obtener la información del fic.', 'error');
                 }
@@ -32,6 +38,21 @@ function FicContent(){
             console.error('Error fetching data:', error);
             Swal.fire('Error', 'No se pudo obtener la información del fic.', 'error');
         });
+        axios.get(`http://localhost:3001/ficChapters?idfic=${id}`)
+            .then(resp => {
+                if (resp.data.message === "Success") {
+                    setFicInfo(prevState => ({
+                        ...prevState,
+                        chapters: resp.data.chapters
+                    }));
+                } else {
+                    Swal.fire('Error', 'No se pudo obtener la información de los capítulos.', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+                Swal.fire('Error', 'No se pudo obtener la información de los capítulos.', 'error');
+            });
     }
     , [id, iduser]);
 
@@ -96,16 +117,8 @@ function FicContent(){
                         <h1 className='content mt-2'>Contenido</h1>
                         <div className="p-0 m-0 mb-3">
                             <div className="chapters-container d-flex flex-column align-items-start">
-                            {[
-                    { content: 'Una vez en invierno' },
-                    { content: 'Una vez en invierno' },
-                    { content: 'Una vez en invierno' },
-                    { content: 'Una vez en invierno' },
-                    { content: 'Una vez en invierno' },
-                    { content: 'Una vez en invierno' },
-                    { content: 'Una vez en invierno'}
-                ]?.map((contentchapter, index) => (
-                                <ContentChapter key={index} content={contentchapter.content} />
+                            {ficInfo.chapters?.map((chapter, index) => (
+                                <ContentChapter key={index} type={editable} idfic={id} id={chapter.idchapter} content={chapter.title} />
                             ))}
                             </div>
                         </div>

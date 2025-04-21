@@ -149,7 +149,6 @@ app.get("/userInfo", (request, response)=>{
                     message: error.code,
                 })
             } else {
-                console.log(data[0][0]);
                 if(data[0][0].error){
                     response.json({
                         message: data[0][0].error,
@@ -184,7 +183,6 @@ app.get("/userPublicInfo", (request, response)=>{
                     message: error.code,
                 })
             } else {
-                console.log(data[0][0]);
                 if(data[0][0].error){
                     response.json({
                         message: data[0][0].error,
@@ -270,7 +268,6 @@ app.get("/staticTags", (request, response)=>{
                     message: error.code,
                 })
             } else {
-                console.log(data[0]);
                 if(data[0].error){
                     response.json({
                         message: data[0].error,
@@ -299,7 +296,6 @@ app.get("/userTags", (request, response)=>{
                     message: error.code,
                 })
             } else {
-                console.log(data[0]);
                 if(data[0].error){
                     response.json({
                         message: data[0].error,
@@ -327,7 +323,6 @@ app.post("/createTag", (request, response)=>{
                     message: error.code,
                 })
             } else {
-                console.log(data[0][0]);
                 response.json({
                     message: "Success",
                     idtag: data[0][0].idtag,
@@ -340,7 +335,6 @@ app.post("/createTag", (request, response)=>{
 app.post("/tagFic", (request, response)=>{
     const idtag = request.body.idtag;
     const idfic = request.body.idfic;
-    console.log(idtag, idfic);
     
     db.query('CALL sp_update_tags("tagfic", ?, null, ?, null)',
         [idtag, idfic],
@@ -361,12 +355,65 @@ app.post("/tagFic", (request, response)=>{
 )
 
 //get fics
-app.get("/userWrittenFics", (request, response)=>{
+app.get("/favoriteFics", (request, response)=>{
+    db.query('CALL sp_get_fics("favorite", null, null, null, null, null, null, null)',
+        (error, data)=>{
+            if(error){
+                console.log(error);
+                response.json({
+                    message: error.code,
+                })
+            } else {
+                if(data[0].error){
+                    response.json({
+                        message: data[0].error,
+                    })
+                }
+                else {
+                    response.json({
+                        message: "Success",
+                        fics: data[0]
+                    })
+                }
+            }
+        }
+    );
+}
+)
+app.get("/lastReadFics", (request, response)=>{
+    const iduser = request.query.iduser;
+
+    db.query('CALL sp_get_fics("lastread", ?, null, null, null, null, null, null)',
+        [iduser],
+        (error, data)=>{
+            if(error){
+                console.log(error);
+                response.json({
+                    message: error.code,
+                })
+            } else {
+                if(data[0].error){
+                    response.json({
+                        message: data[0].error,
+                    })
+                }
+                else {
+                    response.json({
+                        message: "Success",
+                        fics: data[0]
+                    })
+                }
+            }
+        }
+    );
+}
+)
+app.get("/libraryFics", (request, response)=>{
     const iduser = request.query.iduser;
     const nfics = request.query.nfics;
     const npage = request.query.npage;
 
-    db.query('CALL sp_get_fics("user", ?, ?, ?, null, null, null)',
+    db.query('CALL sp_get_fics("library", ?, ?, ?, null, null, null, null)',
         [iduser, nfics, npage],
         (error, data)=>{
             if(error){
@@ -375,7 +422,111 @@ app.get("/userWrittenFics", (request, response)=>{
                     message: error.code,
                 })
             } else {
-                console.log(data[0]);
+                if(data[0].error){
+                    response.json({
+                        message: data[0].error,
+                    })
+                }
+                else {
+                    response.json({
+                        message: "Success",
+                        fics: data[0]
+                    })
+                }
+            }
+        }
+    );
+}
+)
+app.get("/mostCommentedFics", (request, response)=>{
+    db.query('CALL sp_get_fics("commented", null, null, null, null, null, null, null)',
+        (error, data)=>{
+            if(error){
+                console.log(error);
+                response.json({
+                    message: error.code,
+                })
+            } else {
+                if(data[0].error){
+                    response.json({
+                        message: data[0].error,
+                    })
+                }
+                else {
+                    response.json({
+                        message: "Success",
+                        fics: data[0]
+                    })
+                }
+            }
+        }
+    );
+}
+)
+app.get("/newestFics", (request, response)=>{
+    db.query('CALL sp_get_fics("newest", null, null, null, null, null, null, null)',
+        (error, data)=>{
+            if(error){
+                console.log(error);
+                response.json({
+                    message: error.code,
+                })
+            } else {
+                if(data[0].error){
+                    response.json({
+                        message: data[0].error,
+                    })
+                }
+                else {
+                    response.json({
+                        message: "Success",
+                        fics: data[0]
+                    })
+                }
+            }
+        }
+    );
+}
+)
+app.get("/longestFics", (request, response)=>{
+    db.query('CALL sp_get_fics("longest", null, null, null, null, null, null, null)',
+        (error, data)=>{
+            if(error){
+                console.log(error);
+                response.json({
+                    message: error.code,
+                })
+            } else {
+                if(data[0].error){
+                    response.json({
+                        message: data[0].error,
+                    })
+                }
+                else {
+                    response.json({
+                        message: "Success",
+                        fics: data[0]
+                    })
+                }
+            }
+        }
+    );
+}
+)
+app.get("/userWrittenFics", (request, response)=>{
+    const iduser = request.query.iduser;
+    const nfics = request.query.nfics;
+    const npage = request.query.npage;
+
+    db.query('CALL sp_get_fics("user", ?, ?, ?, null, null, null, null)',
+        [iduser, nfics, npage],
+        (error, data)=>{
+            if(error){
+                console.log(error);
+                response.json({
+                    message: error.code,
+                })
+            } else {
                 if(data[0].error){
                     response.json({
                         message: data[0].error,
@@ -398,7 +549,7 @@ app.get("/filteredFics", (request, response)=>{
     const text = request.query.text;
     const idtags = request.query.idtags;
 
-    db.query('CALL sp_get_fics("filtered", null, ?, ?, null, ?, ?)',
+    db.query('CALL sp_get_fics("filtered", null, ?, ?, null, ?, ?, null)',
         [nfics, npage, text, idtags],
         (error, data)=>{
             if(error){
@@ -407,7 +558,6 @@ app.get("/filteredFics", (request, response)=>{
                     message: error.code,
                 })
             } else {
-                console.log(data[0]);
                 if(data[0].error){
                     response.json({
                         message: data[0].error,
@@ -426,9 +576,9 @@ app.get("/filteredFics", (request, response)=>{
 )
 
 //fic info
-app.get("/ficBasicInfo", (request, response)=>{
+app.get("/ficTopInfo", (request, response)=>{
     const idfic = request.query.idfic;
-    db.query('CALL sp_get_fics("basic", null, null, null, ?, null, null)',
+    db.query('CALL sp_get_fics("top", null, null, null, ?, null, null, null)',
         [idfic],
         (error, data)=>{
             if(error){
@@ -437,7 +587,37 @@ app.get("/ficBasicInfo", (request, response)=>{
                     message: error.code,
                 })
             } else {
-                console.log(data[0][0]);
+                if(data[0][0].error){
+                    response.json({
+                        message: data[0][0].error,
+                    })
+                }
+                else {
+                    response.json({
+                        message: "Success",
+                        title: data[0][0].title,
+                        username: data[0][0].username,
+                        description: data[0][0].description,
+                        img_route: data[0][0].img_route,
+                        profile_image: data[0][0].profile_image,
+                    })
+                }
+            }
+        }
+    );
+}
+)
+app.get("/ficBasicInfo", (request, response)=>{
+    const idfic = request.query.idfic;
+    db.query('CALL sp_get_fics("basic", null, null, null, ?, null, null, null)',
+        [idfic],
+        (error, data)=>{
+            if(error){
+                console.log(error);
+                response.json({
+                    message: error.code,
+                })
+            } else {
                 if(data[0][0].error){
                     response.json({
                         message: data[0][0].error,
@@ -457,7 +637,7 @@ app.get("/ficBasicInfo", (request, response)=>{
 )
 app.get("/ficInfoWTag", (request, response)=>{
     const idfic = request.query.idfic;
-    db.query('CALL sp_get_fics("tagged", null, null, null, ?, null, null)',
+    db.query('CALL sp_get_fics("tagged", null, null, null, ?, null, null, null)',
         [idfic],
         (error, data)=>{
             if(error){
@@ -466,7 +646,6 @@ app.get("/ficInfoWTag", (request, response)=>{
                     message: error.code,
                 })
             } else {
-                console.log(data[0][0]);
                 if(data[0][0].error){
                     response.json({
                         message: data[0][0].error,
@@ -514,7 +693,7 @@ app.get("/ficInfoWTag", (request, response)=>{
 app.get("/ficCompleteInfo", (request, response)=>{
     const idfic = request.query.idfic;
     const iduser = request.query.iduser;
-    db.query('CALL sp_get_fics("complete", ?, null, null, ?, null, null)',
+    db.query('CALL sp_get_fics("complete", ?, null, null, ?, null, null, null)',
         [iduser, idfic],
         (error, data)=>{
             if(error){
@@ -523,7 +702,6 @@ app.get("/ficCompleteInfo", (request, response)=>{
                     message: error.code,
                 })
             } else {
-                console.log(data[0][0]);
                 if(data[0][0].error){
                     response.json({
                         message: data[0][0].error,
@@ -573,15 +751,36 @@ app.get("/ficCompleteInfo", (request, response)=>{
     );
 }
 )
+app.post("/viewFic", (request, response)=>{
+    const iduser = request.body.iduser;
+    const idfic = request.body.idfic;
+    const lastread = request.body.lastread;
+    db.query('CALL sp_get_fics("view", ?, null, null, ?, null, null, ?)',
+        [iduser, idfic, lastread],
+        (error, data)=>{
+            if(error){
+                console.log(error);
+                response.json({
+                    message: error.code,
+                })
+            } else {
+                response.json({
+                    message: "Success"
+                })
+            }
+        }
+    );
+}
+)
 app.post("/saveFic", (request, response)=>{
     console.log(request.body);
     const iduser = request.body.iduser;
     const idfic = request.body.idfic;
-    db.query('CALL sp_get_fics("save", ?, null, null, ?, null, null)',
+    db.query('CALL sp_get_fics("save", ?, null, null, ?, null, null, null)',
         [iduser, idfic],
         (error, data)=>{
             if(error){
-                //console.log(error);
+                console.log(error);
                 response.json({
                     message: error.code,
                 })
@@ -600,9 +799,6 @@ app.post("/createFic", upload.single('cover'), (req, res) => {
     const description = req.body.description;
     const iduser = req.body.iduser;
     const completed = req.body.completed;
-
-    console.log("Request file:", req.file);
-    
     const img_route = req.file ? `/uploads/${req.file.filename}` : null;
 
     db.query('CALL sp_update_fics("create", ?, ?, ?, ?, ?, null)',
@@ -614,7 +810,6 @@ app.post("/createFic", upload.single('cover'), (req, res) => {
                     message: error.code 
                 });
             } else {
-                console.log(data[0][0]);
                 res.json({ 
                     message: "Success",
                     idfic: data[0][0].idfic
@@ -649,7 +844,160 @@ app.post("/createChapter", (request, response)=>{
     );
 }
 )
+app.post("/updateChapter", (request, response)=>{
+    const title = request.body.title;
+    const text = request.body.text;
+    const idfic = request.body.idfic;
+    const idchapter = request.body.idchapter;
 
+    db.query('CALL sp_update_chapters("update", ?, ?, ?, ?)',
+        [title, text, idfic, idchapter],
+        (error, data)=>{
+            if(error){
+                console.log(error);
+                response.json({
+                    message: error.code,
+                })
+            } else {
+                response.json({
+                    message: "Success"
+                })
+            }
+        }
+    );
+}
+)
+app.post("/deleteChapter", (request, response)=>{
+    const idfic = request.body.idfic;
+    const idchapter = request.body.idchapter;
+
+    db.query('CALL sp_update_chapters("delete", null, null, ?, ?)',
+        [idfic, idchapter],
+        (error, data)=>{
+            if(error){
+                console.log(error);
+                response.json({
+                    message: error.code,
+                })
+            } else {
+                response.json({
+                    message: "Success"
+                })
+            }
+        }
+    );
+}
+)
+app.get("/ficChapters", (request, response)=>{
+    const idfic = request.query.idfic;
+    db.query('CALL sp_get_chapters("chapters", ?, null)',
+        [idfic],
+        (error, data)=>{
+            if(error){
+                console.log(error);
+                response.json({
+                    message: error.code,
+                })
+            } else {
+                if(data[0].error){
+                    response.json({
+                        message: data[0].error,
+                    })
+                }
+                else {
+                    response.json({
+                        message: "Success",
+                        chapters: data[0]
+                    })
+                }
+            }
+        }
+    );
+}
+)
+app.get("/chapterText", (request, response)=>{
+    const idfic = request.query.idfic;
+    const idchapter = request.query.idchapter;
+    db.query('CALL sp_get_chapters("text", ?, ?)',
+        [idfic, idchapter],
+        (error, data)=>{
+            if(error){
+                console.log(error);
+                response.json({
+                    message: error.code,
+                })
+            } else {
+                if(data[0].error){
+                    response.json({
+                        message: data[0].error,
+                    })
+                }
+                else {
+                    response.json({
+                        message: "Success",
+                        text: data[0][0].text,
+                        title: data[0][0].title,
+                    })
+                }
+            }
+        }
+    );
+}
+)
+
+//comments
+app.get("/chapterComments", (request, response)=>{
+    const idfic = request.query.idfic;
+    const idchapter = request.query.idchapter;
+    const ncomments = request.query.ncomments;
+    const npage = request.query.npage;
+    db.query('CALL sp_get_comments(?, ?, ?, ?)',
+        [idfic, idchapter, ncomments, npage],
+        (error, data)=>{
+            if(error){
+                console.log(error);
+                response.json({
+                    message: error.code,
+                })
+            } else {
+                if(data[0].error){
+                    response.json({
+                        message: data[0].error,
+                    })
+                }
+                else {
+                    response.json({
+                        message: "Success",
+                        comments: data[0]
+                    })
+                }
+            }
+        }
+    );
+}
+)
+app.post("/createComment", (request, response)=>{
+    const idfic = request.body.idfic;
+    const idchapter = request.body.idchapter;
+    const iduser = request.body.iduser;
+    const text = request.body.text;
+    db.query('CALL sp_update_comments("create", ?, ?, ?, ?)',
+        [idfic, idchapter, iduser, text],
+        (error, data)=>{
+            if(error){
+                console.log(error);
+                response.json({
+                    message: error.code,
+                })
+            } else {
+                response.json({
+                    message: "Success"
+                })
+            }
+        }
+    );
+}
+)
 
 //tests
 
@@ -669,7 +1017,6 @@ app.post("/testCreateUser", file.single('image'), /*el nombre de como lo estoy m
                     message: error,
                 })
             } else {
-                console.log(data);
                 response.send({
                     message: "Registered"
                 })

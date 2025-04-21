@@ -261,7 +261,7 @@ function NewFic(){
                         <div className="p-0 m-0 mb-3">
                             <div className="chapters-container d-flex flex-column align-items-start">
                                 {fic.chapters.map((chapter) => (
-                                    <ContentChapter id={chapter.id} type={false} content={ ` ${chapter.id}. ` + chapter.title} />
+                                    <ContentChapter id={chapter.id} type={false} content={chapter.title} />
                                 ))}
                             </div>
                         </div>

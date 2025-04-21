@@ -1,16 +1,98 @@
 import { useState, useEffect } from 'react';
-import 'bootstrap/dist/css/bootstrap.css';
 import NavBar from './NavBar';
 import BrownLine from './BrownLine';
 import BTNMain from './BTNMain';
 import ChapterDrop from './ChapterDrop';
 import CommentSection from './CommentsSection';
+import { useParams } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import Swal from 'sweetalert2';
 
 function Chapter(){
+    const {idFic: idFicEncoded, idChapter: idChapterEncoded } = useParams();
+    const idFic = decodeURIComponent(idFicEncoded);
+    const idChapter = decodeURIComponent(idChapterEncoded);
+    const [ficInfo, setFicInfo] = useState([]);
+    const [chapterInfo, setChapterInfo] = useState({});
+
+    const nav = useNavigate();
+
+    useEffect(() => {
+        axios.get(`http://localhost:3001/ficInfoWTag?idfic=${idFic}`)
+            .then(resp => {
+                if (resp.data.message === "Success") {
+                    setFicInfo(resp.data);
+                } else {
+                    Swal.fire('Error', 'No se pudo obtener la información del fic.', 'error');
+                }
+            }
+        )
+        .catch(error => {
+            console.error('Error fetching data:', error);
+            Swal.fire('Error', 'No se pudo obtener la información del fic.', 'error');
+        });
+        axios.get(`http://localhost:3001/ficChapters?idfic=${idFic}`)
+            .then(resp => {
+                if (resp.data.message === "Success") {
+                    setFicInfo(prevState => ({
+                        ...prevState,
+                        chapters: resp.data.chapters.map(chapter => ({
+                            id: chapter.idchapter,
+                            title: chapter.title,
+                        }))
+                    }));
+                } else {
+                    Swal.fire('Error', 'No se pudo obtener la información de los capítulos.', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+                Swal.fire('Error', 'No se pudo obtener la información de los capítulos.', 'error');
+            });
+        
+    }
+    , [idFic]);
+
+    useEffect(() => {
+        axios.get(`http://localhost:3001/chapterText?idfic=${idFic}&idchapter=${idChapter}`)
+            .then(resp => {
+                if (resp.data.message === "Success") {
+                    setChapterInfo(resp.data);
+                    console.log(resp.data.text);
+                }
+                else {
+                    Swal.fire('Error', 'No se pudo obtener el texto del capítulo.', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+                Swal.fire('Error', 'No se pudo obtener el texto del capítulo.', 'error');
+            });
+
+            axios.post(`http://localhost:3001/viewFic`, {
+                idfic: idFic,
+                iduser: localStorage.getItem('iduser'),
+                lastread: idChapter
+            })
+                .then(resp => {
+                    if (resp.data.message === "Success") {
+                        console.log('Fic viewed successfully');
+                    } else {
+                        Swal.fire('Error', 'No se pudo registrar la vista del fic.', 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error registering view:', error);
+                    Swal.fire('Error', 'No se pudo registrar la vista del fic.', 'error');
+                }
+            );
+    }, [idFic, idChapter]);
+
     const [fontSize, setFontSize] = useState(16);
 
     const [isDarkMode, setIsDarkMode] = useState(() => {
-        return localStorage.getItem('darkMode') === 'true';
+        return localStorage.getItem('mode_pref') === '0';
     });
 
     useEffect(() => {
@@ -30,6 +112,13 @@ function Chapter(){
         setFontSize(prevSize => Math.max(prevSize - 2, 12));
     };
 
+    const handleChapterChange = (chapter) => {
+        nav("/Chapter/" + idFic + "/" + chapter);
+    }
+
+    if (!ficInfo || ficInfo.length === 0 || !ficInfo.chapters || ficInfo.chapters.length === 0) {
+        return <></>;
+    }
 
     return(
         <>
@@ -37,20 +126,23 @@ function Chapter(){
             <NavBar></NavBar>
             <div className='data-container px-5'>
                 <div className={`back-color-chapter ${isDarkMode ? 'dark' : 'light'} row justify-content-center px-5`}>
-                    <h1 className='title row justify-content-center align-items-center mt-3 mb-0'>Hasta el último beso</h1>
-                    <h1 className='author row justify-content-center align-items-center mt-1'>By Lilender</h1>
-                    <h1 className='chapter-title row justify-content-center align-items-center mt-2 mb-3'>Capítulo 1. Una vez en invierno</h1>
+                    <h1 className='title row justify-content-center align-items-center mt-3 mb-0'>{ficInfo.title}</h1>
+                    <h1 className='author row justify-content-center align-items-center mt-1'>By {ficInfo.username}</h1>
+                    <h1 className='chapter-title row justify-content-center align-items-center mt-2 mb-3'>Capítulo {idChapter}. {chapterInfo.title}</h1>
                     <BrownLine type='1'></BrownLine>
                     <div className='chapter-text mt-3' style={{ fontSize: `${fontSize}px` }}>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam vel congue felis. Nunc erat metus, dapibus in sollicitudin eget, suscipit et leo. Nam a dignissim diam. Aenean consequat, est porta molestie ultrices, purus velit varius mauris, in blandit nunc ante nec dolor. Praesent in ultricies diam, nec dapibus diam. Integer sit amet dui turpis. Ut mollis, nulla id aliquet lobortis, quam justo viverra odio, eu tincidunt urna mi pulvinar lacus. Praesent et lobortis lorem. Nunc ultricies erat in rhoncus laoreet. Maecenas rutrum bibendum lobortis. Sed dignissim, orci sit amet tempor ullamcorper, tellus arcu iaculis ante, eu mollis turpis eros nec libero. Aenean egestas enim a egestas feugiat. In bibendum sit amet dui at vestibulum. Phasellus ut nisi tellus. Suspendisse tempus ultrices posuere.</p>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit...</p>
+                        <p>{chapterInfo.text}</p>
                     </div>
                     <BrownLine type='1'></BrownLine>
                     <div className='row justify-content-center align-items-center p-1 px-2 mt-3 mb-0'>
                         <div className='d-flex w-25 justify-content-center align-items-center m-0'>
-                            <BTNMain type='4' content="/img/a-left.png"></BTNMain>
-                            <ChapterDrop theme={isDarkMode ? 'dark' : 'light'}></ChapterDrop>
-                            <BTNMain type='4' content="/img/a-right.png"></BTNMain>
+                            {idChapter > 1 && (
+                                <BTNMain onClick={()=>handleChapterChange(parseInt(idChapter) - 1)} type='4' content="/img/a-left.png"></BTNMain>
+                            )}
+                            <ChapterDrop chapterChange={handleChapterChange} chapters={ficInfo.chapters} theme={isDarkMode ? 'dark' : 'light'}></ChapterDrop>
+                            {idChapter < ficInfo.chapters.length && (
+                                <BTNMain onClick={()=>handleChapterChange(parseInt(idChapter) + 1)} type='4' content="/img/a-right.png"></BTNMain>
+                            )}
                         </div>
                     </div>
                     <div className='row justify-content-center w-25 m-0'>
@@ -70,7 +162,7 @@ function Chapter(){
                 </div>
             </div>
         </div>
-        <CommentSection></CommentSection>
+        <CommentSection idfic={idFic} idchapter={idChapter}></CommentSection>
         </>
 
     );

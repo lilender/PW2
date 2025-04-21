@@ -16,17 +16,35 @@ CREATE PROCEDURE sp_update_users (
 BEGIN
     DECLARE pass CHAR(64);
     IF in_option = 'info' THEN
-        SELECT User.iduser, username, email, profile_image, COUNT(Fic.idfic) AS written_fics, COUNT(Favorites.idfic) AS saved_fics, mode_pref, User.created 
+        SELECT 
+        User.iduser, 
+        username, 
+        email, 
+        profile_image, 
+        (SELECT COUNT(Fic.idfic)
+        FROM Fic
+        LEFT JOIN User ON User.iduser = Fic.iduser
+        WHERE User.iduser = in_iduser) AS written_fics,
+        (SELECT COUNT(Favorites.idfic)
+        FROM Favorites
+        LEFT JOIN User ON User.iduser = Favorites.iduser
+        WHERE User.iduser = in_iduser) AS saved_fics, 
+        mode_pref, 
+        User.created 
         FROM User 
-        LEFT JOIN Fic ON User.iduser = Fic.iduser
-        LEFT JOIN Favorites ON User.iduser = Favorites.iduser
         WHERE User.iduser = in_iduser;
     END IF;
     IF in_option = 'public' THEN
-        SELECT User.iduser, username, profile_image, COUNT(Fic.idfic) AS written_fics, User.created 
+        SELECT 
+        User.iduser, 
+        username, 
+        profile_image, 
+        (SELECT COUNT(Fic.idfic)
+        FROM Fic
+        LEFT JOIN User ON User.iduser = Fic.iduser
+        WHERE User.iduser = in_iduser) AS written_fics,
+        User.created 
         FROM User
-        LEFT JOIN Fic ON User.iduser = Fic.iduser
-        LEFT JOIN Favorites ON User.iduser = Favorites.iduser
         WHERE User.iduser = in_iduser;
     END IF;
     IF in_option = 'login' THEN
