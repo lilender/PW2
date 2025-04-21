@@ -951,7 +951,7 @@ app.get("/chapterComments", (request, response)=>{
     const idchapter = request.query.idchapter;
     const ncomments = request.query.ncomments;
     const npage = request.query.npage;
-    db.query('CALL sp_get_comments(?, ?, ?, ?)',
+    db.query('CALL sp_get_comments("get", ?, ?, ?, ?)',
         [idfic, idchapter, ncomments, npage],
         (error, data)=>{
             if(error){
@@ -998,6 +998,33 @@ app.post("/createComment", (request, response)=>{
     );
 }
 )
+app.get("/nComments", (request, response)=>{
+    const idfic = request.query.idfic;
+    const idchapter = request.query.idchapter;
+    db.query('CALL sp_get_comments("count", ?, ?, null, null)',
+        [idfic, idchapter],
+        (error, data)=>{
+            if(error){
+                console.log(error);
+                response.json({
+                    message: error.code,
+                })
+            } else {
+                if(data[0].error){
+                    response.json({
+                        message: data[0].error,
+                    })
+                }
+                else {
+                    response.json({
+                        message: "Success",
+                        ncomments: data[0][0].ncomments
+                    })
+                }
+            }
+        }
+    );
+})
 
 //tests
 

@@ -1,24 +1,25 @@
 import React from "react";
 import { Pagination } from "react-bootstrap";
 
-function Pags(){
+function Pags({totalPages, currentPage, setCurrentPage}){
+    const handlePageChange = (page) => {
+        if(page < 1 || page > totalPages) return;
+        setCurrentPage(page);
+    };
     return(
         <div className="row mt-3">
             <Pagination className="d-flex justify-content-center pagination">
-                <Pagination.First />
-                <Pagination.Prev />
-                <Pagination.Item>{1}</Pagination.Item>
-                <Pagination.Ellipsis />
-
-                <Pagination.Item>{10}</Pagination.Item>
-                <Pagination.Item>{11}</Pagination.Item>
-                <Pagination.Item active>{12}</Pagination.Item>
-                <Pagination.Item>{13}</Pagination.Item>
-
-                <Pagination.Ellipsis />
-                <Pagination.Item>{20}</Pagination.Item>
-                <Pagination.Next />
-                <Pagination.Last />
+                <Pagination.First onClick={ ()=> handlePageChange(1)} />
+                <Pagination.Prev onClick={ ()=> handlePageChange(currentPage-1)} />
+                {currentPage !== 1 && <Pagination.Item onClick={ ()=> handlePageChange(1)} >{1}</Pagination.Item>}
+                {currentPage > 3 && <Pagination.Ellipsis />}
+                {currentPage > 2 && <Pagination.Item onClick={ ()=> handlePageChange(currentPage-1)} >{currentPage - 1}</Pagination.Item>}
+                <Pagination.Item active>{currentPage}</Pagination.Item>
+                {currentPage < totalPages - 1 && <Pagination.Item onClick={ ()=> handlePageChange(currentPage+1)} >{currentPage + 1}</Pagination.Item>}
+                {currentPage < totalPages - 2 && <Pagination.Ellipsis />}
+                {currentPage !== totalPages && <Pagination.Item onClick={ ()=> handlePageChange(totalPages)} >{totalPages}</Pagination.Item>}
+                <Pagination.Next onClick={ ()=> handlePageChange(currentPage+1)}/>
+                <Pagination.Last onClick={ ()=> handlePageChange(totalPages)} />
             </Pagination>
         </div>
         
