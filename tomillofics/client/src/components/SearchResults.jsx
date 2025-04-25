@@ -1,7 +1,6 @@
 import FanficFront from './FanficFront';
-import Pags from './Pagination';
 
-function SearchResults({searchFics}){
+function SearchResults({searchFics, currentPage, setCurrentPage}){
     return(
         <div className='col-8'>
             {
@@ -14,7 +13,9 @@ function SearchResults({searchFics}){
                     <p>No hay fics disponibles.</p>
                 </div>
             }
-            <Pags></Pags>
+            <div onClick={ ()=> setCurrentPage(currentPage+1)} className='col-12 text-center'>
+                <p className='text-secondary'>Cargar más</p>
+            </div>
         </div>
     );
 }
