@@ -12,9 +12,13 @@ app.use(express.json());
 
 app.use('/public', express.static(path.join(__dirname, 'public')));
 
-app.listen(3001, ()=>{
+/*app.listen(3001, ()=>{
     console.log("Server listening on port 3001");
-})
+})*/
+
+app.listen(3001, '0.0.0.0', () => {
+    console.log('Backend server running on http://0.0.0.0:3001');
+});
 
 const db = mysql.createConnection(
     {
