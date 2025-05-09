@@ -67,7 +67,13 @@ function WriteChapter(){
             <NavBar></NavBar>
             <div className='data-container px-5'>
                 <div className={`back-color-chapter ${isDarkMode ? 'dark' : 'light'} row justify-content-center px-5`}>
-                    <h1 className='title row justify-content-center align-items-center mt-3 mb-0'>{fic.title} (posdata, puedes poner un boton pa regresar a la pag del fic?)</h1>
+                    <div className='row justify-content-between align-items-center mt-3 mb-0'>
+                        <div className='col-2 m-0'>
+                            <BTNMain onClick='' type='1' content="Guardar y salir"></BTNMain>
+                        </div>
+                        <p className='instructions col-6 m-0 p-0'>Para asignar un nombre al capítulo has click sobre 'Nuevo capítulo'</p>
+                    </div>
+                    <h1 className='row justify-content-center align-items-center title mt-1 mb-0'>{fic.title}</h1>                        
                     <h1 className='author row justify-content-center align-items-center mt-1'>By {localStorage.getItem("username")}</h1>
                     <input className='special-input row' type="text" value={fic.chapters[id - 1].title} onChange={(e) => updateChapter(id, { ...fic.chapters[id - 1], title: e.target.value }) }></input>
                     <BrownLine type='1'></BrownLine>
