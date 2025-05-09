@@ -257,10 +257,8 @@ app.post("/updateUser", file.single('image'),
 
 //tags
 app.get("/staticTags", (request, response)=>{
-    const text = request.query.text;
-    const ntags = request.query.ntags;
-    db.query('CALL sp_update_tags("static", null, ?, null, ?)',
-        [text, ntags],
+    db.query('CALL sp_update_tags("static", null, null, null, null)',
+        [],
         (error, data)=>{
             if(error){
                 console.log(error);
@@ -543,14 +541,66 @@ app.get("/userWrittenFics", (request, response)=>{
     );
 }
 )
+
+app.get("/nSearchFics", (request, response)=>{
+    const text = request.query.text;
+    const idtags = request.query.idtags;
+    const status = request.query.status;
+    let sp;
+    if(status == -1){
+        sp = "nfiltered";
+    }
+    else if(status == 0){
+        sp = "nfilteredp";
+    }
+    else if(status == 1){
+        sp = "nfilteredc";
+    }
+
+    db.query('CALL sp_get_fics(?, null, null, null, null, ?, ?, null)',
+        [sp, text, idtags],
+        (error, data)=>{
+            if(error){
+                console.log(error);
+                response.json({
+                    message: error.code,
+                })
+            } else {
+                if(data[0].error){
+                    response.json({
+                        message: data[0].error,
+                    })
+                }
+                else {
+                    response.json({
+                        message: "Success",
+                        nfics: data[0][0].nresults
+                    })
+                }
+            }
+        }
+    );
+}
+)
 app.get("/filteredFics", (request, response)=>{
     const nfics = request.query.nfics;
     const npage = request.query.npage;
     const text = request.query.text;
     const idtags = request.query.idtags;
+    const status = request.query.status;
+    let sp;
+    if(status == -1){
+        sp = "filtered";
+    }
+    else if(status == 0){
+        sp = "filteredp";
+    }
+    else if(status == 1){
+        sp = "filteredc";
+    }
 
-    db.query('CALL sp_get_fics("filtered", null, ?, ?, null, ?, ?, null)',
-        [nfics, npage, text, idtags],
+    db.query('CALL sp_get_fics(?, null, ?, ?, null, ?, ?, null)',
+        [sp, nfics, npage, text, idtags],
         (error, data)=>{
             if(error){
                 console.log(error);
@@ -751,6 +801,41 @@ app.get("/ficCompleteInfo", (request, response)=>{
     );
 }
 )
+app.get("/ficEditInfo", (request, response) => {
+    const idfic = request.query.idfic;
+    db.query('CALL sp_get_fics("edit", null, null, null, ?, null, null, null)',
+        [idfic],
+        (error, results) => {
+            if(error) {
+                console.log(error);
+                response.json({
+                    message: error.code,
+                });
+            } else {
+                if(results[0].length === 0) {
+                    response.json({
+                        message: "Fic not found",
+                    });
+                } else {
+                    const ficData = results[0][0];
+                    const tags = results[1];
+                    const chapters = results[2];
+                    
+                    response.json({
+                        message: "Success",
+                        idfic: ficData.idfic,
+                        title: ficData.title,
+                        description: ficData.description,
+                        img_route: ficData.img_route,
+                        completed: ficData.completed,
+                        tags: tags,
+                        chapters: chapters
+                    });
+                }
+            }
+        }
+    );
+});
 app.post("/viewFic", (request, response)=>{
     const iduser = request.body.iduser;
     const idfic = request.body.idfic;
@@ -819,6 +904,30 @@ app.post("/createFic", upload.single('cover'), (req, res) => {
     );
 }
 )
+app.post("/updateFic", upload.single('cover'), (req, res) => {
+    const idfic = req.body.idfic;
+    const title = req.body.title;
+    const description = req.body.description;
+    const completed = req.body.completed;
+    const img_route = req.file ? `/uploads/${req.file.filename}` : null;
+    
+    db.query('CALL sp_update_fics("update", null, ?, ?, ?, ?, ?)',
+        [title, description, img_route, completed, idfic],
+        (error, data) => {
+            if (error) {
+                console.log(error);
+                res.json({
+                    message: error.code
+                });
+            } else {
+                res.json({
+                    message: "Success"
+                });
+            }
+        }
+    );
+}
+)
 
 //chapters
 app.post("/createChapter", (request, response)=>{
@@ -827,7 +936,7 @@ app.post("/createChapter", (request, response)=>{
     const idfic = request.body.idfic;
     const idchapter = request.body.idchapter;
 
-    db.query('CALL sp_update_chapters("create", ?, ?, ?, ?)',
+    db.query('CALL sp_update_chapters("create", ?, ?, ?, ?, null)',
         [title, text, idfic, idchapter],
         (error, data)=>{
             if(error){
@@ -849,9 +958,10 @@ app.post("/updateChapter", (request, response)=>{
     const text = request.body.text;
     const idfic = request.body.idfic;
     const idchapter = request.body.idchapter;
+    const previdchapter = request.body.previdchapter;
 
-    db.query('CALL sp_update_chapters("update", ?, ?, ?, ?)',
-        [title, text, idfic, idchapter],
+    db.query('CALL sp_update_chapters("update", ?, ?, ?, ?, ?)',
+        [title, text, idfic, idchapter, previdchapter],
         (error, data)=>{
             if(error){
                 console.log(error);
@@ -867,11 +977,10 @@ app.post("/updateChapter", (request, response)=>{
     );
 }
 )
-app.post("/deleteChapter", (request, response)=>{
+app.post("/deleteChapters", (request, response)=>{
     const idfic = request.body.idfic;
-    const idchapter = request.body.idchapter;
-
-    db.query('CALL sp_update_chapters("delete", null, null, ?, ?)',
+    const idchapter = request.body.idchapter; //last id, any ids greater than this should be deleted
+    db.query('CALL sp_update_chapters("delete", null, null, ?, ?, null)',
         [idfic, idchapter],
         (error, data)=>{
             if(error){

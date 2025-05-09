@@ -19,6 +19,14 @@ BEGIN
         VALUES (in_iduser, in_title, in_description, in_img_route, completed);
         SELECT LAST_INSERT_ID() AS idfic;
     END IF;
+    IF in_option = 'update' THEN
+        UPDATE Fic 
+        SET title = in_title, 
+        description = in_description, 
+        img_route = IF(in_img_route IS NULL, img_route, in_img_route),
+        completed = completed
+        WHERE idfic = in_idfic;
+    END IF;
 
 END$$
 

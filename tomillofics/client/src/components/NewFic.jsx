@@ -8,10 +8,51 @@ import Swal from 'sweetalert2';
 import { useFic } from "./FicContext";
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useParams } from "react-router-dom";
+import { useEffect } from 'react';
+/*
+<Route path="/Fic" element={<NewFic/>}></Route>
+<Route path="/FicEdit/:id" element={<NewFic/>}></Route> */
 
 function NewFic(){
     const { fic, setFic, addChapter } = useFic();
     const nav = useNavigate();
+    const { id: encodedId } = useParams();
+    const id = decodeURIComponent(parseInt(encodedId, 10));
+
+    useEffect(() => {
+        if (!isNaN(id)) {
+            axios.get(`http://localhost:3001/ficEditInfo?idfic=${id}`)
+                .then(resp => {
+                    if (resp.data.message === "Success") {
+                        setFic({
+                            id: resp.data.idfic,
+                            title: resp.data.title,
+                            description: resp.data.description,
+                            completed: resp.data.completed,
+                            img_route: `http://localhost:3001/public${resp.data.img_route}`,
+                            file: null,
+                            tags: resp.data.tags.map(tag => ({
+                                idtag: tag.idtag,
+                                name: tag.name
+                            })),
+                            chapters: resp.data.chapters.map(chapter => ({
+                                id: chapter.idchapter,
+                                title: chapter.title,
+                                text: chapter.text,
+                                previd: chapter.idchapter
+                            }))
+                        });
+                    } else {
+                        Swal.fire('Error', 'No se pudo obtener la información del fic.', 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                    Swal.fire('Error', 'No se pudo obtener la información del fic.', 'error');
+                });
+        }
+    }, [id, setFic]);
 
     const handleAddChapter = () => {
         addChapter({
@@ -91,128 +132,302 @@ function NewFic(){
         data.append("iduser", localStorage.getItem("iduser"));
         data.append("cover", fic.file);
 
-        axios.post("http://localhost:3001/createFic", 
-            data, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            }
-        ).then(
-            (resp)=>{
-                if(resp.data.message === "Success"){
-                    console.log("Fic created");
-                    fic.id = resp.data.idfic;
-                } else {
-                    console.log("Error creating fic")
-                }
-            }
-        ).catch(
-            (error)=>{
-                console.log(error)
-            }
-        ).then(
-            () => {
-                fic.tags.forEach((tag) => {
-                    console.log(tag.idtag);
-                    if ( parseInt(tag.idtag) === 0){
-                        axios.post("http://localhost:3001/createTag", {
-                            name: tag.name
-                        }).then(
-                            (resp)=>{
-                                if(resp.data.message === "Success"){
-                                    console.log("Tag created")
-                                    tag.idtag = resp.data.idtag;
-                                } else {
-                                    console.log("Error creating tag")
-                                }
-                            }
-                        ).catch(
-                            (error)=>{
-                                console.log(error)
-                            }
-                        ).then(
-                            () => {
-                                axios.post("http://localhost:3001/tagFic", {
-                                    idtag: tag.idtag,
-                                    idfic: fic.id
-                                }).then(
-                                    (resp)=>{
-                                        if(resp.data.message === "Success"){
-                                            console.log("Tag added to fic")
-                                        } else {
-                                            console.log("Error adding tag to fic")
-                                        }
-                                    }
-                                ).catch(
-                                    (error)=>{
-                                        console.log(error)
-                                    }
-                                )
-                            }
-                        )
-                    } else {
-                        axios.post("http://localhost:3001/tagFic", {
-                            idtag: tag.idtag,
-                            idfic: fic.id
-                        }).then(
-                            (resp)=>{
-                                if(resp.data.message === "Success"){
-                                    console.log("Tag added to fic")
-                                } else {
-                                    console.log("Error adding tag to fic")
-                                }
-                            }
-                        ).catch(
-                            (error)=>{
-                                console.log(error)
-                            }
-                        )
+        if (!isNaN(id)) {
+            data.append("idfic", id);
+            axios.post("http://localhost:3001/updateFic", 
+                data, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
                     }
-                })
+                }
+            ).then(
+                (resp)=>{
+                    if(resp.data.message === "Success"){
+                        console.log("Fic updated");
+                    } else {
+                        console.log("Error updating fic")
+                    }
+                }
+            ).catch(
+                (error)=>{
+                    console.log(error)
+                }
+            ).then(
+                () => {
+                    fic.tags.forEach((tag) => {
+                        console.log(tag.idtag);
+                        if ( parseInt(tag.idtag) === 0){
+                            axios.post("http://localhost:3001/createTag", {
+                                name: tag.name
+                            }).then(
+                                (resp)=>{
+                                    if(resp.data.message === "Success"){
+                                        console.log("Tag created")
+                                        tag.idtag = resp.data.idtag;
+                                    } else {
+                                        console.log("Error creating tag")
+                                    }
+                                }
+                            ).catch(
+                                (error)=>{
+                                    console.log(error)
+                                }
+                            ).then(
+                                () => {
+                                    axios.post("http://localhost:3001/tagFic", {
+                                        idtag: tag.idtag,
+                                        idfic: fic.id
+                                    }).then(
+                                        (resp)=>{
+                                            if(resp.data.message === "Success"){
+                                                console.log("Tag added to fic")
+                                            } else {
+                                                console.log("Error adding tag to fic")
+                                            }
+                                        }
+                                    ).catch(
+                                        (error)=>{
+                                            console.log(error)
+                                        }
+                                    )
+                                }
+                            )
+                        } else {
+                            axios.post("http://localhost:3001/tagFic", {
+                                idtag: tag.idtag,
+                                idfic: fic.id
+                            }).then(
+                                (resp)=>{
+                                    if(resp.data.message === "Success"){
+                                        console.log("Tag added to fic")
+                                    } else {
+                                        console.log("Error adding tag to fic")
+                                    }
+                                }
+                            ).catch(
+                                (error)=>{
+                                    console.log(error)
+                                }
+                            )
+                        }
+                    })
+    
+                    fic.chapters.forEach((chapter) => {
+                        if(chapter.previd){ //if the chapter has a previous id, it means it was already created and we need to update it
+                            axios.post("http://localhost:3001/updateChapter", {
+                                title: chapter.title,
+                                text: chapter.text,
+                                idfic: fic.id,
+                                idchapter: chapter.id,
+                                previdchapter: chapter.previd
+                            }).then(
+                                (resp)=>{
+                                    if(resp.data.message === "Success"){
+                                        console.log("Chapter updated " + chapter.id)
+                                    } else {
+                                        console.log("Error updating chapter")
+                                    }
+                                }
+                            ).catch(
+                                (error)=>{
+                                    console.log(error)
+                                }
+                            ).then(
+                                () => {
+                                    //once that finishes, i need to erase all the other chapters that are after the last one
+                                    axios.post("http://localhost:3001/deleteChapters", {
+                                        idfic: fic.id,
+                                        idchapter: fic.chapters[fic.chapters.length - 1].id //this is the last chapter id
+                                    }).then(
+                                        (resp)=>{
+                                            if(resp.data.message === "Success"){
+                                                console.log("Chapters deleted with id greater than " + fic.chapters[fic.chapters.length - 1].id);
 
-                fic.chapters.forEach((chapter) => {
-                    axios.post("http://localhost:3001/createChapter", {
-                        title: chapter.title,
-                        text: chapter.text,
-                        idfic: fic.id,
-                        idchapter: chapter.id
-                    }).then(
-                        (resp)=>{
-                            if(resp.data.message === "Success"){
-                                console.log("Chapter created")
-                            } else {
-                                console.log("Error creating chapter")
+                                            } else {
+                                                console.log("Error deleting chapters")
+                                            }
+                                        }
+                                    ).catch(
+                                        (error)=>{
+                                            console.log(error)
+                                        }
+                                    )
+                                }
+                            )
+                        }
+                    })
+                }
+            ).then(
+                () => {
+                    fic.chapters.forEach((chapter) => {
+                        if(!chapter.previd){ //if the chapter doesn't have a previous id, it means it was just created and we need to create it
+                            axios.post("http://localhost:3001/createChapter", {
+                                title: chapter.title,
+                                text: chapter.text,
+                                idfic: fic.id,
+                                idchapter: chapter.id
+                            }).then(
+                                (resp)=>{
+                                    if(resp.data.message === "Success"){
+                                        console.log("Chapter created " + chapter.id)
+                                    } else {
+                                        console.log("Error creating chapter")
+                                    }
+                                }
+                            ).catch(
+                                (error)=>{
+                                    console.log(error)
+                                }
+                            )
+                        }
+                    })
+                }
+            ).then(
+                () => {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Éxito',
+                        text: 'Tu historia ha sido publicada con éxito.'
+                    });
+            
+                    setFic({
+                        id: 0,
+                        title: "",
+                        description: "",
+                        completed: false,
+                        img_route: "/img/default-cover.png",
+                        file: null,
+                        tags: [],
+                        chapters: [],
+                    });
+                    
+                    nav(`/Profile/${encodeURIComponent(localStorage.getItem("iduser"))}`);
+                }
+            )
+        } else {
+            axios.post("http://localhost:3001/createFic", 
+                data, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                }
+            ).then(
+                (resp)=>{
+                    if(resp.data.message === "Success"){
+                        console.log("Fic created");
+                        fic.id = resp.data.idfic;
+                    } else {
+                        console.log("Error creating fic")
+                    }
+                }
+            ).catch(
+                (error)=>{
+                    console.log(error)
+                }
+            ).then(
+                () => {
+                    fic.tags.forEach((tag) => {
+                        console.log(tag.idtag);
+                        if ( parseInt(tag.idtag) === 0){
+                            axios.post("http://localhost:3001/createTag", {
+                                name: tag.name
+                            }).then(
+                                (resp)=>{
+                                    if(resp.data.message === "Success"){
+                                        console.log("Tag created")
+                                        tag.idtag = resp.data.idtag;
+                                    } else {
+                                        console.log("Error creating tag")
+                                    }
+                                }
+                            ).catch(
+                                (error)=>{
+                                    console.log(error)
+                                }
+                            ).then(
+                                () => {
+                                    axios.post("http://localhost:3001/tagFic", {
+                                        idtag: tag.idtag,
+                                        idfic: fic.id
+                                    }).then(
+                                        (resp)=>{
+                                            if(resp.data.message === "Success"){
+                                                console.log("Tag added to fic")
+                                            } else {
+                                                console.log("Error adding tag to fic")
+                                            }
+                                        }
+                                    ).catch(
+                                        (error)=>{
+                                            console.log(error)
+                                        }
+                                    )
+                                }
+                            )
+                        } else {
+                            axios.post("http://localhost:3001/tagFic", {
+                                idtag: tag.idtag,
+                                idfic: fic.id
+                            }).then(
+                                (resp)=>{
+                                    if(resp.data.message === "Success"){
+                                        console.log("Tag added to fic")
+                                    } else {
+                                        console.log("Error adding tag to fic")
+                                    }
+                                }
+                            ).catch(
+                                (error)=>{
+                                    console.log(error)
+                                }
+                            )
+                        }
+                    })
+    
+                    fic.chapters.forEach((chapter) => {
+                        axios.post("http://localhost:3001/createChapter", {
+                            title: chapter.title,
+                            text: chapter.text,
+                            idfic: fic.id,
+                            idchapter: chapter.id
+                        }).then(
+                            (resp)=>{
+                                if(resp.data.message === "Success"){
+                                    console.log("Chapter created")
+                                } else {
+                                    console.log("Error creating chapter")
+                                }
                             }
-                        }
-                    ).catch(
-                        (error)=>{
-                            console.log(error)
-                        }
-                    )
-                })
-            }
-        ).then(
-            () => {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Éxito',
-                    text: 'Tu historia ha sido publicada con éxito.'
-                });
-        
-                setFic({
-                    id: 0,
-                    title: "",
-                    description: "",
-                    completed: false,
-                    img_route: "/img/default-cover.png",
-                    file: null,
-                    tags: [],
-                    chapters: [],
-                });
-                
-                nav(`/Profile/${encodeURIComponent(localStorage.getItem("iduser"))}`);
-            }
-        )
+                        ).catch(
+                            (error)=>{
+                                console.log(error)
+                            }
+                        )
+                    })
+                }
+            ).then(
+                () => {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Éxito',
+                        text: 'Tu historia ha sido publicada con éxito.'
+                    });
+            
+                    setFic({
+                        id: 0,
+                        title: "",
+                        description: "",
+                        completed: false,
+                        img_route: "/img/default-cover.png",
+                        file: null,
+                        tags: [],
+                        chapters: [],
+                    });
+                    
+                    nav(`/Profile/${encodeURIComponent(localStorage.getItem("iduser"))}`);
+                }
+            )
+        }
     }
 
     return(

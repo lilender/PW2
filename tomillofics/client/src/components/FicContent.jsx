@@ -9,12 +9,15 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';
 
 function FicContent(){
     const { id: encodedId } = useParams();
     const id = decodeURIComponent(encodedId);
     const [ficInfo, setFicInfo] = useState([]);
     const [editable, setEditable] = useState(false);
+
+    const nav = useNavigate();
 
     const iduser = localStorage.getItem("iduser");
 
@@ -91,6 +94,9 @@ function FicContent(){
                         </div>
                         <div className='row p-1 px-5'>
                             {
+                                editable===false?
+                                <BTNMain onClick={()=>nav("/FicEdit/"+id)} content='Editar' type={'1'}></BTNMain>
+                                :
                                 ficInfo.saved===0?
                                 <BTNMain onClick={handleSave} content='Guardar como favorito' type={'1'}></BTNMain>
                                 :
@@ -118,7 +124,7 @@ function FicContent(){
                         <div className="p-0 m-0 mb-3">
                             <div className="chapters-container d-flex flex-column align-items-start">
                             {ficInfo.chapters?.map((chapter, index) => (
-                                <ContentChapter key={index} type={editable} idfic={id} id={chapter.idchapter} content={chapter.title} />
+                                <ContentChapter key={index} type={true} idfic={id} id={chapter.idchapter} content={chapter.title} />
                             ))}
                             </div>
                         </div>

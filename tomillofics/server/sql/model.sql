@@ -66,15 +66,14 @@ DROP TABLE IF EXISTS `tomillofics`.`Views` ;
 CREATE TABLE IF NOT EXISTS `tomillofics`.`Views` (
   `iduser` INT UNSIGNED NOT NULL,
   `idfic` INT UNSIGNED NOT NULL,
-  `lastread` INT UNSIGNED NOT NULL,
   `time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`iduser`, `idfic`),
   CONSTRAINT `fk_User_has_Fic_User2`
     FOREIGN KEY (`iduser`)
     REFERENCES `tomillofics`.`User` (`iduser`),
-  CONSTRAINT `fk_Views_Chapter1`
-    FOREIGN KEY (`idfic`, `lastread`)
-    REFERENCES `tomillofics`.`Chapter` (`idfic` , `idchapter`)
+  CONSTRAINT `fk_Views_Fic`
+    FOREIGN KEY (`idfic`, `iduser`)
+    REFERENCES `tomillofics`.`Fic` (`idfic` , `iduser`)
 );
 
 DROP TABLE IF EXISTS `tomillofics`.`Comment` ;

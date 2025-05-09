@@ -20,9 +20,7 @@ BEGIN
     END IF;
     IF in_option = 'static' THEN
         SELECT idtag, name FROM Tag 
-        WHERE erasable = 0 
-        AND name LIKE CONCAT('%', in_name, '%')
-        LIMIT in_ntags;
+        WHERE erasable = 0 ;
     END IF;
     IF in_option = 'create' THEN
         INSERT INTO Tag (name, erasable) 
