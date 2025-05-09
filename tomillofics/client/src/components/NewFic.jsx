@@ -100,7 +100,8 @@ function NewFic(){
     }
 
     const handlePublish = () => {
-        if (fic.title === '' || fic.description === '' || fic.img_route === '') {
+        console.log(fic.img_route);
+        if (fic.title === '' || fic.description === '' || fic.img_route === '' || fic.img_route === '/img/default-cover.png') {
             Swal.fire({
                 icon: 'error',
                 title: 'Error',

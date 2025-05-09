@@ -29,3 +29,5 @@ yarn-error.log*
 
 # moderation test
 /tomillofics/server/moderation
+
+# uploads
