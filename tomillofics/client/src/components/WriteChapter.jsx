@@ -1,5 +1,4 @@
 import { useState, useRef, useEffect } from 'react';
-import 'bootstrap/dist/css/bootstrap.css';
 import NavBar from './NavBar';
 import BrownLine from './BrownLine';
 import BTNMain from './BTNMain';
@@ -68,10 +67,9 @@ function WriteChapter(){
             <NavBar></NavBar>
             <div className='data-container px-5'>
                 <div className={`back-color-chapter ${isDarkMode ? 'dark' : 'light'} row justify-content-center px-5`}>
-                    <h1 className='title row justify-content-center align-items-center mt-3 mb-0'>Hasta el último beso (posdata, puedes poner un boton pa regresar a la pag del fic?)</h1>
+                    <h1 className='title row justify-content-center align-items-center mt-3 mb-0'>{fic.title} (posdata, puedes poner un boton pa regresar a la pag del fic?)</h1>
                     <h1 className='author row justify-content-center align-items-center mt-1'>By {localStorage.getItem("username")}</h1>
-                    <input type="text" value={fic.chapters[id - 1].title} onChange={(e) => updateChapter(id, { ...fic.chapters[id - 1], title: e.target.value }) }></input>
-                    <h1 className='chapter-title row justify-content-center align-items-center mt-2 mb-3'>hola itzel puedes cambiar el coso este de arriba? jiji (y quitar este)</h1>
+                    <input className='special-input row' type="text" value={fic.chapters[id - 1].title} onChange={(e) => updateChapter(id, { ...fic.chapters[id - 1], title: e.target.value }) }></input>
                     <BrownLine type='1'></BrownLine>
                     <div className={`chapter-text ${isDarkMode ? 'dark' : 'light'} mt-3`} style={{ fontSize: `${fontSize}px` }}>
                         <textarea

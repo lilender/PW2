@@ -5,6 +5,7 @@ import BrownLine from './BrownLine';
 import CoversRow from './CoversRow';
 import FanficFront from './FanficFront';
 import Pags from './Pagination';
+import CarruselCovers from './CarruselCovers';
 
 import { useParams } from "react-router-dom";
 import { useEffect } from 'react';
@@ -20,10 +21,46 @@ function UserOnline(){
     const [userData, setUserData] = useState({});
     const [profileImage, setProfileImage] = useState(null);
     const [userWrittenFics, setUserWrittenFics] = useState([]);
+    const [ficLastRead, setFicLastRead] = useState([]);
+    const [ficLibrary, setFicLibrary] = useState([]);
+
+    const nFics = 5; // Number of fics per page
+    const [totalPages, setTotalPages] = useState(0);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [offset, setOffset] = useState(0);
 
     const change = (valor) => {
         setUpdatedImage(valor);
     }
+
+    useEffect(() => {
+        setOffset((currentPage - 1) * nFics);
+    }
+    , [currentPage]);
+
+    useEffect(() => {
+        if(id === localStorage.getItem("iduser")){
+            axios.get(`http://localhost:3001/libraryFics?iduser=${id}&nfics=${nFics}&npage=${offset}`)
+            .then(resp => {
+                if (resp.data.message === "Success") {
+                    setFicLibrary(resp.data.fics);
+                } else {
+                    Swal.fire('Error', 'No se pudo obtener la información de los fics.', 'error');
+                }
+            }
+            );
+        }else{
+            axios.get(`http://localhost:3001/userWrittenFics?iduser=${id}&nfics=${nFics}&npage=${offset}`)
+            .then(resp => {
+                if (resp.data.message === "Success") {
+                    setUserWrittenFics(resp.data.fics);
+                } else {
+                    Swal.fire('Error', 'No se pudo obtener la información de los fics.', 'error');
+                }
+            }
+            );
+        }
+    },[id, nFics, offset]);
 
     useEffect(() => {
         if(id === localStorage.getItem("iduser")){
@@ -36,8 +73,27 @@ function UserOnline(){
                         : "/img/tomilloprofile.png";
                     setProfileImage(profile_image);
                     setUserData(resp.data);
+                    setTotalPages(Math.ceil( parseInt(resp.data.saved_fics) / nFics));
                 } else {
                     Swal.fire('Error', 'No se pudo obtener la información del usuario.', 'error');
+                }
+            }
+            );
+            axios.get(`http://localhost:3001/lastReadFics?iduser=${id}`)
+            .then(resp => {
+                if (resp.data.message === "Success") {
+                    setFicLastRead(resp.data.fics);
+                } else {
+                    Swal.fire('Error', 'No se pudo obtener la información de los fics.', 'error');
+                }
+            }
+            );
+            axios.get(`http://localhost:3001/userWrittenFics?iduser=${id}&nfics=100&npage=0`)
+            .then(resp => {
+                if (resp.data.message === "Success") {
+                    setUserWrittenFics(resp.data.fics);
+                } else {
+                    Swal.fire('Error', 'No se pudo obtener la información de los fics.', 'error');
                 }
             }
             );
@@ -51,6 +107,7 @@ function UserOnline(){
                         : "/img/tomilloprofile.png";
                     setProfileImage(profile_image);
                     setUserData(resp.data);
+                    setTotalPages(Math.ceil( parseInt(resp.data.written_fics) / nFics));
                 } else {
                     Swal.fire('Error', 'No se pudo obtener la información del usuario.', 'error');
                 }
@@ -58,15 +115,7 @@ function UserOnline(){
             );
         }
         
-        axios.get(`http://localhost:3001/userWrittenFics?iduser=${id}&nfics=5&npage=0`)
-        .then(resp => {
-            if (resp.data.message === "Success") {
-                setUserWrittenFics(resp.data.fics);
-            } else {
-                Swal.fire('Error', 'No se pudo obtener la información de los fics.', 'error');
-            }
-        }
-        );
+        
     }, [id]);
 
     useEffect(() => {
@@ -103,18 +152,27 @@ function UserOnline(){
             <div className='back-color'>
                 <NavBar profileImage={profileImage}></NavBar>
                 <UserBanner profileImage={profileImage} userData={userData} changed={change} type='1'></UserBanner>
-                <div className='data-container'>
-                    <CoversRow header='Mis historias'
-                    fics={userWrittenFics}></CoversRow>
-                    <CoversRow header='Últimas lecturas'
-                    fics={userWrittenFics}></CoversRow>
-                    <BrownLine></BrownLine>
 
+                <div className='data-container mt-5'>
+                    <h1 className='title data-container mt-5 m-0 mb-3 p-0'>Mis historias</h1>
+                </div>
+
+                <div className='row justify-content-around w-100 m-0 p-0 px-5'>
+                    <CarruselCovers fics={userWrittenFics} theme="dark"></CarruselCovers>
+                </div>
+
+                <div className='data-container'>
+                    <CoversRow header='Últimas lecturas'
+                    fics={ficLastRead}></CoversRow>
+                </div>
+
+                <div className='data-container'>
+                    <BrownLine></BrownLine>
                     <h1 className='title m-0 mt-4 p-0'>Historias guardadas</h1>
                     <div className='data-container mt-4'>
                         {
-                        Array.isArray(userWrittenFics) && userWrittenFics.length > 0 ?
-                        userWrittenFics.map((fic) => (
+                        Array.isArray(ficLibrary) && ficLibrary.length > 0 ?
+                        ficLibrary.map((fic) => (
                                 <FanficFront key={fic.idfic} idfic={fic.idfic} type='2'></FanficFront>
                             ))
                             :
@@ -122,7 +180,7 @@ function UserOnline(){
                                 <p>No hay fics disponibles.</p>
                             </div>
                         }
-                        <Pags></Pags>
+                        <Pags totalPages={totalPages} currentPage={currentPage} setCurrentPage={setCurrentPage}></Pags>
                     </div>
                 </div>
             </div>
@@ -148,7 +206,7 @@ function UserOnline(){
                                 <p>No hay fics disponibles.</p>
                             </div>
                         }
-                        <Pags></Pags>
+                        <Pags totalPages={totalPages} currentPage={currentPage} setCurrentPage={setCurrentPage}></Pags>
                     </div>
                 </div>
             </div>

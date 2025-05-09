@@ -30,6 +30,7 @@ function Rutas () {
                     <Route path="/Search" element={<Search/>}></Route>
                     <Route path="/Profile/:id" element={<Profile/>}></Route>
                     <Route path="/Fic" element={<NewFic/>}></Route>
+                    <Route path="/FicEdit/:id" element={<NewFic/>}></Route>
                     <Route path="/Fic/:id" element={<FicContent/>}></Route>
                     <Route path="/Chapter/:id" element={<WriteChapter/>}></Route>
                     <Route path="/Chapter/:idFic/:idChapter" element={<Chapter/>}></Route>

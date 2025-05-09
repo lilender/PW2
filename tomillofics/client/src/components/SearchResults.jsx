@@ -1,7 +1,7 @@
 import FanficFront from './FanficFront';
 import Pags from './Pagination';
 
-function SearchResults({searchFics}){
+function SearchResults({searchFics, currentPage, setCurrentPage, totalPages}){
     return(
         <div className='col-8'>
             {
@@ -14,7 +14,7 @@ function SearchResults({searchFics}){
                     <p>No hay fics disponibles.</p>
                 </div>
             }
-            <Pags></Pags>
+            <Pags totalPages={totalPages} currentPage={currentPage} setCurrentPage={setCurrentPage}></Pags>
         </div>
     );
 }

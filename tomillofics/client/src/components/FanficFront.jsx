@@ -2,11 +2,12 @@ import FicData from './FicData';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';
 
 function FanficFront(props){
-
     const [ficInfo, setFicInfo] = useState([]);
-
+    const nav = useNavigate();
+    
     useEffect(() => {
         axios.get(`http://localhost:3001/ficInfoWTag?idfic=${props.idfic}`)
             .then(resp => {
@@ -20,9 +21,13 @@ function FanficFront(props){
     }
     , [props.idfic]);
 
+    const seeFic = () => {
+        nav(`/Fic/${props.idfic}`);
+    }
+
     if(props.type === '1'){
         return(
-            <div className='fanfic-front row justify-content-center py-3'>
+            <div onClick={seeFic} className='fanfic-front row justify-content-center py-3'>
                 <div className='col-3 align-self-center'>
                     <div className='cover row p-0 m-0'>
                         <img className='m-0 p-0' src={`http://localhost:3001/public${ficInfo.img_route}`} alt="" />
@@ -41,7 +46,7 @@ function FanficFront(props){
         );
     }else{
         return(
-            <div className='fanfic-front-two row justify-content-center py-3'>
+            <div onClick={seeFic} className='fanfic-front-two row justify-content-center py-3'>
                 <div className='col-3 align-self-center'>
                     <div className='cover row p-0 m-0'>
                         <img className='m-0 p-0' src={`http://localhost:3001/public${ficInfo.img_route}`} alt="" />
