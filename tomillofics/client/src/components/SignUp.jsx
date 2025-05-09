@@ -17,28 +17,94 @@ function SignUp(){
     const sendData=()=>{
 
         if(username === '' || email === '' || password === '' || password2 === ''){
-            Swal.fire("Por favor llene todos los campos");
+            Swal.fire({
+                color: '#4C0B0B',
+                background: '#EACDBD',
+                iconColor: '#4C0B0B',
+                customClass: {
+                    confirmButton: "btn-main",
+                    cancelButton: "btn-sec",
+                    title: 'title',
+                },
+                icon: 'warning',
+                text: 'Por favor llene todos los campos'
+            });
             return;
         }
         
         if(username.length < 4){
-            Swal.fire("Nombre de usuario muy corto");
+            Swal.fire({
+                color: '#4C0B0B',
+                background: '#EACDBD',
+                iconColor: '#4C0B0B',
+                customClass: {
+                    confirmButton: "btn-main",
+                    cancelButton: "btn-sec",
+                    title: 'title',
+                },
+                icon: 'warning',
+                text: 'Nombre de usuario muy corto'
+            });
             return;
         }
         if(email.length < 4){
-            Swal.fire("Correo muy corto");
+            Swal.fire({
+                color: '#4C0B0B',
+                background: '#EACDBD',
+                iconColor: '#4C0B0B',
+                customClass: {
+                    confirmButton: "btn-main",
+                    cancelButton: "btn-sec",
+                    title: 'title',
+                },
+                icon: 'warning',
+                text: 'Correo muy corto'
+            });
             return;
         }
         if(!email.includes('@')){
-            Swal.fire("Correo inválido");
+            Swal.fire({
+                color: '#4C0B0B',
+                background: '#EACDBD',
+                iconColor: '#4C0B0B',
+                customClass: {
+                    confirmButton: "btn-main",
+                    cancelButton: "btn-sec",
+                    title: 'title',
+                },
+                icon: 'warning',
+                text: 'Correo inválido'
+            });
             return;
         }
         if(password.length < 4){
-            Swal.fire("Contraseña muy corta");
+            Swal.fire({
+                color: '#4C0B0B',
+                background: '#EACDBD',
+                iconColor: '#4C0B0B',
+                customClass: {
+                    confirmButton: "btn-main",
+                    cancelButton: "btn-sec",
+                    title: 'title',
+                },
+                icon: 'warning',
+                text: 'Contraseña muy corta'
+            });
             return;
         }
         if(password !== password2){
-            Swal.fire("Las contraseñas no coinciden");
+            Swal.fire({
+                color: '#4C0B0B',
+                background: '#EACDBD',
+                iconColor: '#4C0B0B',
+                customClass: {
+                    confirmButton: "btn-main",
+                    cancelButton: "btn-sec",
+                    title: 'title',
+                },
+                icon: 'warning',
+                text: 'Las contraseñas no coinciden'
+            });
             return;
         }
 
@@ -56,16 +122,61 @@ function SignUp(){
         ).then(
             (resp)=>{
                 if(resp.data.message === "Success"){
-                    Swal.fire("Registrado");
+                    Swal.fire({
+                        color: '#4C0B0B',
+                        background: '#EACDBD',
+                        iconColor: '#9B4444',
+                        customClass: {
+                            confirmButton: "btn-main",
+                            cancelButton: "btn-sec",
+                            title: 'title',
+                        },
+                        icon: 'success',
+                        title: 'Éxito',
+                        text: 'Registrado'
+                    });
                     nav("/LogIn");
                 } else {
                     if (resp.data.message === 'ER_DUP_USERNAME') {
-                        Swal.fire("El nombre de usuario ya existe");
+                        Swal.fire({
+                            color: '#4C0B0B',
+                            background: '#EACDBD',
+                            iconColor: '#4C0B0B',
+                            customClass: {
+                                confirmButton: "btn-main",
+                                cancelButton: "btn-sec",
+                                title: 'title',
+                            },
+                            icon: 'warning',
+                            text: 'El nombre de usuario ya existe'
+                        });
                     } else if (resp.data.message === 'ER_DUP_EMAIL') {
-                        Swal.fire("El correo ya existe");
+                        Swal.fire({
+                            color: '#4C0B0B',
+                            background: '#EACDBD',
+                            iconColor: '#4C0B0B',
+                            customClass: {
+                                confirmButton: "btn-main",
+                                cancelButton: "btn-sec",
+                                title: 'title',
+                            },
+                            icon: 'warning',
+                            text: 'El correo ya existe'
+                        });
                     }
                     else {
-                        Swal.fire("Error desconocido. Contacte a soporte");
+                        Swal.fire({
+                            color: '#4C0B0B',
+                            background: '#EACDBD',
+                            iconColor: '#4C0B0B',
+                            customClass: {
+                                confirmButton: "btn-main",
+                                cancelButton: "btn-sec",
+                                title: 'title',
+                            },
+                            icon: 'error',
+                            text: 'Error desconocido. Contacte a soporte'
+                        });
                     }
                 }
             }

@@ -44,12 +44,36 @@ function NewFic(){
                             }))
                         });
                     } else {
-                        Swal.fire('Error', 'No se pudo obtener la información del fic.', 'error');
+                        Swal.fire({
+                                color: '#4C0B0B',
+                                background: '#EACDBD',
+                                iconColor: '#4C0B0B',
+                                customClass: {
+                                    confirmButton: "btn-main",
+                                    cancelButton: "btn-sec",
+                                    title: 'title',
+                                },
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'No se pudo obtener la información del fic.'
+                            });
                     }
                 })
                 .catch(error => {
                     console.error('Error fetching data:', error);
-                    Swal.fire('Error', 'No se pudo obtener la información del fic.', 'error');
+                    Swal.fire({
+                        color: '#4C0B0B',
+                        background: '#EACDBD',
+                        iconColor: '#4C0B0B',
+                        customClass: {
+                            confirmButton: "btn-main",
+                            cancelButton: "btn-sec",
+                            title: 'title',
+                        },
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'No se pudo obtener la información del fic.'
+                    });
                 });
         }
     }, [id, setFic]);
@@ -81,6 +105,14 @@ function NewFic(){
                         img.onload = function () {
                             if (img.width / img.height !== 16 / 25) {
                                 Swal.fire({
+                                    color: '#4C0B0B',
+                                    background: '#EACDBD',
+                                    iconColor: '#4C0B0B',
+                                    customClass: {
+                                        confirmButton: "btn-main",
+                                        cancelButton: "btn-sec",
+                                        title: 'title',
+                                    },
                                     icon: 'error',
                                     title: 'Error',
                                     text: 'La imagen debe tener la muy extraña relación de 16:25. Por favor, intenta de nuevo.'
@@ -102,6 +134,14 @@ function NewFic(){
     const handlePublish = () => {
         if (fic.title === '' || fic.description === '' || fic.img_route === '') {
             Swal.fire({
+                color: '#4C0B0B',
+                background: '#EACDBD',
+                iconColor: '#4C0B0B',
+                customClass: {
+                    confirmButton: "btn-main",
+                    cancelButton: "btn-sec",
+                    title: 'title',
+                },
                 icon: 'error',
                 title: 'Error',
                 text: 'Por favor, completa todos los campos antes de publicar.'
@@ -110,6 +150,14 @@ function NewFic(){
         } 
         if (fic.tags.length === 0) {
             Swal.fire({
+                color: '#4C0B0B',
+                background: '#EACDBD',
+                iconColor: '#4C0B0B',
+                customClass: {
+                    confirmButton: "btn-main",
+                    cancelButton: "btn-sec",
+                    title: 'title',
+                },
                 icon: 'error',
                 title: 'Error',
                 text: 'Por favor, agrega al menos una etiqueta antes de publicar.'
@@ -118,6 +166,14 @@ function NewFic(){
         }
         if (fic.chapters.length === 0) {
             Swal.fire({
+                color: '#4C0B0B',
+                background: '#EACDBD',
+                iconColor: '#4C0B0B',
+                customClass: {
+                    confirmButton: "btn-main",
+                    cancelButton: "btn-sec",
+                    title: 'title',
+                },
                 icon: 'error',
                 title: 'Error',
                 text: 'Por favor, agrega al menos un capítulo antes de publicar.'
@@ -285,6 +341,14 @@ function NewFic(){
             ).then(
                 () => {
                     Swal.fire({
+                        color: '#4C0B0B',
+                        background: '#EACDBD',
+                        iconColor: '#9B4444',
+                        customClass: {
+                            confirmButton: "btn-main",
+                            cancelButton: "btn-sec",
+                            title: 'title',
+                        },
                         icon: 'success',
                         title: 'Éxito',
                         text: 'Tu historia ha sido publicada con éxito.'
@@ -408,6 +472,14 @@ function NewFic(){
             ).then(
                 () => {
                     Swal.fire({
+                        color: '#4C0B0B',
+                        background: '#EACDBD',
+                        iconColor: '#9B4444',
+                        customClass: {
+                            confirmButton: "btn-main",
+                            cancelButton: "btn-sec",
+                            title: 'title',
+                        },
                         icon: 'success',
                         title: 'Éxito',
                         text: 'Tu historia ha sido publicada con éxito.'

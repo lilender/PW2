@@ -14,7 +14,18 @@ function FanficFront(props){
                 if (resp.data.message === "Success") {
                     setFicInfo(resp.data);
                 } else {
-                    Swal.fire('Error', 'No se pudo obtener la información del fic.', 'error');
+                    Swal.fire({
+                        color: '#4C0B0B',
+                        background: '#EACDBD',
+                        iconColor: '#4C0B0B',
+                        customClass: {
+                            confirmButton: "btn-main",
+                            cancelButton: "btn-sec",
+                            title: 'title',
+                        },
+                        icon: 'error',
+                        text: 'No se pudo obtener la información del fic.'
+                    });
                 }
             }
         );

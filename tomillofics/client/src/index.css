@@ -629,10 +629,11 @@ p{
 }
 
 .tomillo-input{
+  text-align: start;
   p{
     font-family: Montserrat;
     color: #646464;
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     font-weight: 500;
     letter-spacing: 0.01rem;
     margin: 0;

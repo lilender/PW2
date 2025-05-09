@@ -18,7 +18,18 @@ function Filters({searchText, setFicStatus, totalFics, ficStatus, setIdTags}){
                 if (resp.data.message === "Success") {
                     setStaticCategories(resp.data.tags);
                 } else {
-                    Swal.fire('Error', 'No se pudo obtener la información de las categorías.', 'error');
+                    Swal.fire({
+                        color: '#4C0B0B',
+                        background: '#EACDBD',
+                        iconColor: '#4C0B0B',
+                        customClass: {
+                            confirmButton: "btn-main",
+                            cancelButton: "btn-sec",
+                            title: 'title',
+                        },
+                        icon: 'error',
+                        text: 'No se pudo obtener la información de las categorías.'
+                    });
                 }
             })
             .catch(error => {
@@ -39,7 +50,18 @@ function Filters({searchText, setFicStatus, totalFics, ficStatus, setIdTags}){
                     const filteredCategories = resp.data.tags.filter((cat) => !checkedCategories.some((checkedCat) => checkedCat.idtag === cat.idtag));
                     setCategories(filteredCategories);
                 } else {
-                    Swal.fire('Error', 'No se pudo obtener la información de las categorías.', 'error');
+                    Swal.fire({
+                        color: '#4C0B0B',
+                        background: '#EACDBD',
+                        iconColor: '#4C0B0B',
+                        customClass: {
+                            confirmButton: "btn-main",
+                            cancelButton: "btn-sec",
+                            title: 'title',
+                        },
+                        icon: 'error',
+                        text: 'No se pudo obtener la información de las categorías.'
+                    });
                 }
             })
             .catch(error => {

@@ -33,13 +33,35 @@ function FicContent(){
                         setEditable(true);
                     }
                 } else {
-                    Swal.fire('Error', 'No se pudo obtener la información del fic.', 'error');
+                    Swal.fire({
+                        color: '#4C0B0B',
+                        background: '#EACDBD',
+                        iconColor: '#4C0B0B',
+                        customClass: {
+                            confirmButton: "btn-main",
+                            cancelButton: "btn-sec",
+                            title: 'title',
+                        },
+                        icon: 'error',
+                        text: 'No se pudo obtener la información del fic.'
+                    });
                 }
             }
         )
         .catch(error => {
             console.error('Error fetching data:', error);
-            Swal.fire('Error', 'No se pudo obtener la información del fic.', 'error');
+            Swal.fire({
+                color: '#4C0B0B',
+                        background: '#EACDBD',
+                        iconColor: '#4C0B0B',
+                        customClass: {
+                            confirmButton: "btn-main",
+                            cancelButton: "btn-sec",
+                            title: 'title',
+                        },
+                        icon: 'error',
+                        text: 'No se pudo obtener la información del fic.'
+            });
         });
         axios.get(`http://localhost:3001/ficChapters?idfic=${id}`)
             .then(resp => {
@@ -49,12 +71,34 @@ function FicContent(){
                         chapters: resp.data.chapters
                     }));
                 } else {
-                    Swal.fire('Error', 'No se pudo obtener la información de los capítulos.', 'error');
+                    Swal.fire({
+                        color: '#4C0B0B',
+                        background: '#EACDBD',
+                        iconColor: '#4C0B0B',
+                        customClass: {
+                            confirmButton: "btn-main",
+                            cancelButton: "btn-sec",
+                            title: 'title',
+                        },
+                        icon: 'error',
+                        text: 'No se pudo obtener la información de los capítulos.'
+                    });
                 }
             })
             .catch(error => {
                 console.error('Error fetching data:', error);
-                Swal.fire('Error', 'No se pudo obtener la información de los capítulos.', 'error');
+                Swal.fire({
+                    color: '#4C0B0B',
+                    background: '#EACDBD',
+                    iconColor: '#4C0B0B',
+                    customClass: {
+                        confirmButton: "btn-main",
+                        cancelButton: "btn-sec",
+                        title: 'title',
+                    },
+                    icon: 'error',
+                    text: 'No se pudo obtener la información de los capítulos.'
+                });
             });
     }
     , [id, iduser]);
@@ -77,7 +121,18 @@ function FicContent(){
         })
         .catch(error => {
             console.error('Error saving data:', error);
-            Swal.fire('Error', 'No se pudo guardar el fic como favorito.', 'error');
+            Swal.fire({
+                color: '#4C0B0B',
+                background: '#EACDBD',
+                iconColor: '#4C0B0B',
+                customClass: {
+                    confirmButton: "btn-main",
+                    cancelButton: "btn-sec",
+                    title: 'title',
+                },
+                icon: 'error',
+                text: 'No se pudo guardar el fic como favorito.'
+            });
         });
     };
 

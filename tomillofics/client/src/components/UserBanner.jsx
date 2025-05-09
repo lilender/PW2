@@ -10,33 +10,48 @@ function UserBanner({profileImage,userData, changed,type}){
         
         const handleForm = () => {
             Swal.fire({
+                customClass: {
+                    confirmButton: "btn-main",
+                    cancelButton: "btn-sec",
+                    title: 'title',
+                },
+                color: '#4C0B0B',
+                background: '#EACDBD',
                 title: 'Editar perfil',
                 html: `
-                    <div class="mb-3">
-                        <label for="inputName" class="form-label">Nombre de usuario</label>
+                    <div class="tomillo-input m-4 mb-3">
+                        <p for="inputName" class="">Nombre de usuario</p>
                         <input type="text" id="inputName" class="userBanner form-control" value="${userData.username || ''}"/>
                     </div>
-                    <div class="mb-3">
-                        <label for="inputEmail" class="form-label">Correo electrónico</label>
+                    <div class="tomillo-input m-4 mb-3">
+                        <p for="inputEmail" class="">Correo electrónico</p>
                         <input type="email" id="inputEmail" class="userBanner form-control" value="${userData.email || ''}" placeholder="Dejar vacío para no cambiar"/>
                     </div>
-                    <div class="mb-3">
-                        <label for="inputPassword" class="form-label">Nueva contraseña</label>
+                    <div class="tomillo-input m-4 mb-3">
+                        <p for="inputPassword" class="">Nueva contraseña</p>
                         <input type="password" id="inputPassword" class="userBanner form-control" placeholder="Dejar vacío para no cambiar"/>
                     </div>
-                    <div class="mb-3">
-                        <label for="inputPassword2" class="form-label">Confirmar contraseña</label>
+                    <div class="tomillo-input m-4 mb-3">
+                        <p for="inputPassword2" class="">Confirmar contraseña</p>
                         <input type="password" id="inputPassword2" class="userBanner form-control" placeholder="Dejar vacío para no cambiar"/>
                     </div>
-                    <div class="mb-3">
-                        <label for="inputFile" class="form-label">Imagen de perfil</label>
+                    <div class="tomillo-input m-4 mb-3">
+                        <p for="inputFile" class="">Imagen de perfil</p>
                         <input type="file" id="inputFile" class="userBanner form-control"/>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">Modo</label>
-                        <div>
-                            <input type="radio" class="userBanner" name="mode" value="0" id="dark" ${String(userData.mode_pref) === '0' ? 'checked' : ''}/> <label for="dark">Oscuro</label>
-                            <input type="radio" class="userBanner" name="mode" value="1" id="light" ${String(userData.mode_pref) === '1' ? 'checked' : ''}/> <label for="light">Claro</label>
+                    <div class="tomillo-input d-flex flex-column justify-content-center bulgy-radios m-0 mb-3 p-0">
+                        <p class="ms-4">Modo</p>
+                        <div class="row justify-content-start m-0 p-0 ms-4 mb-1">
+                            <label class="d-flex justify-content-center align-items-center m-1 p-0 w-25">
+                                <input type="radio" class="userBanner" name="mode" value="0" id="dark" ${String(userData.mode_pref) === '0' ? 'checked' : ''}>
+                                <span for="dark" class="radio m-1"></span>
+                                <span for="dark" class="label categories ps-1">Oscuro</span>
+                            </label>
+                            <label class="d-flex justify-content-center align-items-center m-1 p-0 w-25">
+                                <input type="radio" class="userBanner" name="mode" value="1" id="light" ${String(userData.mode_pref) === '1' ? 'checked' : ''}>
+                                <span for="light" class="radio m-1"></span>
+                                <span for="light" class="label categories ps-1">Claro</span>
+                            </label>
                         </div>
                     </div>
                 `,
@@ -59,29 +74,95 @@ function UserBanner({profileImage,userData, changed,type}){
                     const mode = document.querySelector('input[name="mode"]:checked')?.value;
             
                     if (!name || name.length < 4) {
-                        Swal.showValidationMessage('El nombre de usuario es obligatorio y debe tener al menos 4 caracteres.');
+                        Swal.showValidationMessage({
+                            color: '#4C0B0B',
+                            background: '#EACDBD',
+                            iconColor: '#4C0B0B',
+                            customClass: {
+                                confirmButton: "btn-main",
+                                cancelButton: "btn-sec",
+                                title: 'title',
+                            },
+                            icon: 'warning',
+                            text: 'El nombre de usuario es obligatorio y debe tener al menos 4 caracteres.'
+                        });
                         return false;
                     }
                     if (email && (email.length < 4 || !email.includes('@'))) {
-                        Swal.showValidationMessage('Correo inválido');
+                        Swal.showValidationMessage({
+                            color: '#4C0B0B',
+                            background: '#EACDBD',
+                            iconColor: '#4C0B0B',
+                            customClass: {
+                                confirmButton: "btn-main",
+                                cancelButton: "btn-sec",
+                                title: 'title',
+                            },
+                            icon: 'warning',
+                            text: 'Correo inválido'
+                        });
                         return false;
                     }
                     if (password && password.length < 4) {
-                        Swal.showValidationMessage('Contraseña muy corta');
+                        Swal.showValidationMessage({
+                            color: '#4C0B0B',
+                            background: '#EACDBD',
+                            iconColor: '#4C0B0B',
+                            customClass: {
+                                confirmButton: "btn-main",
+                                cancelButton: "btn-sec",
+                                title: 'title',
+                            },
+                            icon: 'warning',
+                            text: 'Contraseña muy corta'
+                        });
                         return false;
                     }
                     if (password && password !== password2) {
-                        Swal.showValidationMessage('Las contraseñas no coinciden');
+                        Swal.showValidationMessage({
+                            color: '#4C0B0B',
+                            background: '#EACDBD',
+                            iconColor: '#4C0B0B',
+                            customClass: {
+                                confirmButton: "btn-main",
+                                cancelButton: "btn-sec",
+                                title: 'title',
+                            },
+                            icon: 'warning',
+                            text: 'Las contraseñas no coinciden'
+                        });
                         return false;
                     }
                     if (file) {
                         const validImageTypes = ['image/jpeg', 'image/png', 'image/gif'];
                         if (!validImageTypes.includes(file.type)) {
-                            Swal.showValidationMessage('Formato de imagen no válido');
+                            Swal.showValidationMessage({
+                                color: '#4C0B0B',
+                                background: '#EACDBD',
+                                iconColor: '#4C0B0B',
+                                customClass: {
+                                    confirmButton: "btn-main",
+                                    cancelButton: "btn-sec",
+                                    title: 'title',
+                                },
+                                icon: 'warning',
+                                text: 'Formato de imagen no válido'
+                            });
                             return false;
                         }
                         if (file.size > 16777215) { // MEDIUMTEXT = 16MB
-                            Swal.showValidationMessage('La imagen es demasiado grande (máx. 16MB)');
+                            Swal.showValidationMessage({
+                                color: '#4C0B0B',
+                                background: '#EACDBD',
+                                iconColor: '#4C0B0B',
+                                customClass: {
+                                    confirmButton: "btn-main",
+                                    cancelButton: "btn-sec",
+                                    title: 'title',
+                                },
+                                icon: 'warning',
+                                text: 'La imagen es demasiado grande (máx. 16MB)'
+                            });
                             return false;
                         }
             
@@ -95,7 +176,18 @@ function UserBanner({profileImage,userData, changed,type}){
             
                                 img.onload = function () {
                                     if (img.width !== img.height) {
-                                        Swal.showValidationMessage('La imagen debe ser cuadrada (mismo ancho y alto).');
+                                        Swal.showValidationMessage({
+                                            color: '#4C0B0B',
+                                            background: '#EACDBD',
+                                            iconColor: '#4C0B0B',
+                                            customClass: {
+                                                confirmButton: "btn-main",
+                                                cancelButton: "btn-sec",
+                                                title: 'title',
+                                            },
+                                            icon: 'info',
+                                            text: 'La imagen debe ser cuadrada (mismo ancho y alto).'
+                                        });
                                         resolve(false);
                                     } else {
                                         resolve({ name, email, password, file, mode });
@@ -130,16 +222,61 @@ function UserBanner({profileImage,userData, changed,type}){
                     }).then(
                         (resp)=>{
                             if(resp.data.message === "Success"){
-                                Swal.fire("Registrado");
+                                Swal.fire({
+                                    color: '#4C0B0B',
+                                    background: '#EACDBD',
+                                    iconColor: '#9B4444',
+                                    customClass: {
+                                        confirmButton: "btn-main",
+                                        cancelButton: "btn-sec",
+                                        title: 'title',
+                                    },
+                                    icon: 'success',
+                                    title: 'Éxito',
+                                    text: 'Registrado'
+                                });
                                 changed(true);
                             } else {
                                 if (resp.data.message === 'ER_DUP_USERNAME') {
-                                    Swal.fire("El nombre de usuario ya existe");
+                                    Swal.fire({
+                                        color: '#4C0B0B',
+                                        background: '#EACDBD',
+                                        iconColor: '#4C0B0B',
+                                        customClass: {
+                                            confirmButton: "btn-main",
+                                            cancelButton: "btn-sec",
+                                            title: 'title',
+                                        },
+                                        icon: 'warning',
+                                        text: 'El nombre de usuario ya existe'
+                                    });
                                 } else if (resp.data.message === 'ER_DUP_EMAIL') {
-                                    Swal.fire("El correo ya existe");
+                                    Swal.fire({
+                                        color: '#4C0B0B',
+                                        background: '#EACDBD',
+                                        iconColor: '#4C0B0B',
+                                        customClass: {
+                                            confirmButton: "btn-main",
+                                            cancelButton: "btn-sec",
+                                            title: 'title',
+                                        },
+                                        icon: 'warning',
+                                        text: 'El correo ya existe'
+                                    });
                                 }
                                 else {
-                                    Swal.fire("Error desconocido. Contacte a soporte");
+                                    Swal.fire({
+                                        color: '#4C0B0B',
+                                        background: '#EACDBD',
+                                        iconColor: '#4C0B0B',
+                                        customClass: {
+                                            confirmButton: "btn-main",
+                                            cancelButton: "btn-sec",
+                                            title: 'title',
+                                        },
+                                        icon: 'error',
+                                        text: 'Error desconocido. Contacte a soporte'
+                                    });
                                 }
                             }
                         }
