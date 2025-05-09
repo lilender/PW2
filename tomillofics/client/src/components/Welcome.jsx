@@ -18,7 +18,18 @@ function Welcome(){
             if (resp.data.message === "Success") {
                 setTopFics(resp.data.fics);
             } else {
-                Swal.fire('Error', 'No se pudo obtener la información de los fics.', 'error');
+                Swal.fire({
+                    color: '#4C0B0B',
+                    background: '#EACDBD',
+                    iconColor: '#4C0B0B',
+                    customClass: {
+                        confirmButton: "btn-main",
+                        cancelButton: "btn-sec",
+                        title: 'title',
+                    },
+                    icon: 'error',
+                    text: 'No se pudo obtener la información de los fics.'
+                });
             }
         }
         );

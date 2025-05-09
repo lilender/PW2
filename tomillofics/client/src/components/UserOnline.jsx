@@ -45,7 +45,18 @@ function UserOnline(){
                 if (resp.data.message === "Success") {
                     setFicLibrary(resp.data.fics);
                 } else {
-                    Swal.fire('Error', 'No se pudo obtener la información de los fics.', 'error');
+                    Swal.fire({
+                        color: '#4C0B0B',
+                        background: '#EACDBD',
+                        iconColor: '#4C0B0B',
+                        customClass: {
+                            confirmButton: "btn-main",
+                            cancelButton: "btn-sec",
+                            title: 'title',
+                        },
+                        icon: 'error',
+                        text: 'No se pudo obtener la información de los fics.'
+                    });
                 }
             }
             );
@@ -55,7 +66,18 @@ function UserOnline(){
                 if (resp.data.message === "Success") {
                     setUserWrittenFics(resp.data.fics);
                 } else {
-                    Swal.fire('Error', 'No se pudo obtener la información de los fics.', 'error');
+                    Swal.fire({
+                        color: '#4C0B0B',
+                        background: '#EACDBD',
+                        iconColor: '#4C0B0B',
+                        customClass: {
+                            confirmButton: "btn-main",
+                            cancelButton: "btn-sec",
+                            title: 'title',
+                        },
+                        icon: 'error',
+                        text: 'No se pudo obtener la información de los fics.'
+                    });
                 }
             }
             );
@@ -75,7 +97,18 @@ function UserOnline(){
                     setUserData(resp.data);
                     setTotalPages(Math.ceil( parseInt(resp.data.saved_fics) / nFics));
                 } else {
-                    Swal.fire('Error', 'No se pudo obtener la información del usuario.', 'error');
+                    Swal.fire({
+                        color: '#4C0B0B',
+                        background: '#EACDBD',
+                        iconColor: '#4C0B0B',
+                        customClass: {
+                            confirmButton: "btn-main",
+                            cancelButton: "btn-sec",
+                            title: 'title',
+                        },
+                        icon: 'error',
+                        text: 'No se pudo obtener la información del usuario.'
+                    });
                 }
             }
             );
@@ -84,7 +117,18 @@ function UserOnline(){
                 if (resp.data.message === "Success") {
                     setFicLastRead(resp.data.fics);
                 } else {
-                    Swal.fire('Error', 'No se pudo obtener la información de los fics.', 'error');
+                    Swal.fire({
+                        color: '#4C0B0B',
+                        background: '#EACDBD',
+                        iconColor: '#4C0B0B',
+                        customClass: {
+                            confirmButton: "btn-main",
+                            cancelButton: "btn-sec",
+                            title: 'title',
+                        },
+                        icon: 'error',
+                        text: 'No se pudo obtener la información de los fics.'
+                    });
                 }
             }
             );
@@ -93,7 +137,18 @@ function UserOnline(){
                 if (resp.data.message === "Success") {
                     setUserWrittenFics(resp.data.fics);
                 } else {
-                    Swal.fire('Error', 'No se pudo obtener la información de los fics.', 'error');
+                    Swal.fire({
+                        color: '#4C0B0B',
+                        background: '#EACDBD',
+                        iconColor: '#4C0B0B',
+                        customClass: {
+                            confirmButton: "btn-main",
+                            cancelButton: "btn-sec",
+                            title: 'title',
+                        },
+                        icon: 'error',
+                        text: 'No se pudo obtener la información de los fics.'
+                    });
                 }
             }
             );
@@ -109,7 +164,18 @@ function UserOnline(){
                     setUserData(resp.data);
                     setTotalPages(Math.ceil( parseInt(resp.data.written_fics) / nFics));
                 } else {
-                    Swal.fire('Error', 'No se pudo obtener la información del usuario.', 'error');
+                    Swal.fire({
+                        color: '#4C0B0B',
+                        background: '#EACDBD',
+                        iconColor: '#4C0B0B',
+                        customClass: {
+                            confirmButton: "btn-main",
+                            cancelButton: "btn-sec",
+                            title: 'title',
+                        },
+                        icon: 'error',
+                        text: 'No se pudo obtener la información del usuario.'
+                    });
                 }
             }
             );
@@ -138,7 +204,18 @@ function UserOnline(){
                     setProfileImage(profile_image);
                     setUserData(resp.data);
                 } else {
-                    Swal.fire('Error', 'No se pudo obtener la información del usuario.', 'error');
+                    Swal.fire({
+                        color: '#4C0B0B',
+                        background: '#EACDBD',
+                        iconColor: '#4C0B0B',
+                        customClass: {
+                            confirmButton: "btn-main",
+                            cancelButton: "btn-sec",
+                            title: 'title',
+                        },
+                        icon: 'error',
+                        text: 'No se pudo obtener la información del usuario.'
+                    });
                 }
             }
         );

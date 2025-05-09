@@ -24,7 +24,18 @@ function Dashboard(){
                 if (resp.data.message === "Success") {
                     setFicTop(resp.data.fics);
                 } else {
-                    Swal.fire('Error', 'No se pudo obtener la información de los fics.', 'error');
+                    Swal.fire({
+                        color: '#4C0B0B',
+                        background: '#EACDBD',
+                        iconColor: '#4C0B0B',
+                        customClass: {
+                            confirmButton: "btn-main",
+                            cancelButton: "btn-sec",
+                            title: 'title',
+                        },
+                        icon: 'error',
+                        text: 'No se pudo obtener la información de los fics.'
+                    });
                 }
             }
         );
@@ -33,7 +44,18 @@ function Dashboard(){
                 if (resp.data.message === "Success") {
                     setFicLastRead(resp.data.fics);
                 } else {
-                    Swal.fire('Error', 'No se pudo obtener la información de los fics.', 'error');
+                    Swal.fire({
+                        color: '#4C0B0B',
+                        background: '#EACDBD',
+                        iconColor: '#4C0B0B',
+                        customClass: {
+                            confirmButton: "btn-main",
+                            cancelButton: "btn-sec",
+                            title: 'title',
+                        },
+                        icon: 'error',
+                        text: 'No se pudo obtener la información de los fics.'
+                    });
                 }
             }
         );
@@ -42,7 +64,18 @@ function Dashboard(){
                 if (resp.data.message === "Success") {
                     setFicLibrary(resp.data.fics);
                 } else {
-                    Swal.fire('Error', 'No se pudo obtener la información de los fics.', 'error');
+                    Swal.fire({
+                        color: '#4C0B0B',
+                        background: '#EACDBD',
+                        iconColor: '#4C0B0B',
+                        customClass: {
+                            confirmButton: "btn-main",
+                            cancelButton: "btn-sec",
+                            title: 'title',
+                        },
+                        icon: 'error',
+                        text: 'No se pudo obtener la información de los fics.'
+                    });
                 }
             }
         );
@@ -51,7 +84,18 @@ function Dashboard(){
                 if (resp.data.message === "Success") {
                     setFicFresh(resp.data.fics);
                 } else {
-                    Swal.fire('Error', 'No se pudo obtener la información de los fics.', 'error');
+                    Swal.fire({
+                        color: '#4C0B0B',
+                        background: '#EACDBD',
+                        iconColor: '#4C0B0B',
+                        customClass: {
+                            confirmButton: "btn-main",
+                            cancelButton: "btn-sec",
+                            title: 'title',
+                        },
+                        icon: 'error',
+                        text: 'No se pudo obtener la información de los fics.'
+                    });
                 }
             }
         );
@@ -60,7 +104,18 @@ function Dashboard(){
                 if (resp.data.message === "Success") {
                     setFicMarathon(resp.data.fics);
                 } else {
-                    Swal.fire('Error', 'No se pudo obtener la información de los fics.', 'error');
+                    Swal.fire({
+                        color: '#4C0B0B',
+                        background: '#EACDBD',
+                        iconColor: '#4C0B0B',
+                        customClass: {
+                            confirmButton: "btn-main",
+                            cancelButton: "btn-sec",
+                            title: 'title',
+                        },
+                        icon: 'error',
+                        text: 'No se pudo obtener la información de los fics.'
+                    });
                 }
             }
         );
@@ -69,7 +124,18 @@ function Dashboard(){
                 if (resp.data.message === "Success") {
                     setFicMostDiscussed(resp.data.fics);
                 } else {
-                    Swal.fire('Error', 'No se pudo obtener la información de los fics.', 'error');
+                    Swal.fire({
+                        color: '#4C0B0B',
+                        background: '#EACDBD',
+                        iconColor: '#4C0B0B',
+                        customClass: {
+                            confirmButton: "btn-main",
+                            cancelButton: "btn-sec",
+                            title: 'title',
+                        },
+                        icon: 'error',
+                        text: 'No se pudo obtener la información de los fics.'
+                    });
                 }
             }
         );

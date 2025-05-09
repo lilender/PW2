@@ -40,12 +40,34 @@ function Search(){
                 setCurrentPage(1);
                 setTotalPages(Math.ceil(resp.data.nfics / nFics));
             } else {
-                Swal.fire('Error', 'No se pudo obtener la información de los fics.', 'error');
+                Swal.fire({
+                    color: '#4C0B0B',
+                    background: '#EACDBD',
+                    iconColor: '#4C0B0B',
+                    customClass: {
+                        confirmButton: "btn-main",
+                        cancelButton: "btn-sec",
+                        title: 'title',
+                    },
+                    icon: 'error',
+                    text: 'No se pudo obtener la información de los fics.'
+                });
             }
         })
         .catch(error => {
             console.error("Error fetching data:", error);
-            Swal.fire('Error', 'Hubo un problema al conectar con el servidor.', 'error');
+            Swal.fire({
+                color: '#4C0B0B',
+                background: '#EACDBD',
+                iconColor: '#4C0B0B',
+                customClass: {
+                    confirmButton: "btn-main",
+                    cancelButton: "btn-sec",
+                    title: 'title',
+                },
+                icon: 'error',
+                text: 'Hubo un problema al conectar con el servidor.'
+            });
         });
     }
     , [searchText, ficStatus, idtags]);
@@ -56,12 +78,34 @@ function Search(){
             if (resp.data.message === "Success") {
                 setSearchFics(resp.data.fics);
             } else {
-                Swal.fire('Error', 'No se pudo obtener la información de los fics.', 'error');
+                Swal.fire({
+                    color: '#4C0B0B',
+                    background: '#EACDBD',
+                    iconColor: '#4C0B0B',
+                    customClass: {
+                        confirmButton: "btn-main",
+                        cancelButton: "btn-sec",
+                        title: 'title',
+                    },
+                    icon: 'error',
+                    text: 'No se pudo obtener la información de los fics.'
+                });
             }
         })
         .catch(error => {
             console.error("Error fetching data:", error);
-            Swal.fire('Error', 'Hubo un problema al conectar con el servidor.', 'error');
+            Swal.fire({
+                color: '#4C0B0B',
+                background: '#EACDBD',
+                iconColor: '#4C0B0B',
+                customClass: {
+                    confirmButton: "btn-main",
+                    cancelButton: "btn-sec",
+                    title: 'title',
+                },
+                icon: 'error',
+                text: 'Hubo un problema al conectar con el servidor.'
+            });
         });
     }, [searchText, nFics, offset, ficStatus, idtags]);
 

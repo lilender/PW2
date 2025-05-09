@@ -15,7 +15,18 @@ function LogIn(){
 
     const sendData=()=>{
         if(username === '' || password === ''){
-            Swal.fire("Por favor llene todos los campos");
+            Swal.fire({
+                        color: '#4C0B0B',
+                        background: '#EACDBD',
+                        iconColor: '#4C0B0B',
+                        customClass: {
+                            confirmButton: "btn-main",
+                            cancelButton: "btn-sec",
+                            title: 'title',
+                        },
+                        icon: 'warning',
+                        text: 'Por favor llene todos los campos'
+                    });
             return;
         }
 
@@ -33,12 +44,44 @@ function LogIn(){
                 nav("/Dashboard");
             } else {
                 if(resp.data.message === "ER_WRONG_PASS"){
-                    Swal.fire("Contraseña incorrecta");
+                    Swal.fire({
+                        color: '#4C0B0B',
+                        background: '#EACDBD',
+                        iconColor: '#4C0B0B',
+                        customClass: {
+                            confirmButton: "btn-main",
+                            cancelButton: "btn-sec",
+                            title: 'title',
+                        },
+                        icon: 'error',
+                        text: "Contraseña incorrecta"});
                 } else if (resp.data.message === "ER_NOT_FOUND"){
-                    Swal.fire("Usuario no encontrado");
+                    Swal.fire({
+                        color: '#4C0B0B',
+                        background: '#EACDBD',
+                        iconColor: '#4C0B0B',
+                        customClass: {
+                            confirmButton: "btn-main",
+                            cancelButton: "btn-sec",
+                            title: 'title',
+                        },
+                        icon: 'error',
+                        text:'Usuario no encontrado'
+                    });
                 }
                 else {
-                    Swal.fire("Error desconocido. Contacte a soporte");
+                    Swal.fire({
+                        color: '#4C0B0B',
+                        background: '#EACDBD',
+                        iconColor: '#4C0B0B',
+                        customClass: {
+                            confirmButton: "btn-main",
+                            cancelButton: "btn-sec",
+                            title: 'title',
+                        },
+                        icon: 'error',
+                        text: 'Error desconocido. Contacte a soporte'
+                        });
                 }
             }
         }).catch(
