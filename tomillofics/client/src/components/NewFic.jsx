@@ -27,7 +27,7 @@ function NewFic(){
         console.log("FIC ID:", fic.id);
         if (!isNaN(id) && !updated && fic.id === 0 ) {
             console.log("Fetching data for id:", id);
-            axios.get(`http://localhost:3001/ficEditInfo?idfic=${id}`)
+            axios.get(`/api/ficEditInfo?idfic=${id}`)
                 .then(resp => {
                     if (resp.data.message === "Success") {
                         setFic({
@@ -35,7 +35,7 @@ function NewFic(){
                             title: resp.data.title,
                             description: resp.data.description,
                             completed: resp.data.completed,
-                            img_route: `http://localhost:3001/public${resp.data.img_route}`,
+                            img_route: `/api/public${resp.data.img_route}`,
                             file: null,
                             tags: resp.data.tags.map(tag => ({
                                 idtag: tag.idtag,
@@ -239,7 +239,7 @@ function NewFic(){
 
         if (!isNaN(id)) {
             data.append("idfic", id);
-            axios.post("http://localhost:3001/updateFic", 
+            axios.post("/api/updateFic", 
                 data, {
                     headers: {
                         'Content-Type': 'multipart/form-data'
@@ -262,7 +262,7 @@ function NewFic(){
                     fic.tags.forEach((tag) => {
                         console.log(tag.idtag);
                         if ( parseInt(tag.idtag) === 0){
-                            axios.post("http://localhost:3001/createTag", {
+                            axios.post("/api/createTag", {
                                 name: tag.name
                             }).then(
                                 (resp)=>{
@@ -279,7 +279,7 @@ function NewFic(){
                                 }
                             ).then(
                                 () => {
-                                    axios.post("http://localhost:3001/tagFic", {
+                                    axios.post("/api/tagFic", {
                                         idtag: tag.idtag,
                                         idfic: fic.id
                                     }).then(
@@ -298,7 +298,7 @@ function NewFic(){
                                 }
                             )
                         } else {
-                            axios.post("http://localhost:3001/tagFic", {
+                            axios.post("/api/tagFic", {
                                 idtag: tag.idtag,
                                 idfic: fic.id
                             }).then(
@@ -319,7 +319,7 @@ function NewFic(){
     
                     fic.chapters.forEach((chapter) => {
                         if(chapter.previd){ //if the chapter has a previous id, it means it was already created and we need to update it
-                            axios.post("http://localhost:3001/updateChapter", {
+                            axios.post("/api/updateChapter", {
                                 title: chapter.title,
                                 text: chapter.text,
                                 idfic: fic.id,
@@ -340,7 +340,7 @@ function NewFic(){
                             ).then(
                                 () => {
                                     //once that finishes, i need to erase all the other chapters that are after the last one
-                                    axios.post("http://localhost:3001/deleteChapters", {
+                                    axios.post("/api/deleteChapters", {
                                         idfic: fic.id,
                                         idchapter: fic.chapters[fic.chapters.length - 1].id //this is the last chapter id
                                     }).then(
@@ -366,7 +366,7 @@ function NewFic(){
                 () => {
                     fic.chapters.forEach((chapter) => {
                         if(!chapter.previd){ //if the chapter doesn't have a previous id, it means it was just created and we need to create it
-                            axios.post("http://localhost:3001/createChapter", {
+                            axios.post("/api/createChapter", {
                                 title: chapter.title,
                                 text: chapter.text,
                                 idfic: fic.id,
@@ -420,7 +420,7 @@ function NewFic(){
                 }
             )
         } else {
-            axios.post("http://localhost:3001/createFic", 
+            axios.post("/api/createFic", 
                 data, {
                     headers: {
                         'Content-Type': 'multipart/form-data'
@@ -444,7 +444,7 @@ function NewFic(){
                     fic.tags.forEach((tag) => {
                         console.log(tag.idtag);
                         if ( parseInt(tag.idtag) === 0){
-                            axios.post("http://localhost:3001/createTag", {
+                            axios.post("/api/createTag", {
                                 name: tag.name
                             }).then(
                                 (resp)=>{
@@ -461,7 +461,7 @@ function NewFic(){
                                 }
                             ).then(
                                 () => {
-                                    axios.post("http://localhost:3001/tagFic", {
+                                    axios.post("/api/tagFic", {
                                         idtag: tag.idtag,
                                         idfic: fic.id
                                     }).then(
@@ -480,7 +480,7 @@ function NewFic(){
                                 }
                             )
                         } else {
-                            axios.post("http://localhost:3001/tagFic", {
+                            axios.post("/api/tagFic", {
                                 idtag: tag.idtag,
                                 idfic: fic.id
                             }).then(
@@ -500,7 +500,7 @@ function NewFic(){
                     })
     
                     fic.chapters.forEach((chapter) => {
-                        axios.post("http://localhost:3001/createChapter", {
+                        axios.post("/api/createChapter", {
                             title: chapter.title,
                             text: chapter.text,
                             idfic: fic.id,

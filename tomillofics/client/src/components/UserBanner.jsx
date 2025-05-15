@@ -216,7 +216,7 @@ function UserBanner({profileImage,userData, changed,type}){
                     }
                     formData.append('mode_pref', result.value.mode);
                     
-                    axios.post('http://localhost:3001/updateUser', formData, {
+                    axios.post('/api/updateUser', formData, {
                         headers: { 'Content-Type': 'multipart/form-data' }
                     }).then(
                         (resp)=>{

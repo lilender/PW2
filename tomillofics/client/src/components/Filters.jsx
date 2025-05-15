@@ -13,7 +13,7 @@ function Filters({searchText, setFicStatus, totalFics, ficStatus, setIdTags}){
     const [selectedCategories, setSelectedCategories] = useState([]);
     //only once
     useEffect(() => {
-        axios.get(`http://localhost:3001/staticTags`)
+        axios.get(`/api/staticTags`)
             .then(resp => {
                 if (resp.data.message === "Success") {
                     setStaticCategories(resp.data.tags);
@@ -43,7 +43,7 @@ function Filters({searchText, setFicStatus, totalFics, ficStatus, setIdTags}){
     }, [selectedCategories, setIdTags]);
     
     useEffect(() => {
-        axios.get(`http://localhost:3001/userTags?text=${query}&ntags=${5}`)
+        axios.get(`/api/userTags?text=${query}&ntags=${5}`)
             .then(resp => {
                 if (resp.data.message === "Success") {
                     // Check if the category is already in checkedCategories

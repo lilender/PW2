@@ -33,7 +33,7 @@ function Search(){
     , [location.search]);
 
     useEffect(() => {
-        axios.get(`http://localhost:3001/nSearchFics?text=${searchText}&idtags=${idtags}&status=${ficStatus}`)
+        axios.get(`/api/nSearchFics?text=${searchText}&idtags=${idtags}&status=${ficStatus}`)
         .then(resp => {
             if (resp.data.message === "Success") {
                 setTotalFics(resp.data.nfics);
@@ -73,7 +73,7 @@ function Search(){
     , [searchText, ficStatus, idtags]);
 
     useEffect(() => {
-        axios.get(`http://localhost:3001/filteredFics?text=${searchText}&nfics=${nFics}&npage=${offset}&idtags=${idtags}&status=${ficStatus}`)
+        axios.get(`/api/filteredFics?text=${searchText}&nfics=${nFics}&npage=${offset}&idtags=${idtags}&status=${ficStatus}`)
         .then(resp => {
             if (resp.data.message === "Success") {
                 setSearchFics(resp.data.fics);

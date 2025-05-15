@@ -29,7 +29,7 @@ function LogIn(){
             return;
         }
 
-        axios.post("http://localhost:3001/loginUser", 
+        axios.post("/api/loginUser", 
             {
                 username: username,
                 password: password

@@ -10,7 +10,7 @@ function CategorySelector() {
     const { fic, setFic } = useFic();
 
     useEffect(() => {
-        axios.get(`http://localhost:3001/userTags?text=${query}&ntags=${5}`)
+        axios.get(`/api/userTags?text=${query}&ntags=${5}`)
             .then(resp => {
                 if (resp.data.message === "Success") {
                     setCategories(resp.data.tags);

@@ -9,7 +9,7 @@ function FanficFront(props){
     const nav = useNavigate();
     
     useEffect(() => {
-        axios.get(`http://localhost:3001/ficInfoWTag?idfic=${props.idfic}`)
+        axios.get(`/api/ficInfoWTag?idfic=${props.idfic}`)
             .then(resp => {
                 if (resp.data.message === "Success") {
                     setFicInfo(resp.data);
@@ -41,7 +41,7 @@ function FanficFront(props){
             <div onClick={seeFic} className='fanfic-front row justify-content-center py-3'>
                 <div className='col-3 align-self-center'>
                     <div className='cover row p-0 m-0'>
-                        <img className='m-0 p-0' src={`http://localhost:3001/public${ficInfo.img_route}`} alt="" />
+                        <img className='m-0 p-0' src={`/api/public${ficInfo.img_route}`} alt="" />
                     </div>
                 </div>
                 <div className='col-9 py-3 ms-0 ps-0 align-self-start'>
@@ -61,7 +61,7 @@ function FanficFront(props){
             <div onClick={seeFic} className='fanfic-front-two row justify-content-center py-3'>
                 <div className='col-3 align-self-center'>
                     <div className='cover row p-0 m-0'>
-                        <img className='m-0 p-0' src={`http://localhost:3001/public${ficInfo.img_route}`} alt="" />
+                        <img className='m-0 p-0' src={`/api/public${ficInfo.img_route}`} alt="" />
                     </div>
                 </div>
                 <div className='col-9 py-3 ms-0 ps-0 align-self-start'>

@@ -19,7 +19,7 @@ function Chapter(){
     const nav = useNavigate();
 
     useEffect(() => {
-        axios.get(`http://localhost:3001/ficInfoWTag?idfic=${idFic}`)
+        axios.get(`/api/ficInfoWTag?idfic=${idFic}`)
             .then(resp => {
                 if (resp.data.message === "Success") {
                     setFicInfo(resp.data);
@@ -32,7 +32,7 @@ function Chapter(){
             console.error('Error fetching data:', error);
             Swal.fire('Error', 'No se pudo obtener la información del fic.', 'error');
         });
-        axios.get(`http://localhost:3001/ficChapters?idfic=${idFic}`)
+        axios.get(`/api/ficChapters?idfic=${idFic}`)
             .then(resp => {
                 if (resp.data.message === "Success") {
                     setFicInfo(prevState => ({
@@ -55,7 +55,7 @@ function Chapter(){
     , [idFic]);
 
     useEffect(() => {
-        axios.get(`http://localhost:3001/chapterText?idfic=${idFic}&idchapter=${idChapter}`)
+        axios.get(`/api/chapterText?idfic=${idFic}&idchapter=${idChapter}`)
             .then(resp => {
                 if (resp.data.message === "Success") {
                     setChapterInfo(resp.data);
@@ -70,7 +70,7 @@ function Chapter(){
                 Swal.fire('Error', 'No se pudo obtener el texto del capítulo.', 'error');
             });
 
-            axios.post(`http://localhost:3001/viewFic`, {
+            axios.post(`/api/viewFic`, {
                 idfic: idFic,
                 iduser: localStorage.getItem('iduser'),
                 lastread: idChapter

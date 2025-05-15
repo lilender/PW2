@@ -7,7 +7,7 @@ function TopFanfics({id}){
     const [ficInfo, setFicInfo] = useState({});
 
     useEffect(() => {
-        axios.get(`http://localhost:3001/ficTopInfo?idfic=${id}`)
+        axios.get(`/api/ficTopInfo?idfic=${id}`)
             .then(resp => {
                 if (resp.data.message === "Success") {
                     setFicInfo(resp.data);
@@ -34,7 +34,7 @@ function TopFanfics({id}){
         <div className='col-9 justify-content-center pr-5'> 
             <div className='row'>
                 <div className='col-3 img-container m-0 p-0'>
-                    <img className='m-0' src={`http://localhost:3001/public${ficInfo.img_route}`} alt="" />
+                    <img className='m-0' src={`/api/public${ficInfo.img_route}`} alt="" />
                 </div>
                 <div className='col-9 m-0 p-0 align-self-end'>
                     <div className='text-container p-3 row'>

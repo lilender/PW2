@@ -23,14 +23,14 @@ function Registro (){
         data.append("password", password);
         data.append("image", image);
 
-        /*axios.post("http://localhost:3001/createUser", 
+        /*axios.post("/api/createUser", 
             {
                 name: name,
                 email: email,
                 password: password
             }
         )*/
-        axios.post("http://localhost:3001/createUser", 
+        axios.post("/api/createUser", 
             data, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
