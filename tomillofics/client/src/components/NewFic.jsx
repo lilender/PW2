@@ -197,6 +197,38 @@ function NewFic(){
             });
             return;
         }
+        if(fic.title.length > 50){
+            Swal.fire({
+                color: '#4C0B0B',
+                background: '#EACDBD',
+                iconColor: '#4C0B0B',
+                customClass: {
+                    confirmButton: "btn-main",
+                    cancelButton: "btn-sec",
+                    title: 'title',
+                },
+                icon: 'error',
+                title: 'Error',
+                text: 'El título no puede tener más de 50 caracteres.'
+            });
+            return;
+        }
+        if(fic.description.length > 254){
+            Swal.fire({
+                color: '#4C0B0B',
+                background: '#EACDBD',
+                iconColor: '#4C0B0B',
+                customClass: {
+                    confirmButton: "btn-main",
+                    cancelButton: "btn-sec",
+                    title: 'title',
+                },
+                icon: 'error',
+                title: 'Error',
+                text: 'La descripción no puede tener más de 254 caracteres.'
+            });
+            return;
+        }
 
         const data = new FormData();
         data.append("title", fic.title);
