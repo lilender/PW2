@@ -1,4 +1,3 @@
-import 'bootstrap/dist/css/bootstrap.css';
 import PrimeNavBar from './PrimeNavBar';
 import BTNMain from './BTNMain';
 import BrownLine from './BrownLine';

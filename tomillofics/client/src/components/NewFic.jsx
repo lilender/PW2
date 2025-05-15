@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useParams } from "react-router-dom";
 import { useEffect } from 'react';
+import { useState } from 'react';
 /*
 <Route path="/Fic" element={<NewFic/>}></Route>
 <Route path="/FicEdit/:id" element={<NewFic/>}></Route> */
@@ -19,9 +20,13 @@ function NewFic(){
     const nav = useNavigate();
     const { id: encodedId } = useParams();
     const id = decodeURIComponent(parseInt(encodedId, 10));
+    const [updated, setUpdated] = useState(false);
 
     useEffect(() => {
-        if (!isNaN(id)) {
+        console.log("ID:", id);
+        console.log("FIC ID:", fic.id);
+        if (!isNaN(id) && !updated && fic.id === 0 ) {
+            console.log("Fetching data for id:", id);
             axios.get(`http://localhost:3001/ficEditInfo?idfic=${id}`)
                 .then(resp => {
                     if (resp.data.message === "Success") {
@@ -75,8 +80,19 @@ function NewFic(){
                         text: 'No se pudo obtener la información del fic.'
                     });
                 });
+        } else if (isNaN(id) && fic.id !== 0 ){
+            setFic({
+                id: 0,
+                title: "",
+                description: "",
+                completed: false,
+                img_route: "/img/default-cover.png",
+                file: null,
+                tags: [],
+                chapters: [],
+            });
         }
-    }, [id, setFic]);
+    }, [id, setFic, updated, fic.id]);
 
     const handleAddChapter = () => {
         addChapter({
@@ -352,8 +368,10 @@ function NewFic(){
                         },
                         icon: 'success',
                         title: 'Éxito',
-                        text: 'Tu historia ha sido publicada con éxito.'
+                        text: 'Tu historia ha sido editada con éxito.'
                     });
+
+                    setUpdated(true);
             
                     setFic({
                         id: 0,
@@ -485,6 +503,8 @@ function NewFic(){
                         title: 'Éxito',
                         text: 'Tu historia ha sido publicada con éxito.'
                     });
+
+                    setUpdated(true);
             
                     setFic({
                         id: 0,

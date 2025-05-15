@@ -223,7 +223,7 @@ BEGIN
         WHERE idfic = in_idfic;
     END IF;
     IF in_option = 'tagged' THEN 
-        SELECT title, username, description, img_route, GROUP_CONCAT(name) AS tags
+        SELECT title, User.iduser AS iduser, username, description, img_route, GROUP_CONCAT(name) AS tags
         FROM Fic
         JOIN User ON Fic.iduser = User.iduser
         JOIN FicTag ON Fic.idfic = FicTag.idfic

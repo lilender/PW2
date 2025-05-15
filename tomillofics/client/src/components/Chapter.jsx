@@ -116,6 +116,10 @@ function Chapter(){
         nav("/Chapter/" + idFic + "/" + chapter);
     }
 
+    const handleClick = () => {
+        nav("/Profile/" + ficInfo.iduser );
+    }
+
     if (!ficInfo || ficInfo.length === 0 || !ficInfo.chapters || ficInfo.chapters.length === 0) {
         return <></>;
     }
@@ -127,7 +131,7 @@ function Chapter(){
             <div className='data-container px-5'>
                 <div className={`back-color-chapter ${isDarkMode ? 'dark' : 'light'} row justify-content-center px-5`}>
                     <h1 className='title row justify-content-center align-items-center mt-3 mb-0'>{ficInfo.title}</h1>
-                    <h1 className='author row justify-content-center align-items-center mt-1'>By {ficInfo.username}</h1>
+                    <h1 onClick={handleClick} className='author row justify-content-center align-items-center mt-1'>By {ficInfo.username}</h1>
                     <h1 className='chapter-title row justify-content-center align-items-center mt-2 mb-3'>Capítulo {idChapter}. {chapterInfo.title}</h1>
                     <BrownLine type='1'></BrownLine>
                     <div className='chapter-text mt-3' style={{ fontSize: `${fontSize}px` }}>

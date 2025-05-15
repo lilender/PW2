@@ -1,4 +1,3 @@
-import 'bootstrap/dist/css/bootstrap.css';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 
 function ChapterDrop(props){

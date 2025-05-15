@@ -51,6 +51,7 @@ function FanficFront(props){
                         txtareaRows ='6'
                         description={ficInfo.description}
                         tags={ficInfo.tags}
+                        iduser={ficInfo.iduser}
                     />
                 </div>
             </div>

@@ -736,7 +736,8 @@ app.get("/ficInfoWTag", (request, response)=>{
                         username: data[0][0].username,
                         description: data[0][0].description,
                         img_route: data[0][0].img_route,
-                        tags: tagsWithType
+                        tags: tagsWithType,
+                        iduser: data[0][0].iduser,
                     })
                 }
             }
@@ -912,9 +913,11 @@ app.post("/updateFic", upload.single('cover'), (req, res) => {
     const idfic = req.body.idfic;
     const title = req.body.title;
     const description = req.body.description;
-    const completed = req.body.completed;
+    const completed = req.body.completed === 'true' ? 1 : 0;
     const img_route = req.file ? `/uploads/${req.file.filename}` : null;
-    
+    console.log("this fic was marked as completed= " + completed);
+    console.log("CALL sp_update_fics(\"update\", null, '" + title + "', '" + description + "', " + img_route + ", " + completed + ", " + idfic + ")");
+
     db.query('CALL sp_update_fics("update", null, ?, ?, ?, ?, ?)',
         [title, description, img_route, completed, idfic],
         (error, data) => {

@@ -70,10 +70,7 @@ CREATE TABLE IF NOT EXISTS `tomillofics`.`Views` (
   PRIMARY KEY (`iduser`, `idfic`),
   CONSTRAINT `fk_User_has_Fic_User2`
     FOREIGN KEY (`iduser`)
-    REFERENCES `tomillofics`.`User` (`iduser`),
-  CONSTRAINT `fk_Views_Fic`
-    FOREIGN KEY (`idfic`, `iduser`)
-    REFERENCES `tomillofics`.`Fic` (`idfic` , `iduser`)
+    REFERENCES `tomillofics`.`User` (`iduser`)
 );
 
 DROP TABLE IF EXISTS `tomillofics`.`Comment` ;

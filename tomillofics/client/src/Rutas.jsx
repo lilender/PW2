@@ -21,7 +21,7 @@ import WriteChapter from './components/WriteChapter';
 function Rutas () {
     return (
         <FicProvider>
-            <BrowserRouter basename="/tomillofics">
+            <BrowserRouter>
                 <Routes>
                     <Route path="/" element={<Welcome/>}></Route>
                     <Route path="/Dashboard" element={<Dashboard/>}></Route>

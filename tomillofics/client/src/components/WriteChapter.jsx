@@ -49,6 +49,8 @@ function WriteChapter(){
         textarea.style.height = textarea.scrollHeight + 'px';
 
         updateChapter(id, { ...fic.chapters[id - 1], text: event.target.value });
+        console.log(fic.chapters);
+
         setSaving(true);
 
         clearTimeout(saveTimeout.current);
@@ -62,6 +64,14 @@ function WriteChapter(){
         nav("/Chapter/" + chapter);
     }
 
+    const handleBack = () => {
+        if (fic.id === 0){
+            nav("/Fic");
+        } else {
+            nav("/FicEdit/" + fic.id);
+        }
+    }
+
     return(
         <div className={`back-color ${isDarkMode ? 'dark' : 'light'}`}>
             <NavBar></NavBar>
@@ -69,7 +79,7 @@ function WriteChapter(){
                 <div className={`back-color-chapter ${isDarkMode ? 'dark' : 'light'} row justify-content-center px-5`}>
                     <div className='row justify-content-between align-items-center mt-3 mb-0'>
                         <div className='col-2 m-0'>
-                            <BTNMain onClick='' type='1' content="Guardar y salir"></BTNMain>
+                            <BTNMain onClick={handleBack} type='1' content="Guardar y salir"></BTNMain>
                         </div>
                         <p className='instructions col-6 m-0 p-0'>Para asignar un nombre al capítulo has click sobre 'Nuevo capítulo'</p>
                     </div>

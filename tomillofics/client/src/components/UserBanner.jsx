@@ -1,4 +1,3 @@
-import 'bootstrap/dist/css/bootstrap.css';
 import BTNMain from './BTNMain';
 import Swal from 'sweetalert2';
 import axios from 'axios';

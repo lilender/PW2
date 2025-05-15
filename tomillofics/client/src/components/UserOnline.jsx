@@ -1,4 +1,3 @@
-import 'bootstrap/dist/css/bootstrap.css';
 import NavBar from './NavBar';
 import UserBanner from './UserBanner';
 import BrownLine from './BrownLine';

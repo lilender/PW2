@@ -166,6 +166,7 @@ function FicContent(){
                             txtareaRows ='4'
                             description={ficInfo.description}
                             tags={ficInfo.tags}
+                            iduser={ficInfo.iduser}
                         />
                         <div className='row justify-content-start align-items-center mt-2'>
                             <div className='d-flex justify-content-start align-items-center'>
