@@ -7,6 +7,7 @@ import { useFic } from "./FicContext";
 import { useParams } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import axios from 'axios';
 
 function WriteChapter(){
     const nav = useNavigate();
