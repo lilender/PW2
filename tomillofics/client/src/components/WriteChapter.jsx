@@ -42,7 +42,6 @@ function WriteChapter(){
 
     //autoguardado
     const [saving, setSaving] = useState(false);
-    let saveTimeout = useRef(null);
 
     const handleInputChange = (event) => {
         const textarea = textareaRef.current;
