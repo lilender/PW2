@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 
 function WriteChapter(){
     const nav = useNavigate();
-    const { fic, updateChapter } = useFic();
+    const { fic, updateChapter, setFic } = useFic();
     const { id: encodedId } = useParams();
     const id = decodeURIComponent(encodedId);
 
@@ -50,27 +50,182 @@ function WriteChapter(){
 
         updateChapter(id, { ...fic.chapters[id - 1], text: event.target.value });
         console.log(fic.chapters);
-
-        setSaving(true);
-
-        clearTimeout(saveTimeout.current);
-        saveTimeout.current = setTimeout(() => {
-            //localStorage.setItem('chapterContent', content);
-            setSaving(false);
-        }, 1500);
     };
 
     const handleChapterChange = (chapter) => {
         nav("/Chapter/" + chapter);
     }
 
-    const handleBack = () => {
-        if (fic.id === 0){
-            nav("/Fic");
-        } else {
-            nav("/FicEdit/" + fic.id);
+    const handleBack = async () => {
+        try {
+            Swal.fire({
+                color: '#4C0B0B',
+                background: '#EACDBD',
+                iconColor: '#4C0B0B',
+                customClass: {
+                    confirmButton: "btn-main",
+                    cancelButton: "btn-sec",
+                    title: 'title',
+                },
+                icon: 'info',
+                title: 'Guardando...',
+                text: 'Verificando contenido, por favor espere.',
+                showConfirmButton: false,
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+            
+            setSaving(true);
+            
+            const chapterText = fic.chapters[id - 1].text;
+            
+            const response = await fetch('/check', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ text: chapterText })
+            });
+            
+            if (!response.ok) {
+                throw new Error('Error al verificar el contenido');
+            }
+            
+            const moderationResults = await response.json();
+            console.log('Moderation results:', moderationResults);
+            
+            const categoryToTagMap = {
+                "Toxic": 1,             // Tóxico
+                "Insult": 2,            // Insulto
+                "Profanity": 3,         // Blasfemia
+                "Derogatory": 4,        // Despectivo
+                "Sexual": 5,            // Sexual
+                "Death, Harm & Tragedy": 6, // Muerte, daño y tragedia
+                "Violent": 7,           // Violento
+                "Firearms & Weapons": 8, // Armas
+                "Health": 9,            // Salud
+                "Religion & Belief": 10, // Religión y creencias
+                "Illicit Drugs": 11,    // Drogas ilícitas
+                "War & Conflict": 12,   // Guerra y conflicto
+                "Politics": 13          // Política
+            };
+            
+            let hasInappropriateContent = false;
+            
+            const detectedCategories = [];
+            
+            if (moderationResults && Object.keys(moderationResults).length > 0 && !moderationResults["No Inappropriate Content"]) {
+                hasInappropriateContent = true;
+                
+                setFic((prev) => {
+                    const newTags = [];
+                    
+                    for (const category in moderationResults) {
+                        if (category === "No Inappropriate Content") continue;
+                        
+                        const tagId = categoryToTagMap[category];
+                        
+                        if (tagId && !prev.tags.some(tag => tag.id === tagId)) {
+                            newTags.push({
+                                id: tagId,
+                                name: Object.entries(categoryToTagMap).find(([key, value]) => value === tagId)[0]
+                            });
+                            
+                            detectedCategories.push(category);
+                        }
+                    }
+                    
+                    return {
+                        ...prev,
+                        tags: [...prev.tags, ...newTags],
+                    };
+                });
+            }
+            
+            if (hasInappropriateContent) {
+                const categoriesText = detectedCategories.join(', ');
+                
+                const result = await Swal.fire({
+                    color: '#4C0B0B',
+                    background: '#EACDBD',
+                    iconColor: '#4C0B0B',
+                    customClass: {
+                        confirmButton: "btn-main",
+                        cancelButton: "btn-sec",
+                        title: 'title',
+                    },
+                    icon: 'warning',
+                    title: 'Contenido Inapropiado',
+                    text: `Se ha detectado posible contenido inapropiado: ${categoriesText}. Se han añadido las etiquetas correspondientes. ¿Deseas continuar?`,
+                    showCancelButton: true,
+                    confirmButtonText: 'Continuar',
+                    cancelButtonText: 'Revisar'
+                });
+                
+                if (!result.isConfirmed) {
+                    setSaving(false);
+                    return;
+                }
+            }
+            
+            Swal.fire({
+                color: '#4C0B0B',
+                background: '#EACDBD',
+                iconColor: '#4C0B0B',
+                customClass: {
+                    confirmButton: "btn-main",
+                    title: 'title',
+                },
+                icon: 'success',
+                title: 'Guardado',
+                text: 'El contenido ha sido guardado correctamente.',
+                timer: 1500,
+                showConfirmButton: false
+            });
+            
+            setSaving(false);
+            
+            setTimeout(() => {
+                if (fic.id === 0) {
+                    nav("/Fic");
+                } else {
+                    nav("/FicEdit/" + fic.id);
+                }
+            }, 1500);
+            
+        } catch (error) {
+            console.error('Error during moderation check:', error);
+            
+            const result = await Swal.fire({
+                color: '#4C0B0B',
+                background: '#EACDBD',
+                iconColor: '#4C0B0B',
+                customClass: {
+                    confirmButton: "btn-main",
+                    cancelButton: "btn-sec",
+                    title: 'title',
+                },
+                icon: 'error',
+                title: 'Error',
+                text: `Ocurrió un error al verificar el contenido: ${error.message}. ¿Deseas continuar de todos modos?`,
+                showCancelButton: true,
+                confirmButtonText: 'Continuar',
+                cancelButtonText: 'Revisar'
+            });
+            
+            setSaving(false);
+            
+            if (result.isConfirmed) {
+                if (fic.id === 0) {
+                    nav("/Fic");
+                } else {
+                    nav("/FicEdit/" + fic.id);
+                }
+            }
         }
-    }
+    };
 
     return(
         <div className={`back-color ${isDarkMode ? 'dark' : 'light'}`}>

@@ -6,15 +6,12 @@ const cors = require('cors');
 const mysql = require('mysql');
 const multer = require('multer');
 const path = require('path');
+const language = require('@google-cloud/language');
 
 app.use(cors());
 app.use(express.json());
 
 app.use('/public', express.static(path.join(__dirname, 'public')));
-
-/*app.listen(3001, ()=>{
-    console.log("Server listening on port 3001");
-})*/
 
 app.listen(3001, '0.0.0.0', () => {
     console.log('Backend server running on http://0.0.0.0:3001');
@@ -70,6 +67,48 @@ const upload = multer({
         } else {
             return callback(new Error("Invalid file type"));
         }
+    }
+});
+
+//google moderation
+const client = new language.LanguageServiceClient();
+
+app.post("/check", async (req, res) => {
+    try {
+        const inputText = req.body.text;
+        
+        if (!inputText) {
+            return res.status(400).json({error: 'Text is required'});
+        }
+
+        console.log("Input text:", inputText);
+        
+        const document = {
+            content: inputText,
+            type: 'PLAIN_TEXT'
+        };
+
+        const [result] = await client.moderateText({
+            document: document
+        });
+        
+        const categories = result.moderationCategories || [];
+        let categoriesMap = {};
+        
+        for (const category of categories) {
+            if (category.confidence > 0.8) {
+                console.log(`Category: ${category.name}, Confidence: ${category.confidence}`);
+                categoriesMap[category.name] = category.confidence;
+            }
+        }
+        
+        if(Object.keys(categoriesMap).length === 0) {
+            categoriesMap["No Inappropriate Content"] = 1;
+        }
+        
+        res.json(categoriesMap);
+    } catch (error) {
+        console.error('Error during moderation:', error);
     }
 });
 
@@ -708,28 +747,18 @@ app.get("/ficInfoWTag", (request, response)=>{
                 else {
                     const tags = data[0][0].tags.split(',');
                     const tagsWithType = tags.map(tag => {
-                        /*if(tag.includes('romance')){
-                            return {type: 'romance', content: tag};
-                        } else if(tag.includes('action')){
-                            return {type: 'action', content: tag};
-                        } else if(tag.includes('drama')){
-                            return {type: 'drama', content: tag};
-                        } else if(tag.includes('comedy')){
-                            return {type: 'comedy', content: tag};
-                        } else {
-                            return {type: 'other', content: tag};
+                        if(tag in ['Insulto', 'Blasfemia', 'Despectivo', 'Sexual', 'Muerte, daño y tragedia', 'Violento', 'Armas', 'Salud', 'Religión y creencias', 'Drogas ilícitas', 'Guerra y conflicto', 'Política']){
+                            return {type: '2', content: tag};
                         }
-                            { type: '1', content: 'Completada' },
-                            { type: '2', content: 'Contenido sexual' },
-                            { type: '3', content: 'Amor' },
-                            { type: '3', content: 'Time travel' },
-                            { type: '3', content: 'Enemies to lovers' },
-                            { type: '3', content: 'Drama' },
-                            { type: '4', content: '+'}
-                            */
-                        return {type: '3', content: tag};
+                        else {
+                            return {type: '3', content: tag};
+                        }
                     }
                     );
+                    if(data[0][0].completed == 1){
+                        //put tag completed at the beginning
+                        tagsWithType.unshift({type: '1', content: 'Completada'});
+                    }
                     response.json({
                         message: "Success",
                         title: data[0][0].title,
@@ -765,28 +794,18 @@ app.get("/ficCompleteInfo", (request, response)=>{
                 else {
                     const tags = data[0][0].tags.split(',');
                     const tagsWithType = tags.map(tag => {
-                        /*if(tag.includes('romance')){
-                            return {type: 'romance', content: tag};
-                        } else if(tag.includes('action')){
-                            return {type: 'action', content: tag};
-                        } else if(tag.includes('drama')){
-                            return {type: 'drama', content: tag};
-                        } else if(tag.includes('comedy')){
-                            return {type: 'comedy', content: tag};
-                        } else {
-                            return {type: 'other', content: tag};
+                        if(tag in ['Insulto', 'Blasfemia', 'Despectivo', 'Sexual', 'Muerte, daño y tragedia', 'Violento', 'Armas', 'Salud', 'Religión y creencias', 'Drogas ilícitas', 'Guerra y conflicto', 'Política']){
+                            return {type: '2', content: tag};
                         }
-                            { type: '1', content: 'Completada' },
-                            { type: '2', content: 'Contenido sexual' },
-                            { type: '3', content: 'Amor' },
-                            { type: '3', content: 'Time travel' },
-                            { type: '3', content: 'Enemies to lovers' },
-                            { type: '3', content: 'Drama' },
-                            { type: '4', content: '+'}
-                            */
-                        return {type: '3', content: tag};
+                        else {
+                            return {type: '3', content: tag};
+                        }
                     }
                     );
+                    if(data[0][0].completed == 1){
+                        //put tag completed at the beginning
+                        tagsWithType.unshift({type: '1', content: 'Completada'});
+                    }
                     response.json({
                         message: "Success",
                         title: data[0][0].title,

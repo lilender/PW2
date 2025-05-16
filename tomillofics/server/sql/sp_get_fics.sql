@@ -237,6 +237,7 @@ BEGIN
 			User.username, 
 			Fic.description, 
 			Fic.img_route,
+            Fic.completed,
 			(SELECT GROUP_CONCAT(name)
 				FROM Fic
 				JOIN FicTag ON Fic.idfic = FicTag.idfic
