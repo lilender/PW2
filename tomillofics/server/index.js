@@ -753,14 +753,13 @@ app.get("/ficInfoWTag", (request, response)=>{
                 else {
                     const tags = data[0][0].tags.split(',');
                     const tagsWithType = tags.map(tag => {
-                        if(tag in ['Insulto', 'Blasfemia', 'Despectivo', 'Sexual', 'Muerte, daño y tragedia', 'Violento', 'Armas', 'Salud', 'Religión y creencias', 'Drogas ilícitas', 'Guerra y conflicto', 'Política']){
+                        if(['Tóxico', 'Insulto', 'Blasfemia', 'Despectivo', 'Sexual', 'Muerte, daño y tragedia', 'Violento', 'Armas', 'Salud', 'Religión y creencias', 'Drogas ilícitas', 'Guerra y conflicto', 'Política'].includes(tag)){
                             return {type: '2', content: tag};
                         }
                         else {
                             return {type: '3', content: tag};
                         }
-                    }
-                    );
+                    });
                     if(data[0][0].completed == 1){
                         //put tag completed at the beginning
                         tagsWithType.unshift({type: '1', content: 'Completada'});
@@ -800,14 +799,13 @@ app.get("/ficCompleteInfo", (request, response)=>{
                 else {
                     const tags = data[0][0].tags.split(',');
                     const tagsWithType = tags.map(tag => {
-                        if(tag in ['Insulto', 'Blasfemia', 'Despectivo', 'Sexual', 'Muerte, daño y tragedia', 'Violento', 'Armas', 'Salud', 'Religión y creencias', 'Drogas ilícitas', 'Guerra y conflicto', 'Política']){
+                        if(['Tóxico', 'Insulto', 'Blasfemia', 'Despectivo', 'Sexual', 'Muerte, daño y tragedia', 'Violento', 'Armas', 'Salud', 'Religión y creencias', 'Drogas ilícitas', 'Guerra y conflicto', 'Política'].includes(tag)){
                             return {type: '2', content: tag};
                         }
                         else {
                             return {type: '3', content: tag};
                         }
-                    }
-                    );
+                    });
                     if(data[0][0].completed == 1){
                         //put tag completed at the beginning
                         tagsWithType.unshift({type: '1', content: 'Completada'});
