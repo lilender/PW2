@@ -109,11 +109,11 @@ function WriteChapter(){
             const detectedCategories = [];
             const tagsToAdd = [];
             
-            // Just collect information about potential inappropriate content
+            // Check if there's inappropriate content
             if (moderationResults && Object.keys(moderationResults).length > 0 && !moderationResults["No Inappropriate Content"]) {
                 hasInappropriateContent = true;
                 
-                // Instead of immediately updating the fic state, just prepare the tags
+                // Prepare the tags to potentially add (don't add them yet)
                 for (const category in moderationResults) {
                     if (category === "No Inappropriate Content") continue;
                     
@@ -128,66 +128,70 @@ function WriteChapter(){
                         detectedCategories.push(category);
                     }
                 }
+                
+                // If there's inappropriate content, ask for user confirmation
+                if (detectedCategories.length > 0) {
+                    const categoriesText = detectedCategories.join(', ');
+                    
+                    const result = await Swal.fire({
+                        color: '#4C0B0B',
+                        background: '#EACDBD',
+                        iconColor: '#4C0B0B',
+                        customClass: {
+                            confirmButton: "btn-main",
+                            cancelButton: "btn-sec",
+                            title: 'title',
+                        },
+                        icon: 'warning',
+                        title: 'Contenido Inapropiado',
+                        text: `Se ha detectado posible contenido inapropiado: ${categoriesText}. ¿Deseas añadir las etiquetas correspondientes y continuar?`,
+                        showCancelButton: true,
+                        confirmButtonText: 'Continuar',
+                        cancelButtonText: 'Revisar'
+                    });
+                    
+                    // If user clicks "Revisar", stop navigation and don't add tags
+                    if (!result.isConfirmed) {
+                        continueNavigation = false;
+                        return { hasInappropriateContent, continueNavigation };
+                    }
+                    
+                    // Only if the user confirmed (clicked "Continuar"), add the tags
+                    if (result.isConfirmed && tagsToAdd.length > 0) {
+                        setFic((prev) => {
+                            // Filter out tags that already exist
+                            const newTags = tagsToAdd.filter(
+                                newTag => !prev.tags.some(existingTag => existingTag.id === newTag.id)
+                            );
+                            
+                            return {
+                                ...prev,
+                                tags: [...prev.tags, ...newTags],
+                            };
+                        });
+                    }
+                }
             }
             
-            // If there's inappropriate content, ask for user confirmation
-            if (hasInappropriateContent) {
-                const categoriesText = detectedCategories.join(', ');
-                
-                const result = await Swal.fire({
+            // Only show success message if we're continuing navigation
+            if (continueNavigation) {
+                Swal.fire({
                     color: '#4C0B0B',
                     background: '#EACDBD',
                     iconColor: '#4C0B0B',
                     customClass: {
                         confirmButton: "btn-main",
-                        cancelButton: "btn-sec",
                         title: 'title',
                     },
-                    icon: 'warning',
-                    title: 'Contenido Inapropiado',
-                    text: `Se ha detectado posible contenido inapropiado: ${categoriesText}. ¿Deseas añadir las etiquetas correspondientes y continuar?`,
-                    showCancelButton: true,
-                    confirmButtonText: 'Continuar',
-                    cancelButtonText: 'Revisar'
+                    icon: 'success',
+                    title: 'Guardado',
+                    text: 'El contenido ha sido guardado correctamente.',
+                    timer: 1500,
+                    showConfirmButton: false
                 });
-                
-                if (!result.isConfirmed) {
-                    continueNavigation = false;
-                    return { hasInappropriateContent, continueNavigation };
-                }
-                
-                // Only add the tags if the user confirmed
-                if (result.isConfirmed && tagsToAdd.length > 0) {
-                    setFic((prev) => {
-                        // Filter out tags that already exist
-                        const newTags = tagsToAdd.filter(
-                            newTag => !prev.tags.some(existingTag => existingTag.id === newTag.id)
-                        );
-                        
-                        return {
-                            ...prev,
-                            tags: [...prev.tags, ...newTags],
-                        };
-                    });
-                }
             }
-            
-            Swal.fire({
-                color: '#4C0B0B',
-                background: '#EACDBD',
-                iconColor: '#4C0B0B',
-                customClass: {
-                    confirmButton: "btn-main",
-                    title: 'title',
-                },
-                icon: 'success',
-                title: 'Guardado',
-                text: 'El contenido ha sido guardado correctamente.',
-                timer: 1500,
-                showConfirmButton: false
-            });
 
-            return { hasInappropriateContent, continueNavigation: true };
+            return { hasInappropriateContent, continueNavigation };
         } catch (error) {
             // Detailed error logging
             console.error('Error in performModerationCheck:', error);
