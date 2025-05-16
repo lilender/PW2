@@ -888,7 +888,7 @@ app.post("/createFic", upload.single('cover'), (req, res) => {
     const title = req.body.title;
     const description = req.body.description;
     const iduser = req.body.iduser;
-    const completed = req.body.completed;
+    const completed = req.body.completed === 'true' ? 1 : 0;
     const img_route = req.file ? `/uploads/${req.file.filename}` : null;
 
     db.query('CALL sp_update_fics("create", ?, ?, ?, ?, ?, null)',
