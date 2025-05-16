@@ -52,35 +52,8 @@ function WriteChapter(){
         console.log(fic.chapters);
     };
 
-    const handleChapterChange = (chapter) => {
-        nav("/Chapter/" + chapter);
-    }
-
-    const handleBack = async () => {
+    const performModerationCheck = async (chapterText) => {
         try {
-            Swal.fire({
-                color: '#4C0B0B',
-                background: '#EACDBD',
-                iconColor: '#4C0B0B',
-                customClass: {
-                    confirmButton: "btn-main",
-                    cancelButton: "btn-sec",
-                    title: 'title',
-                },
-                icon: 'info',
-                title: 'Guardando...',
-                text: 'Verificando contenido, por favor espere.',
-                showConfirmButton: false,
-                allowOutsideClick: false,
-                didOpen: () => {
-                    Swal.showLoading();
-                }
-            });
-            
-            setSaving(true);
-            
-            const chapterText = fic.chapters[id - 1].text;
-            
             const response = await fetch('/check', {
                 method: 'POST',
                 headers: {
@@ -113,6 +86,7 @@ function WriteChapter(){
             };
             
             let hasInappropriateContent = false;
+            let continueNavigation = true;
             
             const detectedCategories = [];
             
@@ -165,8 +139,8 @@ function WriteChapter(){
                 });
                 
                 if (!result.isConfirmed) {
-                    setSaving(false);
-                    return;
+                    continueNavigation = false;
+                    return { hasInappropriateContent, continueNavigation };
                 }
             }
             
@@ -184,17 +158,107 @@ function WriteChapter(){
                 timer: 1500,
                 showConfirmButton: false
             });
+
+            return { hasInappropriateContent, continueNavigation };
+        } catch (error) {
+            throw error; // Propagate the error to be handled by the calling function
+        }
+    };
+
+    const handleChapterChange = async (chapter) => {
+        try {
+            Swal.fire({
+                color: '#4C0B0B',
+                background: '#EACDBD',
+                iconColor: '#4C0B0B',
+                customClass: {
+                    confirmButton: "btn-main",
+                    cancelButton: "btn-sec",
+                    title: 'title',
+                },
+                icon: 'info',
+                title: 'Guardando...',
+                text: 'Verificando contenido, por favor espere.',
+                showConfirmButton: false,
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+            
+            setSaving(true);
+            
+            const result = await performModerationCheck(fic.chapters[id - 1].text);
+            setSaving(false);
+            
+            if (result.continueNavigation) {
+                setTimeout(() => {
+                    nav("/Chapter/" + chapter);
+                }, 1000); // Shorter delay for chapter navigation
+            }
+        } catch (error) {
+            console.error('Error during moderation check:', error);
+            
+            const result = await Swal.fire({
+                color: '#4C0B0B',
+                background: '#EACDBD',
+                iconColor: '#4C0B0B',
+                customClass: {
+                    confirmButton: "btn-main",
+                    cancelButton: "btn-sec",
+                    title: 'title',
+                },
+                icon: 'error',
+                title: 'Error',
+                text: `Ocurrió un error al verificar el contenido: ${error.message}. ¿Deseas cambiar de capítulo de todos modos?`,
+                showCancelButton: true,
+                confirmButtonText: 'Continuar',
+                cancelButtonText: 'Revisar'
+            });
             
             setSaving(false);
             
-            setTimeout(() => {
-                if (fic.id === 0) {
-                    nav("/Fic");
-                } else {
-                    nav("/FicEdit/" + fic.id);
+            if (result.isConfirmed) {
+                nav("/Chapter/" + chapter);
+            }
+        }
+    };
+
+    const handleBack = async () => {
+        try {
+            Swal.fire({
+                color: '#4C0B0B',
+                background: '#EACDBD',
+                iconColor: '#4C0B0B',
+                customClass: {
+                    confirmButton: "btn-main",
+                    cancelButton: "btn-sec",
+                    title: 'title',
+                },
+                icon: 'info',
+                title: 'Guardando...',
+                text: 'Verificando contenido, por favor espere.',
+                showConfirmButton: false,
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
                 }
-            }, 1500);
+            });
             
+            setSaving(true);
+            
+            const result = await performModerationCheck(fic.chapters[id - 1].text);
+            setSaving(false);
+            
+            if (result.continueNavigation) {
+                setTimeout(() => {
+                    if (fic.id === 0) {
+                        nav("/Fic");
+                    } else {
+                        nav("/FicEdit/" + fic.id);
+                    }
+                }, 1500);
+            }
         } catch (error) {
             console.error('Error during moderation check:', error);
             
