@@ -70,8 +70,7 @@ function WriteChapter(){
             } catch (endpointError) {
                 console.error('Error with /api/check endpoint:', endpointError);
                 
-                // If the first endpoint fails, try a fallback (check in your server console logs 
-                // what the actual endpoint path should be)
+                // If the first endpoint fails, try a fallback
                 console.log('Trying fallback endpoint...');
                 response = await axios.post('/check', {
                     text: chapterText
@@ -120,9 +119,10 @@ function WriteChapter(){
                     const tagId = categoryToTagMap[category];
                     
                     if (tagId) {
+                        // Use the correct property names: idtag and name
                         tagsToAdd.push({
-                            id: tagId,
-                            name: Object.entries(categoryToTagMap).find(([key, value]) => value === tagId)[0]
+                            idtag: tagId,
+                            name: category // Use the category name directly
                         });
                         
                         detectedCategories.push(category);
@@ -159,9 +159,9 @@ function WriteChapter(){
                     // Only if the user confirmed (clicked "Continuar"), add the tags
                     if (result.isConfirmed && tagsToAdd.length > 0) {
                         setFic((prev) => {
-                            // Filter out tags that already exist
+                            // Filter out tags that already exist - use idtag for comparison
                             const newTags = tagsToAdd.filter(
-                                newTag => !prev.tags.some(existingTag => existingTag.id === newTag.id)
+                                newTag => !prev.tags.some(existingTag => existingTag.idtag === newTag.idtag)
                             );
                             
                             return {
