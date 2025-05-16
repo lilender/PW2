@@ -5,16 +5,20 @@ DROP PROCEDURE IF EXISTS sp_get_fics;
 DELIMITER $$
 
 CREATE PROCEDURE sp_get_fics (
-	IN in_option			VARCHAR(10),
-	IN in_iduser			INT, 
+    IN in_option            VARCHAR(10),
+    IN in_iduser            INT, 
     IN in_nfics             INT,
     IN in_npage             INT,
     IN in_idfic             INT,
     IN in_text              VARCHAR(100),
-    IN in_idtags              VARCHAR(100),
+    IN in_idtags            VARCHAR(100),
+    IN in_excludeidtags      VARCHAR(100),
     IN in_lastread          INT
 )
 BEGIN
+    DECLARE count_only BOOLEAN;
+    DECLARE base_query TEXT;
+
     IF in_option = 'edit' THEN
         SELECT f.idfic, f.title, f.description, f.img_route, f.completed
         FROM Fic f
@@ -76,141 +80,54 @@ BEGIN
         ORDER BY created DESC
         LIMIT in_nfics OFFSET in_npage;
     END IF;
-    IF in_option = 'nfiltered' THEN
-        IF in_idtags = '' THEN
-            SELECT COUNT(*) AS nresults
+    IF in_option LIKE 'nfiltered%' OR in_option LIKE 'filtered%' THEN
+        SET count_only = (in_option LIKE 'nfiltered%');
+        
+        SET base_query = CONCAT('
+            SELECT ', IF(count_only, 'COUNT(*) AS nresults', 'Fic.idfic'), '
             FROM Fic
-            WHERE title LIKE CONCAT('%', in_text, '%')
-            OR description LIKE CONCAT('%', in_text, '%');
-        ELSE
-            SELECT COUNT(*) AS nresults FROM (
-                SELECT Fic.idfic
-                FROM Fic
-                JOIN FicTag ON Fic.idfic = FicTag.idfic
-                WHERE 
-                (title LIKE CONCAT('%', in_text, '%')
-                OR description LIKE CONCAT('%', in_text, '%'))
-                AND idtag IN (SELECT idtag FROM Tag WHERE FIND_IN_SET(idtag, in_idtags))
-                GROUP BY FicTag.idfic
-                HAVING COUNT(DISTINCT idtag) = (SELECT COUNT(*) FROM Tag WHERE FIND_IN_SET(idtag, in_idtags))
-            ) AS matched_fics;
+            ', IF(in_idtags != '', 'JOIN FicTag ON Fic.idfic = FicTag.idfic', ''), '
+            WHERE (title LIKE CONCAT(''%'', ''', in_text, ''', ''%'')
+            OR description LIKE CONCAT(''%'', ''', in_text, ''', ''%''))');
+        
+        IF in_option LIKE '%c' THEN
+            SET base_query = CONCAT(base_query, ' AND completed = 1');
+        ELSEIF in_option LIKE '%p' THEN
+            SET base_query = CONCAT(base_query, ' AND completed = 0');
         END IF;
-    END IF;
-    IF in_option = 'nfilteredc' THEN
-        IF in_idtags = '' THEN
-            SELECT COUNT(*) AS nresults
-            FROM Fic
-            WHERE 
-            (title LIKE CONCAT('%', in_text, '%')
-            OR description LIKE CONCAT('%', in_text, '%'))
-            AND completed = 1;
-        ELSE
-            SELECT COUNT(*) AS nresults FROM (
-                SELECT Fic.idfic
-                FROM Fic
-                JOIN FicTag ON Fic.idfic = FicTag.idfic
-                WHERE 
-                (title LIKE CONCAT('%', in_text, '%')
-                OR description LIKE CONCAT('%', in_text, '%'))
-                AND completed = 1
-                AND idtag IN (SELECT idtag FROM Tag WHERE FIND_IN_SET(idtag, in_idtags))
-                GROUP BY FicTag.idfic
-                HAVING COUNT(DISTINCT idtag) = (SELECT COUNT(*) FROM Tag WHERE FIND_IN_SET(idtag, in_idtags))
-            ) AS matched_fics;
+        
+        IF in_idtags != '' THEN
+            SET base_query = CONCAT(base_query, ' 
+                AND idtag IN (SELECT idtag FROM Tag WHERE FIND_IN_SET(idtag, ''', in_idtags, '''))');
         END IF;
-    END IF;
-    IF in_option = 'nfilteredp' THEN
-        IF in_idtags = '' THEN
-            SELECT COUNT(*) AS nresults
-            FROM Fic
-            WHERE 
-            (title LIKE CONCAT('%', in_text, '%')
-            OR description LIKE CONCAT('%', in_text, '%'))
-            AND completed = 0;
-        ELSE
-            SELECT COUNT(*) AS nresults FROM (
-                SELECT Fic.idfic
-                FROM Fic
-                JOIN FicTag ON Fic.idfic = FicTag.idfic
-                WHERE 
-                (title LIKE CONCAT('%', in_text, '%')
-                OR description LIKE CONCAT('%', in_text, '%'))
-                AND completed = 0
-                AND idtag IN (SELECT idtag FROM Tag WHERE FIND_IN_SET(idtag, in_idtags))
-                GROUP BY FicTag.idfic
-                HAVING COUNT(DISTINCT idtag) = (SELECT COUNT(*) FROM Tag WHERE FIND_IN_SET(idtag, in_idtags))
-            ) AS matched_fics;
+        
+        IF in_excludeidtags != '' THEN
+            SET base_query = CONCAT(base_query, ' 
+                AND NOT EXISTS (
+                    SELECT 1 FROM FicTag 
+                    WHERE FicTag.idfic = Fic.idfic 
+                    AND FicTag.idtag IN (SELECT idtag FROM Tag WHERE FIND_IN_SET(idtag, ''', in_excludeidtags, '''))
+                )');
         END IF;
-    END IF;
-    IF in_option = 'filtered' THEN
-        IF in_idtags = '' THEN
-            SELECT idfic FROM Fic
-            WHERE 
-            (title LIKE CONCAT('%', in_text, '%')
-            OR description LIKE CONCAT('%', in_text, '%'))
-            ORDER BY created DESC
-            LIMIT in_nfics OFFSET in_npage;
-        ELSE
-            SELECT Fic.idfic
-            FROM Fic
-            JOIN FicTag ON Fic.idfic = FicTag.idfic
-            WHERE
-            (title LIKE CONCAT('%', in_text, '%')
-            OR description LIKE CONCAT('%', in_text, '%'))
-            AND idtag IN (SELECT idtag FROM Tag WHERE FIND_IN_SET(idtag, in_idtags))
-            GROUP BY FicTag.idfic
-            HAVING COUNT(DISTINCT idtag) = (SELECT COUNT(*) FROM Tag WHERE FIND_IN_SET(idtag, in_idtags))
-            ORDER BY created DESC
-            LIMIT in_nfics OFFSET in_npage;
+        
+        IF in_idtags != '' THEN
+            SET base_query = CONCAT(base_query, ' 
+                GROUP BY ', IF(count_only, 'Fic.idfic', 'FicTag.idfic'), '
+                HAVING COUNT(DISTINCT idtag) = (SELECT COUNT(*) FROM Tag WHERE FIND_IN_SET(idtag, ''', in_idtags, '''))');
         END IF;
-    END IF;
-    IF in_option = 'filteredc' THEN
-        IF in_idtags = '' THEN
-            SELECT idfic FROM Fic
-            WHERE 
-            (title LIKE CONCAT('%', in_text, '%')
-            OR description LIKE CONCAT('%', in_text, '%'))
-            AND completed = 1
-            ORDER BY created DESC
-            LIMIT in_nfics OFFSET in_npage;
-        ELSE
-            SELECT Fic.idfic
-            FROM Fic
-            JOIN FicTag ON Fic.idfic = FicTag.idfic
-            WHERE 
-            (title LIKE CONCAT('%', in_text, '%')
-            OR description LIKE CONCAT('%', in_text, '%'))
-            AND completed = 1
-            AND idtag IN (SELECT idtag FROM Tag WHERE FIND_IN_SET(idtag, in_idtags))
-            GROUP BY FicTag.idfic
-            HAVING COUNT(DISTINCT idtag) = (SELECT COUNT(*) FROM Tag WHERE FIND_IN_SET(idtag, in_idtags))
-            ORDER BY created DESC
-            LIMIT in_nfics OFFSET in_npage;
+        
+        IF NOT count_only THEN
+            SET base_query = CONCAT(base_query, '
+                ORDER BY created DESC
+                LIMIT ', in_nfics, ' OFFSET ', in_npage);
         END IF;
-    END IF;
-    IF in_option = 'filteredp' THEN
-        IF in_idtags = '' THEN
-            SELECT idfic FROM Fic
-            WHERE 
-            (title LIKE CONCAT('%', in_text, '%')
-            OR description LIKE CONCAT('%', in_text, '%'))
-            AND completed = 0
-            ORDER BY created DESC
-            LIMIT in_nfics OFFSET in_npage;
-        ELSE
-            SELECT Fic.idfic
-            FROM Fic
-            JOIN FicTag ON Fic.idfic = FicTag.idfic
-            WHERE 
-            (title LIKE CONCAT('%', in_text, '%')
-            OR description LIKE CONCAT('%', in_text, '%'))
-            AND completed = 0
-            AND idtag IN (SELECT idtag FROM Tag WHERE FIND_IN_SET(idtag, in_idtags))
-            GROUP BY FicTag.idfic
-            HAVING COUNT(DISTINCT idtag) = (SELECT COUNT(*) FROM Tag WHERE FIND_IN_SET(idtag, in_idtags))
-            ORDER BY created DESC
-            LIMIT in_nfics OFFSET in_npage;
-        END IF;
+        
+        -- Prepare and execute the dynamic SQL
+        SET @sql = base_query;
+        PREPARE stmt FROM @sql;
+        EXECUTE stmt;
+        DEALLOCATE PREPARE stmt;
+    
     END IF;
     IF in_option = 'top' THEN
         SELECT title, username, description, img_route, profile_image

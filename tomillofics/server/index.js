@@ -403,7 +403,7 @@ app.post("/tagFic", (request, response)=>{
 
 //get fics
 app.get("/favoriteFics", (request, response)=>{
-    db.query('CALL sp_get_fics("favorite", null, null, null, null, null, null, null)',
+    db.query('CALL sp_get_fics("favorite", null, null, null, null, null, null, null, null)',
         (error, data)=>{
             if(error){
                 console.log(error);
@@ -430,7 +430,7 @@ app.get("/favoriteFics", (request, response)=>{
 app.get("/lastReadFics", (request, response)=>{
     const iduser = request.query.iduser;
 
-    db.query('CALL sp_get_fics("lastread", ?, null, null, null, null, null, null)',
+    db.query('CALL sp_get_fics("lastread", ?, null, null, null, null, null, null, null)',
         [iduser],
         (error, data)=>{
             if(error){
@@ -460,7 +460,7 @@ app.get("/libraryFics", (request, response)=>{
     const nfics = request.query.nfics;
     const npage = request.query.npage;
 
-    db.query('CALL sp_get_fics("library", ?, ?, ?, null, null, null, null)',
+    db.query('CALL sp_get_fics("library", ?, ?, ?, null, null, null, null, null)',
         [iduser, nfics, npage],
         (error, data)=>{
             if(error){
@@ -486,7 +486,7 @@ app.get("/libraryFics", (request, response)=>{
 }
 )
 app.get("/mostCommentedFics", (request, response)=>{
-    db.query('CALL sp_get_fics("commented", null, null, null, null, null, null, null)',
+    db.query('CALL sp_get_fics("commented", null, null, null, null, null, null, null, null)',
         (error, data)=>{
             if(error){
                 console.log(error);
@@ -511,7 +511,7 @@ app.get("/mostCommentedFics", (request, response)=>{
 }
 )
 app.get("/newestFics", (request, response)=>{
-    db.query('CALL sp_get_fics("newest", null, null, null, null, null, null, null)',
+    db.query('CALL sp_get_fics("newest", null, null, null, null, null, null, null, null)',
         (error, data)=>{
             if(error){
                 console.log(error);
@@ -536,7 +536,7 @@ app.get("/newestFics", (request, response)=>{
 }
 )
 app.get("/longestFics", (request, response)=>{
-    db.query('CALL sp_get_fics("longest", null, null, null, null, null, null, null)',
+    db.query('CALL sp_get_fics("longest", null, null, null, null, null, null, null, null)',
         (error, data)=>{
             if(error){
                 console.log(error);
@@ -565,7 +565,7 @@ app.get("/userWrittenFics", (request, response)=>{
     const nfics = request.query.nfics;
     const npage = request.query.npage;
 
-    db.query('CALL sp_get_fics("user", ?, ?, ?, null, null, null, null)',
+    db.query('CALL sp_get_fics("user", ?, ?, ?, null, null, null, null, null)',
         [iduser, nfics, npage],
         (error, data)=>{
             if(error){
@@ -594,6 +594,7 @@ app.get("/userWrittenFics", (request, response)=>{
 app.get("/nSearchFics", (request, response)=>{
     const text = request.query.text;
     const idtags = request.query.idtags;
+    const excludeidtags = request.query.excludeidtags;
     const status = request.query.status;
     let sp;
     if(status == -1){
@@ -606,8 +607,8 @@ app.get("/nSearchFics", (request, response)=>{
         sp = "nfilteredc";
     }
 
-    db.query('CALL sp_get_fics(?, null, null, null, null, ?, ?, null)',
-        [sp, text, idtags],
+    db.query('CALL sp_get_fics(?, null, null, null, null, ?, ?, ?, null)',
+        [sp, text, idtags, excludeidtags],
         (error, data)=>{
             if(error){
                 console.log(error);
@@ -636,6 +637,7 @@ app.get("/filteredFics", (request, response)=>{
     const npage = request.query.npage;
     const text = request.query.text;
     const idtags = request.query.idtags;
+    const excludeidtags = request.query.excludeidtags;
     const status = request.query.status;
     let sp;
     if(status == -1){
@@ -648,8 +650,8 @@ app.get("/filteredFics", (request, response)=>{
         sp = "filteredc";
     }
 
-    db.query('CALL sp_get_fics(?, null, ?, ?, null, ?, ?, null)',
-        [sp, nfics, npage, text, idtags],
+    db.query('CALL sp_get_fics(?, null, ?, ?, null, ?, ?, ?, null)',
+        [sp, nfics, npage, text, idtags, excludeidtags],
         (error, data)=>{
             if(error){
                 console.log(error);
@@ -677,7 +679,7 @@ app.get("/filteredFics", (request, response)=>{
 //fic info
 app.get("/ficTopInfo", (request, response)=>{
     const idfic = request.query.idfic;
-    db.query('CALL sp_get_fics("top", null, null, null, ?, null, null, null)',
+    db.query('CALL sp_get_fics("top", null, null, null, ?, null, null, null, null)',
         [idfic],
         (error, data)=>{
             if(error){
@@ -708,7 +710,7 @@ app.get("/ficTopInfo", (request, response)=>{
 )
 app.get("/ficBasicInfo", (request, response)=>{
     const idfic = request.query.idfic;
-    db.query('CALL sp_get_fics("basic", null, null, null, ?, null, null, null)',
+    db.query('CALL sp_get_fics("basic", null, null, null, ?, null, null, null, null)',
         [idfic],
         (error, data)=>{
             if(error){
@@ -736,7 +738,7 @@ app.get("/ficBasicInfo", (request, response)=>{
 )
 app.get("/ficInfoWTag", (request, response)=>{
     const idfic = request.query.idfic;
-    db.query('CALL sp_get_fics("tagged", null, null, null, ?, null, null, null)',
+    db.query('CALL sp_get_fics("tagged", null, null, null, ?, null, null, null, null)',
         [idfic],
         (error, data)=>{
             if(error){
@@ -782,7 +784,7 @@ app.get("/ficInfoWTag", (request, response)=>{
 app.get("/ficCompleteInfo", (request, response)=>{
     const idfic = request.query.idfic;
     const iduser = request.query.iduser;
-    db.query('CALL sp_get_fics("complete", ?, null, null, ?, null, null, null)',
+    db.query('CALL sp_get_fics("complete", ?, null, null, ?, null, null, null, null)',
         [iduser, idfic],
         (error, data)=>{
             if(error){
@@ -831,7 +833,7 @@ app.get("/ficCompleteInfo", (request, response)=>{
 )
 app.get("/ficEditInfo", (request, response) => {
     const idfic = request.query.idfic;
-    db.query('CALL sp_get_fics("edit", null, null, null, ?, null, null, null)',
+    db.query('CALL sp_get_fics("edit", null, null, null, ?, null, null, null, null)',
         [idfic],
         (error, results) => {
             if(error) {
@@ -868,7 +870,7 @@ app.post("/viewFic", (request, response)=>{
     const iduser = request.body.iduser;
     const idfic = request.body.idfic;
     const lastread = request.body.lastread;
-    db.query('CALL sp_get_fics("view", ?, null, null, ?, null, null, ?)',
+    db.query('CALL sp_get_fics("view", ?, null, null, ?, null, null, null, ?)',
         [iduser, idfic, lastread],
         (error, data)=>{
             if(error){
@@ -889,7 +891,7 @@ app.post("/saveFic", (request, response)=>{
     console.log(request.body);
     const iduser = request.body.iduser;
     const idfic = request.body.idfic;
-    db.query('CALL sp_get_fics("save", ?, null, null, ?, null, null, null)',
+    db.query('CALL sp_get_fics("save", ?, null, null, ?, null, null, null, null)',
         [iduser, idfic],
         (error, data)=>{
             if(error){
