@@ -87,7 +87,6 @@ function WriteChapter(){
             const moderationResults = response.data;
             console.log('Moderation results:', moderationResults);
             
-            // Rest of your code remains the same...
             const categoryToTagMap = {
                 "Toxic": 1,             // Tóxico
                 "Insult": 2,            // Insulto
@@ -108,35 +107,30 @@ function WriteChapter(){
             let continueNavigation = true;
             
             const detectedCategories = [];
+            const tagsToAdd = [];
             
+            // Just collect information about potential inappropriate content
             if (moderationResults && Object.keys(moderationResults).length > 0 && !moderationResults["No Inappropriate Content"]) {
                 hasInappropriateContent = true;
                 
-                setFic((prev) => {
-                    const newTags = [];
+                // Instead of immediately updating the fic state, just prepare the tags
+                for (const category in moderationResults) {
+                    if (category === "No Inappropriate Content") continue;
                     
-                    for (const category in moderationResults) {
-                        if (category === "No Inappropriate Content") continue;
+                    const tagId = categoryToTagMap[category];
+                    
+                    if (tagId) {
+                        tagsToAdd.push({
+                            id: tagId,
+                            name: Object.entries(categoryToTagMap).find(([key, value]) => value === tagId)[0]
+                        });
                         
-                        const tagId = categoryToTagMap[category];
-                        
-                        if (tagId && !prev.tags.some(tag => tag.id === tagId)) {
-                            newTags.push({
-                                id: tagId,
-                                name: Object.entries(categoryToTagMap).find(([key, value]) => value === tagId)[0]
-                            });
-                            
-                            detectedCategories.push(category);
-                        }
+                        detectedCategories.push(category);
                     }
-                    
-                    return {
-                        ...prev,
-                        tags: [...prev.tags, ...newTags],
-                    };
-                });
+                }
             }
             
+            // If there's inappropriate content, ask for user confirmation
             if (hasInappropriateContent) {
                 const categoriesText = detectedCategories.join(', ');
                 
@@ -151,7 +145,7 @@ function WriteChapter(){
                     },
                     icon: 'warning',
                     title: 'Contenido Inapropiado',
-                    text: `Se ha detectado posible contenido inapropiado: ${categoriesText}. Se han añadido las etiquetas correspondientes. ¿Deseas continuar?`,
+                    text: `Se ha detectado posible contenido inapropiado: ${categoriesText}. ¿Deseas añadir las etiquetas correspondientes y continuar?`,
                     showCancelButton: true,
                     confirmButtonText: 'Continuar',
                     cancelButtonText: 'Revisar'
@@ -160,6 +154,21 @@ function WriteChapter(){
                 if (!result.isConfirmed) {
                     continueNavigation = false;
                     return { hasInappropriateContent, continueNavigation };
+                }
+                
+                // Only add the tags if the user confirmed
+                if (result.isConfirmed && tagsToAdd.length > 0) {
+                    setFic((prev) => {
+                        // Filter out tags that already exist
+                        const newTags = tagsToAdd.filter(
+                            newTag => !prev.tags.some(existingTag => existingTag.id === newTag.id)
+                        );
+                        
+                        return {
+                            ...prev,
+                            tags: [...prev.tags, ...newTags],
+                        };
+                    });
                 }
             }
             
