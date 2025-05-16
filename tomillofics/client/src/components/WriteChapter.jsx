@@ -54,19 +54,18 @@ function WriteChapter(){
 
     const performModerationCheck = async (chapterText) => {
         try {
-            const response = await fetch('/check', {
-                method: 'POST',
+            const response = await axios.post('/api/check', {
+                text: chapterText
+            }, {
                 headers: {
                     'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ text: chapterText })
+                }
             });
             
-            if (!response.ok) {
-                throw new Error('Error al verificar el contenido');
-            }
+            // Axios automatically throws errors for non-2xx responses,
+            // so we don't need to check response.ok
             
-            const moderationResults = await response.json();
+            const moderationResults = response.data;
             console.log('Moderation results:', moderationResults);
             
             const categoryToTagMap = {
@@ -161,7 +160,22 @@ function WriteChapter(){
 
             return { hasInappropriateContent, continueNavigation };
         } catch (error) {
-            throw error; // Propagate the error to be handled by the calling function
+            // Axios error handling
+            if (error.response) {
+                // The request was made and the server responded with a status code
+                // that falls out of the range of 2xx
+                console.error('Error response:', error.response.data);
+                console.error('Error status:', error.response.status);
+                throw new Error(`Error ${error.response.status}: ${error.response.data.message || 'Error al verificar el contenido'}`);
+            } else if (error.request) {
+                // The request was made but no response was received
+                console.error('Error request:', error.request);
+                throw new Error('No se recibió respuesta del servidor');
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                console.error('Error message:', error.message);
+                throw error;
+            }
         }
     };
 
