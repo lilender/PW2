@@ -75,7 +75,7 @@ const keyFilename = path.resolve(process.env.HOME, 'google-credentials.json');
 console.log('Using Google Cloud credentials from:', keyFilename);
 
 // Initialize with explicit credentials
-const client = new LanguageServiceClient({
+const client = new language.LanguageServiceClient({
     keyFilename: keyFilename
 });
 
