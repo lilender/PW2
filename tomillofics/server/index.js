@@ -71,7 +71,13 @@ const upload = multer({
 });
 
 //google moderation
-const client = new language.LanguageServiceClient();
+const keyFilename = path.resolve(process.env.HOME, 'google-credentials.json');
+console.log('Using Google Cloud credentials from:', keyFilename);
+
+// Initialize with explicit credentials
+const client = new LanguageServiceClient({
+    keyFilename: keyFilename
+});
 
 app.post("/check", async (req, res) => {
     try {
