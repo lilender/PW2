@@ -6,6 +6,7 @@ import ChapterDrop from './ChapterDrop';
 import { useFic } from "./FicContext";
 import { useParams } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 function WriteChapter(){
     const nav = useNavigate();
