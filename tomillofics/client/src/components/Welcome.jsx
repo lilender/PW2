@@ -13,7 +13,7 @@ function Welcome(){
     const [topFics, setTopFics] = useState([]);
 
     useEffect(() => {
-        axios.get(`/api/favoriteFics`)
+        axios.get(`http://localhost:3001/favoriteFics`)
         .then(resp => {
             if (resp.data.message === "Success") {
                 setTopFics(resp.data.fics);

@@ -20,7 +20,7 @@ function CommentsSection({idfic, idchapter}){
     , [currentPage]);
 
     useEffect(() => {
-        axios.get(`/api/nComments?idfic=${idfic}&idchapter=${idchapter}`)
+        axios.get(`http://localhost:3001/nComments?idfic=${idfic}&idchapter=${idchapter}`)
             .then(resp => {
                 if (resp.data.message === "Success") {
                     setTotalPages(Math.ceil( parseInt(resp.data.ncomments) / ncomments));
@@ -34,7 +34,7 @@ function CommentsSection({idfic, idchapter}){
     },[idfic, idchapter]);
 
     useEffect(() => {
-        axios.get(`/api/chapterComments?idfic=${idfic}&idchapter=${idchapter}&ncomments=${ncomments}&npage=${offset}`)
+        axios.get(`http://localhost:3001/chapterComments?idfic=${idfic}&idchapter=${idchapter}&ncomments=${ncomments}&npage=${offset}`)
             .then(resp => {
                 if (resp.data.message === "Success") {
                     setComments(resp.data.comments);
@@ -50,7 +50,7 @@ function CommentsSection({idfic, idchapter}){
     const saveComment = () => {
         const commentText = document.getElementById('input-comment').value;
         if(commentText.length > 0){
-            axios.post(`/api/createComment`, {
+            axios.post(`http://localhost:3001/createComment`, {
                 idfic: idfic,
                 idchapter: idchapter,
                 text: commentText,

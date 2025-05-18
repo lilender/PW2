@@ -1,3 +1,4 @@
+import 'bootstrap/dist/css/bootstrap.css';
 
 function BrownLine(props){
     if (props.type === '1'){

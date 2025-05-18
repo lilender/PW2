@@ -10,7 +10,7 @@ function Carrusel({fics}) {
 
     useEffect(() => {
         Promise.all(fics.map(fic =>
-            axios.get(`/api/ficTopInfo?idfic=${fic.idfic}`)
+            axios.get(`http://localhost:3001/ficTopInfo?idfic=${fic.idfic}`)
         ))
         .then(responses => {
             const successfulResponses = responses
@@ -41,7 +41,7 @@ function Carrusel({fics}) {
                     <div className="MainCarrousel row justify-content-center align-items-center px-5 pb-4">
                         <p className='col-3 num p-0 m-0 ps-5'>#{index + 1}</p>
                         <CarruselIMG 
-                            src={`/api/public${fic.img_route}`}
+                            src={`http://localhost:3001/public${fic.img_route}`}
                         />
                         <CarruselData 
                             title={fic.title} 

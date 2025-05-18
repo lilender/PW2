@@ -1,12 +1,13 @@
+import 'bootstrap/dist/css/bootstrap.css';
 import { Link } from 'react-router-dom';
 
 function PrimeNavBar(){
     return (
         <nav className="prime-navbar navbar-expand-lg m-0">
             <div className="row m-0">
-                <p className="col-2 p-3"> 
+                <a className="col-2 p-3"> 
                     <img src="/img/PrimeNavBarLogo.png" alt="a"/>
-                </p>
+                </a>
                 <div className='col-10 p-3 align-self-center'>
                     <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                         <span className="navbar-toggler-icon"></span>

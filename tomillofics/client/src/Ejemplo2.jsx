@@ -27,7 +27,7 @@ function Modificar({ver, id, userInfo, hideFun, modFun}){
         data.append("email", email);
         data.append("iduser", id);
 
-        axios.post("/api/modifyUserTest", 
+        axios.post("http://localhost:3001/modifyUserTest", 
             data, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
