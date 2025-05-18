@@ -997,8 +997,9 @@ button.profile{
   border: 0.1rem solid #9B4444;
   padding: 0.2rem;
   img {
-      height: auto;
-      width: 90%;
+    border-radius: 50%;
+    width: 100%;
+    height: auto;
   }
 }
 
