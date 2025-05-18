@@ -6,10 +6,12 @@ import ChapterDrop from './ChapterDrop';
 import { useFic } from "./FicContext";
 import { useParams } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
+import axios from 'axios';
 
 function WriteChapter(){
     const nav = useNavigate();
-    const { fic, updateChapter } = useFic();
+    const { fic, updateChapter, setFic } = useFic();
     const { id: encodedId } = useParams();
     const id = decodeURIComponent(encodedId);
 
@@ -41,7 +43,6 @@ function WriteChapter(){
 
     //autoguardado
     const [saving, setSaving] = useState(false);
-    let saveTimeout = useRef(null);
 
     const handleInputChange = (event) => {
         const textarea = textareaRef.current;
@@ -49,18 +50,314 @@ function WriteChapter(){
         textarea.style.height = textarea.scrollHeight + 'px';
 
         updateChapter(id, { ...fic.chapters[id - 1], text: event.target.value });
-        setSaving(true);
-
-        clearTimeout(saveTimeout.current);
-        saveTimeout.current = setTimeout(() => {
-            //localStorage.setItem('chapterContent', content);
-            setSaving(false);
-        }, 1500);
+        console.log(fic.chapters);
     };
 
-    const handleChapterChange = (chapter) => {
-        nav("/Chapter/" + chapter);
-    }
+    const performModerationCheck = async (chapterText) => {
+        try {
+            console.log('Attempting moderation check with text:', chapterText.substring(0, 100) + '...');
+            
+            let response;
+            try {
+                // Try the expected endpoint first
+                response = await axios.post('/api/check', {
+                    text: chapterText
+                }, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+            } catch (endpointError) {
+                console.error('Error with /api/check endpoint:', endpointError);
+                
+                // If the first endpoint fails, try a fallback
+                console.log('Trying fallback endpoint...');
+                response = await axios.post('/check', {
+                    text: chapterText
+                }, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+            }
+            
+            console.log('Moderation API response:', response.status);
+            
+            const moderationResults = response.data;
+            console.log('Moderation results:', moderationResults);
+            
+            const categoryToTagMap = {
+                "Toxic": 1,             // Tóxico
+                "Insult": 2,            // Insulto
+                "Profanity": 3,         // Blasfemia
+                "Derogatory": 4,        // Despectivo
+                "Sexual": 5,            // Sexual
+                "Death, Harm & Tragedy": 6, // Muerte, daño y tragedia
+                "Violent": 7,           // Violento
+                "Firearms & Weapons": 8, // Armas
+                "Health": 9,            // Salud
+                "Religion & Belief": 10, // Religión y creencias
+                "Illicit Drugs": 11,    // Drogas ilícitas
+                "War & Conflict": 12,   // Guerra y conflicto
+                "Politics": 13          // Política
+            };
+            
+            let hasInappropriateContent = false;
+            let continueNavigation = true;
+            
+            const detectedCategories = [];
+            const tagsToAdd = [];
+            
+            // Check if there's inappropriate content
+            if (moderationResults && Object.keys(moderationResults).length > 0 && !moderationResults["No Inappropriate Content"]) {
+                hasInappropriateContent = true;
+                
+                // Prepare the tags to potentially add (don't add them yet)
+                for (const category in moderationResults) {
+                    if (category === "No Inappropriate Content") continue;
+                    
+                    const tagId = categoryToTagMap[category];
+                    
+                    if (tagId) {
+                        // Use the correct property names: idtag and name
+                        tagsToAdd.push({
+                            idtag: tagId,
+                            name: category // Use the category name directly
+                        });
+                        
+                        detectedCategories.push(category);
+                    }
+                }
+                
+                // If there's inappropriate content, ask for user confirmation
+                if (detectedCategories.length > 0) {
+                    const categoriesText = detectedCategories.join(', ');
+                    
+                    const result = await Swal.fire({
+                        color: '#4C0B0B',
+                        background: '#EACDBD',
+                        iconColor: '#4C0B0B',
+                        customClass: {
+                            confirmButton: "btn-main",
+                            cancelButton: "btn-sec",
+                            title: 'title',
+                        },
+                        icon: 'warning',
+                        title: 'Contenido Inapropiado',
+                        text: `Se ha detectado posible contenido inapropiado: ${categoriesText}. ¿Deseas añadir las etiquetas correspondientes y continuar?`,
+                        showCancelButton: true,
+                        confirmButtonText: 'Continuar',
+                        cancelButtonText: 'Revisar'
+                    });
+                    
+                    // If user clicks "Revisar", stop navigation and don't add tags
+                    if (!result.isConfirmed) {
+                        continueNavigation = false;
+                        return { hasInappropriateContent, continueNavigation };
+                    }
+                    
+                    // Only if the user confirmed (clicked "Continuar"), add the tags
+                    if (result.isConfirmed && tagsToAdd.length > 0) {
+                        setFic((prev) => {
+                            // Filter out tags that already exist - use idtag for comparison
+                            const newTags = tagsToAdd.filter(
+                                newTag => !prev.tags.some(existingTag => existingTag.idtag === newTag.idtag)
+                            );
+                            
+                            return {
+                                ...prev,
+                                tags: [...prev.tags, ...newTags],
+                            };
+                        });
+                    }
+                }
+            }
+            
+            // Only show success message if we're continuing navigation
+            if (continueNavigation) {
+                Swal.fire({
+                    color: '#4C0B0B',
+                    background: '#EACDBD',
+                    iconColor: '#4C0B0B',
+                    customClass: {
+                        confirmButton: "btn-main",
+                        title: 'title',
+                    },
+                    icon: 'success',
+                    title: 'Guardado',
+                    text: 'El contenido ha sido guardado correctamente.',
+                    timer: 1500,
+                    showConfirmButton: false
+                });
+            }
+
+            return { hasInappropriateContent, continueNavigation };
+        } catch (error) {
+            // Detailed error logging
+            console.error('Error in performModerationCheck:', error);
+            
+            // Axios error handling
+            if (error.response) {
+                console.error('Error response:', error.response.data);
+                console.error('Error status:', error.response.status);
+                throw new Error(`Error ${error.response.status}: ${error.response.data.message || 'Error al verificar el contenido'}`);
+            } else if (error.request) {
+                console.error('Error request:', error.request);
+                
+                // If we can't reach the moderation API, we'll allow navigation
+                // but log the error for debugging
+                console.warn('Skipping moderation check due to server error');
+                
+                // Show a warning to the user
+                await Swal.fire({
+                    color: '#4C0B0B',
+                    background: '#EACDBD',
+                    iconColor: '#4C0B0B',
+                    customClass: {
+                        confirmButton: "btn-main",
+                        title: 'title',
+                    },
+                    icon: 'warning',
+                    title: 'Advertencia',
+                    text: 'No se pudo verificar el contenido, pero se guardará de todos modos.',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+                
+                // Return success to allow navigation
+                return { hasInappropriateContent: false, continueNavigation: true };
+            } else {
+                console.error('Error message:', error.message);
+                throw error;
+            }
+        }
+    };
+
+    const handleChapterChange = async (chapter) => {
+        try {
+            Swal.fire({
+                color: '#4C0B0B',
+                background: '#EACDBD',
+                iconColor: '#4C0B0B',
+                customClass: {
+                    confirmButton: "btn-main",
+                    cancelButton: "btn-sec",
+                    title: 'title',
+                },
+                icon: 'info',
+                title: 'Guardando...',
+                text: 'Verificando contenido, por favor espere.',
+                showConfirmButton: false,
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+            
+            setSaving(true);
+            
+            const result = await performModerationCheck(fic.chapters[id - 1].text);
+            setSaving(false);
+            
+            if (result.continueNavigation) {
+                setTimeout(() => {
+                    nav("/Chapter/" + chapter);
+                }, 1000); // Shorter delay for chapter navigation
+            }
+        } catch (error) {
+            console.error('Error during moderation check:', error);
+            
+            const result = await Swal.fire({
+                color: '#4C0B0B',
+                background: '#EACDBD',
+                iconColor: '#4C0B0B',
+                customClass: {
+                    confirmButton: "btn-main",
+                    cancelButton: "btn-sec",
+                    title: 'title',
+                },
+                icon: 'error',
+                title: 'Error',
+                text: `Ocurrió un error al verificar el contenido: ${error.message}. ¿Deseas cambiar de capítulo de todos modos?`,
+                showCancelButton: true,
+                confirmButtonText: 'Continuar',
+                cancelButtonText: 'Revisar'
+            });
+            
+            setSaving(false);
+            
+            if (result.isConfirmed) {
+                nav("/Chapter/" + chapter);
+            }
+        }
+    };
+
+    const handleBack = async () => {
+        try {
+            Swal.fire({
+                color: '#4C0B0B',
+                background: '#EACDBD',
+                iconColor: '#4C0B0B',
+                customClass: {
+                    confirmButton: "btn-main",
+                    cancelButton: "btn-sec",
+                    title: 'title',
+                },
+                icon: 'info',
+                title: 'Guardando...',
+                text: 'Verificando contenido, por favor espere.',
+                showConfirmButton: false,
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+            
+            setSaving(true);
+            
+            const result = await performModerationCheck(fic.chapters[id - 1].text);
+            setSaving(false);
+            
+            if (result.continueNavigation) {
+                setTimeout(() => {
+                    if (fic.id === 0) {
+                        nav("/Fic");
+                    } else {
+                        nav("/FicEdit/" + fic.id);
+                    }
+                }, 1500);
+            }
+        } catch (error) {
+            console.error('Error during moderation check:', error);
+            
+            const result = await Swal.fire({
+                color: '#4C0B0B',
+                background: '#EACDBD',
+                iconColor: '#4C0B0B',
+                customClass: {
+                    confirmButton: "btn-main",
+                    cancelButton: "btn-sec",
+                    title: 'title',
+                },
+                icon: 'error',
+                title: 'Error',
+                text: `Ocurrió un error al verificar el contenido: ${error.message}. ¿Deseas continuar de todos modos?`,
+                showCancelButton: true,
+                confirmButtonText: 'Continuar',
+                cancelButtonText: 'Revisar'
+            });
+            
+            setSaving(false);
+            
+            if (result.isConfirmed) {
+                if (fic.id === 0) {
+                    nav("/Fic");
+                } else {
+                    nav("/FicEdit/" + fic.id);
+                }
+            }
+        }
+    };
 
     return(
         <div className={`back-color ${isDarkMode ? 'dark' : 'light'}`}>
@@ -69,7 +366,7 @@ function WriteChapter(){
                 <div className={`back-color-chapter ${isDarkMode ? 'dark' : 'light'} row justify-content-center px-5`}>
                     <div className='row justify-content-between align-items-center mt-3 mb-0'>
                         <div className='col-2 m-0'>
-                            <BTNMain onClick='' type='1' content="Guardar y salir"></BTNMain>
+                            <BTNMain onClick={handleBack} type='1' content="Guardar y salir"></BTNMain>
                         </div>
                         <p className='instructions col-6 m-0 p-0'>Para asignar un nombre al capítulo has click sobre 'Nuevo capítulo'</p>
                     </div>

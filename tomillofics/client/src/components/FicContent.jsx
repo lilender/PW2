@@ -22,7 +22,7 @@ function FicContent(){
     const iduser = localStorage.getItem("iduser");
 
     useEffect(() => {
-        axios.get(`http://localhost:3001/ficCompleteInfo?idfic=${id}&iduser=${iduser}`)
+        axios.get(`/api/ficCompleteInfo?idfic=${id}&iduser=${iduser}`)
             .then(resp => {
                 if (resp.data.message === "Success") {
                     setFicInfo(resp.data);
@@ -63,7 +63,7 @@ function FicContent(){
                         text: 'No se pudo obtener la información del fic.'
             });
         });
-        axios.get(`http://localhost:3001/ficChapters?idfic=${id}`)
+        axios.get(`/api/ficChapters?idfic=${id}`)
             .then(resp => {
                 if (resp.data.message === "Success") {
                     setFicInfo(prevState => ({
@@ -104,7 +104,7 @@ function FicContent(){
     , [id, iduser]);
 
     const handleSave = () => {
-        axios.post('http://localhost:3001/saveFic', 
+        axios.post('/api/saveFic', 
             {
                 idfic: id,
                 iduser: iduser,
@@ -144,7 +144,7 @@ function FicContent(){
                     <div className='col-6 px-5 pt-3'>
                         <div className='px-5'>
                             <div className='cover row p-0 m-0'>
-                                <img className='' src={`http://localhost:3001/public${ficInfo.img_route}`} alt="" />
+                                <img className='' src={`/api/public${ficInfo.img_route}`} alt="" />
                             </div>
                         </div>
                         <div className='row p-1 px-5'>
@@ -166,6 +166,7 @@ function FicContent(){
                             txtareaRows ='4'
                             description={ficInfo.description}
                             tags={ficInfo.tags}
+                            iduser={ficInfo.iduser}
                         />
                         <div className='row justify-content-start align-items-center mt-2'>
                             <div className='d-flex justify-content-start align-items-center'>

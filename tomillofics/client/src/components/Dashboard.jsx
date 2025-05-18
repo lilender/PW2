@@ -19,7 +19,7 @@ function Dashboard(){
     const [ficLibrary, setFicLibrary] = useState([]);
 
     useEffect(() => {
-        axios.get(`http://localhost:3001/favoriteFics`)
+        axios.get(`/api/favoriteFics`)
             .then(resp => {
                 if (resp.data.message === "Success") {
                     setFicTop(resp.data.fics);
@@ -39,7 +39,7 @@ function Dashboard(){
                 }
             }
         );
-        axios.get(`http://localhost:3001/lastReadFics?iduser=${iduser}`)
+        axios.get(`/api/lastReadFics?iduser=${iduser}`)
             .then(resp => {
                 if (resp.data.message === "Success") {
                     setFicLastRead(resp.data.fics);
@@ -59,7 +59,7 @@ function Dashboard(){
                 }
             }
         );
-        axios.get(`http://localhost:3001/libraryFics?iduser=${iduser}&nfics=15&npage=0`)
+        axios.get(`/api/libraryFics?iduser=${iduser}&nfics=15&npage=0`)
             .then(resp => {
                 if (resp.data.message === "Success") {
                     setFicLibrary(resp.data.fics);
@@ -79,7 +79,7 @@ function Dashboard(){
                 }
             }
         );
-        axios.get(`http://localhost:3001/newestFics`)
+        axios.get(`/api/newestFics`)
             .then(resp => {
                 if (resp.data.message === "Success") {
                     setFicFresh(resp.data.fics);
@@ -99,7 +99,7 @@ function Dashboard(){
                 }
             }
         );
-        axios.get(`http://localhost:3001/longestFics`)
+        axios.get(`/api/longestFics`)
             .then(resp => {
                 if (resp.data.message === "Success") {
                     setFicMarathon(resp.data.fics);
@@ -119,7 +119,7 @@ function Dashboard(){
                 }
             }
         );
-        axios.get(`http://localhost:3001/mostCommentedFics`)
+        axios.get(`/api/mostCommentedFics`)
             .then(resp => {
                 if (resp.data.message === "Success") {
                     setFicMostDiscussed(resp.data.fics);

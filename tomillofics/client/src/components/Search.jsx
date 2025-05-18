@@ -19,6 +19,7 @@ function Search(){
     const [totalPages, setTotalPages] = useState(0);
     const [totalFics, setTotalFics] = useState(0);
     const [idtags, setIdTags] = useState('');
+    const [excludeidtags, setExcludeIdTags] = useState('');
 
     useEffect(() => {
             setOffset((currentPage - 1) * nFics);
@@ -33,7 +34,7 @@ function Search(){
     , [location.search]);
 
     useEffect(() => {
-        axios.get(`http://localhost:3001/nSearchFics?text=${searchText}&idtags=${idtags}&status=${ficStatus}`)
+        axios.get(`/api/nSearchFics?text=${searchText}&idtags=${idtags}&excludeidtags=${excludeidtags}&status=${ficStatus}`)
         .then(resp => {
             if (resp.data.message === "Success") {
                 setTotalFics(resp.data.nfics);
@@ -70,10 +71,10 @@ function Search(){
             });
         });
     }
-    , [searchText, ficStatus, idtags]);
+    , [searchText, ficStatus, idtags, excludeidtags]);
 
     useEffect(() => {
-        axios.get(`http://localhost:3001/filteredFics?text=${searchText}&nfics=${nFics}&npage=${offset}&idtags=${idtags}&status=${ficStatus}`)
+        axios.get(`/api/filteredFics?text=${searchText}&nfics=${nFics}&npage=${offset}&idtags=${idtags}&excludeidtags=${excludeidtags}&status=${ficStatus}`)
         .then(resp => {
             if (resp.data.message === "Success") {
                 setSearchFics(resp.data.fics);
@@ -107,7 +108,7 @@ function Search(){
                 text: 'Hubo un problema al conectar con el servidor.'
             });
         });
-    }, [searchText, nFics, offset, ficStatus, idtags]);
+    }, [searchText, nFics, offset, ficStatus, idtags, excludeidtags]);
 
     
     return(
@@ -115,7 +116,7 @@ function Search(){
             <NavBar></NavBar>
             <div className='data-container'>
                 <div className='row justify-content-center'>
-                    <Filters setIdTags={setIdTags} totalFics={totalFics} searchText={searchText} setFicStatus={setFicStatus} ficStatus={ficStatus}></Filters>
+                    <Filters setIdTags={setIdTags} setExcludeIdTags={setExcludeIdTags} totalFics={totalFics} searchText={searchText} setFicStatus={setFicStatus} ficStatus={ficStatus}></Filters>
                     <SearchResults totalPages={totalPages} searchFics={searchFics} currentPage={currentPage} setCurrentPage={setCurrentPage}></SearchResults>
                 </div>
             </div>

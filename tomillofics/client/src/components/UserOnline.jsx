@@ -1,4 +1,3 @@
-import 'bootstrap/dist/css/bootstrap.css';
 import NavBar from './NavBar';
 import UserBanner from './UserBanner';
 import BrownLine from './BrownLine';
@@ -40,7 +39,7 @@ function UserOnline(){
 
     useEffect(() => {
         if(id === localStorage.getItem("iduser")){
-            axios.get(`http://localhost:3001/libraryFics?iduser=${id}&nfics=${nFics}&npage=${offset}`)
+            axios.get(`/api/libraryFics?iduser=${id}&nfics=${nFics}&npage=${offset}`)
             .then(resp => {
                 if (resp.data.message === "Success") {
                     setFicLibrary(resp.data.fics);
@@ -61,7 +60,7 @@ function UserOnline(){
             }
             );
         }else{
-            axios.get(`http://localhost:3001/userWrittenFics?iduser=${id}&nfics=${nFics}&npage=${offset}`)
+            axios.get(`/api/userWrittenFics?iduser=${id}&nfics=${nFics}&npage=${offset}`)
             .then(resp => {
                 if (resp.data.message === "Success") {
                     setUserWrittenFics(resp.data.fics);
@@ -86,7 +85,7 @@ function UserOnline(){
 
     useEffect(() => {
         if(id === localStorage.getItem("iduser")){
-            axios.get(`http://localhost:3001/userInfo?iduser=${id}`)
+            axios.get(`/api/userInfo?iduser=${id}`)
             .then(resp => {
                 if (resp.data.message === "Success") {
                     const storedImage = resp.data.profile_image;
@@ -112,7 +111,7 @@ function UserOnline(){
                 }
             }
             );
-            axios.get(`http://localhost:3001/lastReadFics?iduser=${id}`)
+            axios.get(`/api/lastReadFics?iduser=${id}`)
             .then(resp => {
                 if (resp.data.message === "Success") {
                     setFicLastRead(resp.data.fics);
@@ -132,7 +131,7 @@ function UserOnline(){
                 }
             }
             );
-            axios.get(`http://localhost:3001/userWrittenFics?iduser=${id}&nfics=100&npage=0`)
+            axios.get(`/api/userWrittenFics?iduser=${id}&nfics=100&npage=0`)
             .then(resp => {
                 if (resp.data.message === "Success") {
                     setUserWrittenFics(resp.data.fics);
@@ -153,7 +152,7 @@ function UserOnline(){
             }
             );
         } else {
-            axios.get(`http://localhost:3001/userPublicInfo?iduser=${id}`)
+            axios.get(`/api/userPublicInfo?iduser=${id}`)
             .then(resp => {
                 if (resp.data.message === "Success") {
                     const storedImage = resp.data.profile_image;
@@ -190,7 +189,7 @@ function UserOnline(){
         }
 
         const iduser = localStorage.getItem("iduser");
-        axios.get(`http://localhost:3001/userInfo?iduser=${iduser}`)
+        axios.get(`/api/userInfo?iduser=${iduser}`)
             .then(resp => {
                 if (resp.data.message === "Success") {
                     localStorage.setItem("username", resp.data.username);

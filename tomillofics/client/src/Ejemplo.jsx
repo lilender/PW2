@@ -25,7 +25,7 @@ function Ejemplo() {
     }
 
     const modificar = (nombre, correo, iduser) => {
-        axios.put(`http://localhost:3001/modificar/${iduser}`,
+        axios.put(`/api/modificar/${iduser}`,
             {
                 newName: nombre,
                 newCorreo: correo
@@ -43,7 +43,7 @@ function Ejemplo() {
     }
 
     const eliminar = (iduser) => {
-        axios.delete(`http://localhost:3001/eliminar/${iduser}`,{}
+        axios.delete(`/api/eliminar/${iduser}`,{}
         ).then(
             (resp) => {
                 if(resp.data.message === "Success"){
@@ -58,7 +58,7 @@ function Ejemplo() {
 
     useEffect(() => {
         /*traer info de la base de datos al inicio */
-        axios.get("http://localhost:3001/getUser")
+        axios.get("/api/getUser")
         .then(resp => {
             if(resp.data.message) {
                 setUsers([]);

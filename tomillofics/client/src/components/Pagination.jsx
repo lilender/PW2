@@ -6,6 +6,12 @@ function Pags({totalPages, currentPage, setCurrentPage}){
         if(page < 1 || page > totalPages) return;
         setCurrentPage(page);
     };
+    if (totalPages === 0) {
+        return (
+            <div className="row mt-3">
+            </div>
+        )
+    }
     return(
         <div className="row mt-3">
             <Pagination className="d-flex justify-content-center pagination">

@@ -4,16 +4,16 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
-function Filters({searchText, setFicStatus, totalFics, ficStatus, setIdTags}){
+function Filters({searchText, setFicStatus, totalFics, ficStatus, setIdTags, setExcludeIdTags}) {
 
     const [estatic, setStaticCategories] = useState([]);
     const [categories, setCategories] = useState([]);
     const [query, setQuery] = useState('');
     const [checkedCategories, setCheckedCategories] = useState([]);
-    const [selectedCategories, setSelectedCategories] = useState([]);
+
     //only once
     useEffect(() => {
-        axios.get(`http://localhost:3001/staticTags`)
+        axios.get(`/api/staticTags`)
             .then(resp => {
                 if (resp.data.message === "Success") {
                     setStaticCategories(resp.data.tags);
@@ -39,11 +39,7 @@ function Filters({searchText, setFicStatus, totalFics, ficStatus, setIdTags}){
     , []);
 
     useEffect(() => {
-        setIdTags(selectedCategories.map((cat) => cat.idtag).join(','));
-    }, [selectedCategories, setIdTags]);
-    
-    useEffect(() => {
-        axios.get(`http://localhost:3001/userTags?text=${query}&ntags=${5}`)
+        axios.get(`/api/userTags?text=${query}&ntags=${5}`)
             .then(resp => {
                 if (resp.data.message === "Success") {
                     // Check if the category is already in checkedCategories
@@ -81,20 +77,18 @@ function Filters({searchText, setFicStatus, totalFics, ficStatus, setIdTags}){
 
             if(categoryInStatic) {
                 console.log("Checking static category:", categoryInStatic);
-                setSelectedCategories((prev) => [...prev, categoryInStatic]);
-                console.log("Selected categories after checking static category:", selectedCategories);
+                setExcludeIdTags((prev) => prev + ',' + numericId);
             }
 
             if (categoryInCategories) {
                 setCheckedCategories((prev) => [...prev, categoryInCategories]);
                 setCategories((prev) => prev.filter((cat) => cat.idtag !== numericId));
-                setSelectedCategories((prev) => [...prev, categoryInCategories]);
+                setIdTags((prev) => prev + ',' + numericId);
             }
         } else {
             console.log("Unchecking:", numericId);
-            console.log("Selected categories:", selectedCategories);
-            setSelectedCategories((prev) => prev.filter((cat) => cat.idtag !== numericId));
-            console.log("Selected categories after unchecking:", selectedCategories);
+            setExcludeIdTags((prev) => prev.replace(',' + numericId, ''));
+            setIdTags((prev) => prev.replace(',' + numericId, ''));
             setCheckedCategories((prev) => prev.filter((cat) => cat.idtag !== numericId));
         }
     }

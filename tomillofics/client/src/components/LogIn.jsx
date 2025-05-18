@@ -1,4 +1,3 @@
-import 'bootstrap/dist/css/bootstrap.css';
 import PrimeNavBar from './PrimeNavBar';
 import BTNMain from './BTNMain';
 import BrownLine from './BrownLine';
@@ -30,7 +29,7 @@ function LogIn(){
             return;
         }
 
-        axios.post("http://localhost:3001/loginUser", 
+        axios.post("/api/loginUser", 
             {
                 username: username,
                 password: password

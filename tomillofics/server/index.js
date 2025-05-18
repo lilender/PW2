@@ -6,15 +6,16 @@ const cors = require('cors');
 const mysql = require('mysql');
 const multer = require('multer');
 const path = require('path');
+const language = require('@google-cloud/language');
 
 app.use(cors());
 app.use(express.json());
 
 app.use('/public', express.static(path.join(__dirname, 'public')));
 
-app.listen(3001, ()=>{
-    console.log("Server listening on port 3001");
-})
+app.listen(3001, '0.0.0.0', () => {
+    console.log('Backend server running on http://0.0.0.0:3001');
+});
 
 const db = mysql.createConnection(
     {
@@ -66,6 +67,54 @@ const upload = multer({
         } else {
             return callback(new Error("Invalid file type"));
         }
+    }
+});
+
+//google moderation
+const keyFilename = path.resolve(process.env.HOME, 'google-credentials.json');
+console.log('Using Google Cloud credentials from:', keyFilename);
+
+// Initialize with explicit credentials
+const client = new language.LanguageServiceClient({
+    keyFilename: keyFilename
+});
+
+app.post("/check", async (req, res) => {
+    try {
+        const inputText = req.body.text;
+        
+        if (!inputText) {
+            return res.status(400).json({error: 'Text is required'});
+        }
+
+        console.log("Input text:", inputText);
+        
+        const document = {
+            content: inputText,
+            type: 'PLAIN_TEXT'
+        };
+
+        const [result] = await client.moderateText({
+            document: document
+        });
+        
+        const categories = result.moderationCategories || [];
+        let categoriesMap = {};
+        
+        for (const category of categories) {
+            if (category.confidence > 0.8) {
+                console.log(`Category: ${category.name}, Confidence: ${category.confidence}`);
+                categoriesMap[category.name] = category.confidence;
+            }
+        }
+        
+        if(Object.keys(categoriesMap).length === 0) {
+            categoriesMap["No Inappropriate Content"] = 1;
+        }
+        
+        res.json(categoriesMap);
+    } catch (error) {
+        console.error('Error during moderation:', error);
     }
 });
 
@@ -354,7 +403,7 @@ app.post("/tagFic", (request, response)=>{
 
 //get fics
 app.get("/favoriteFics", (request, response)=>{
-    db.query('CALL sp_get_fics("favorite", null, null, null, null, null, null, null)',
+    db.query('CALL sp_get_fics("favorite", null, null, null, null, null, null, null, null)',
         (error, data)=>{
             if(error){
                 console.log(error);
@@ -381,7 +430,7 @@ app.get("/favoriteFics", (request, response)=>{
 app.get("/lastReadFics", (request, response)=>{
     const iduser = request.query.iduser;
 
-    db.query('CALL sp_get_fics("lastread", ?, null, null, null, null, null, null)',
+    db.query('CALL sp_get_fics("lastread", ?, null, null, null, null, null, null, null)',
         [iduser],
         (error, data)=>{
             if(error){
@@ -411,7 +460,7 @@ app.get("/libraryFics", (request, response)=>{
     const nfics = request.query.nfics;
     const npage = request.query.npage;
 
-    db.query('CALL sp_get_fics("library", ?, ?, ?, null, null, null, null)',
+    db.query('CALL sp_get_fics("library", ?, ?, ?, null, null, null, null, null)',
         [iduser, nfics, npage],
         (error, data)=>{
             if(error){
@@ -437,7 +486,7 @@ app.get("/libraryFics", (request, response)=>{
 }
 )
 app.get("/mostCommentedFics", (request, response)=>{
-    db.query('CALL sp_get_fics("commented", null, null, null, null, null, null, null)',
+    db.query('CALL sp_get_fics("commented", null, null, null, null, null, null, null, null)',
         (error, data)=>{
             if(error){
                 console.log(error);
@@ -462,7 +511,7 @@ app.get("/mostCommentedFics", (request, response)=>{
 }
 )
 app.get("/newestFics", (request, response)=>{
-    db.query('CALL sp_get_fics("newest", null, null, null, null, null, null, null)',
+    db.query('CALL sp_get_fics("newest", null, null, null, null, null, null, null, null)',
         (error, data)=>{
             if(error){
                 console.log(error);
@@ -487,7 +536,7 @@ app.get("/newestFics", (request, response)=>{
 }
 )
 app.get("/longestFics", (request, response)=>{
-    db.query('CALL sp_get_fics("longest", null, null, null, null, null, null, null)',
+    db.query('CALL sp_get_fics("longest", null, null, null, null, null, null, null, null)',
         (error, data)=>{
             if(error){
                 console.log(error);
@@ -516,7 +565,7 @@ app.get("/userWrittenFics", (request, response)=>{
     const nfics = request.query.nfics;
     const npage = request.query.npage;
 
-    db.query('CALL sp_get_fics("user", ?, ?, ?, null, null, null, null)',
+    db.query('CALL sp_get_fics("user", ?, ?, ?, null, null, null, null, null)',
         [iduser, nfics, npage],
         (error, data)=>{
             if(error){
@@ -545,6 +594,7 @@ app.get("/userWrittenFics", (request, response)=>{
 app.get("/nSearchFics", (request, response)=>{
     const text = request.query.text;
     const idtags = request.query.idtags;
+    const excludeidtags = request.query.excludeidtags;
     const status = request.query.status;
     let sp;
     if(status == -1){
@@ -557,8 +607,8 @@ app.get("/nSearchFics", (request, response)=>{
         sp = "nfilteredc";
     }
 
-    db.query('CALL sp_get_fics(?, null, null, null, null, ?, ?, null)',
-        [sp, text, idtags],
+    db.query('CALL sp_get_fics(?, null, null, null, null, ?, ?, ?, null)',
+        [sp, text, idtags, excludeidtags],
         (error, data)=>{
             if(error){
                 console.log(error);
@@ -587,6 +637,7 @@ app.get("/filteredFics", (request, response)=>{
     const npage = request.query.npage;
     const text = request.query.text;
     const idtags = request.query.idtags;
+    const excludeidtags = request.query.excludeidtags;
     const status = request.query.status;
     let sp;
     if(status == -1){
@@ -599,8 +650,8 @@ app.get("/filteredFics", (request, response)=>{
         sp = "filteredc";
     }
 
-    db.query('CALL sp_get_fics(?, null, ?, ?, null, ?, ?, null)',
-        [sp, nfics, npage, text, idtags],
+    db.query('CALL sp_get_fics(?, null, ?, ?, null, ?, ?, ?, null)',
+        [sp, nfics, npage, text, idtags, excludeidtags],
         (error, data)=>{
             if(error){
                 console.log(error);
@@ -628,7 +679,7 @@ app.get("/filteredFics", (request, response)=>{
 //fic info
 app.get("/ficTopInfo", (request, response)=>{
     const idfic = request.query.idfic;
-    db.query('CALL sp_get_fics("top", null, null, null, ?, null, null, null)',
+    db.query('CALL sp_get_fics("top", null, null, null, ?, null, null, null, null)',
         [idfic],
         (error, data)=>{
             if(error){
@@ -659,7 +710,7 @@ app.get("/ficTopInfo", (request, response)=>{
 )
 app.get("/ficBasicInfo", (request, response)=>{
     const idfic = request.query.idfic;
-    db.query('CALL sp_get_fics("basic", null, null, null, ?, null, null, null)',
+    db.query('CALL sp_get_fics("basic", null, null, null, ?, null, null, null, null)',
         [idfic],
         (error, data)=>{
             if(error){
@@ -687,7 +738,7 @@ app.get("/ficBasicInfo", (request, response)=>{
 )
 app.get("/ficInfoWTag", (request, response)=>{
     const idfic = request.query.idfic;
-    db.query('CALL sp_get_fics("tagged", null, null, null, ?, null, null, null)',
+    db.query('CALL sp_get_fics("tagged", null, null, null, ?, null, null, null, null)',
         [idfic],
         (error, data)=>{
             if(error){
@@ -704,35 +755,25 @@ app.get("/ficInfoWTag", (request, response)=>{
                 else {
                     const tags = data[0][0].tags.split(',');
                     const tagsWithType = tags.map(tag => {
-                        /*if(tag.includes('romance')){
-                            return {type: 'romance', content: tag};
-                        } else if(tag.includes('action')){
-                            return {type: 'action', content: tag};
-                        } else if(tag.includes('drama')){
-                            return {type: 'drama', content: tag};
-                        } else if(tag.includes('comedy')){
-                            return {type: 'comedy', content: tag};
-                        } else {
-                            return {type: 'other', content: tag};
+                        if(['Tóxico', 'Insulto', 'Blasfemia', 'Despectivo', 'Sexual', 'Muerte, daño y tragedia', 'Violento', 'Armas', 'Salud', 'Religión y creencias', 'Drogas ilícitas', 'Guerra y conflicto', 'Política'].includes(tag)){
+                            return {type: '2', content: tag};
                         }
-                            { type: '1', content: 'Completada' },
-                            { type: '2', content: 'Contenido sexual' },
-                            { type: '3', content: 'Amor' },
-                            { type: '3', content: 'Time travel' },
-                            { type: '3', content: 'Enemies to lovers' },
-                            { type: '3', content: 'Drama' },
-                            { type: '4', content: '+'}
-                            */
-                        return {type: '3', content: tag};
+                        else {
+                            return {type: '3', content: tag};
+                        }
+                    });
+                    if(data[0][0].completed == 1){
+                        //put tag completed at the beginning
+                        tagsWithType.unshift({type: '1', content: 'Completada'});
                     }
-                    );
                     response.json({
                         message: "Success",
                         title: data[0][0].title,
                         username: data[0][0].username,
                         description: data[0][0].description,
                         img_route: data[0][0].img_route,
-                        tags: tagsWithType
+                        tags: tagsWithType,
+                        iduser: data[0][0].iduser,
                     })
                 }
             }
@@ -743,7 +784,7 @@ app.get("/ficInfoWTag", (request, response)=>{
 app.get("/ficCompleteInfo", (request, response)=>{
     const idfic = request.query.idfic;
     const iduser = request.query.iduser;
-    db.query('CALL sp_get_fics("complete", ?, null, null, ?, null, null, null)',
+    db.query('CALL sp_get_fics("complete", ?, null, null, ?, null, null, null, null)',
         [iduser, idfic],
         (error, data)=>{
             if(error){
@@ -760,28 +801,17 @@ app.get("/ficCompleteInfo", (request, response)=>{
                 else {
                     const tags = data[0][0].tags.split(',');
                     const tagsWithType = tags.map(tag => {
-                        /*if(tag.includes('romance')){
-                            return {type: 'romance', content: tag};
-                        } else if(tag.includes('action')){
-                            return {type: 'action', content: tag};
-                        } else if(tag.includes('drama')){
-                            return {type: 'drama', content: tag};
-                        } else if(tag.includes('comedy')){
-                            return {type: 'comedy', content: tag};
-                        } else {
-                            return {type: 'other', content: tag};
+                        if(['Tóxico', 'Insulto', 'Blasfemia', 'Despectivo', 'Sexual', 'Muerte, daño y tragedia', 'Violento', 'Armas', 'Salud', 'Religión y creencias', 'Drogas ilícitas', 'Guerra y conflicto', 'Política'].includes(tag)){
+                            return {type: '2', content: tag};
                         }
-                            { type: '1', content: 'Completada' },
-                            { type: '2', content: 'Contenido sexual' },
-                            { type: '3', content: 'Amor' },
-                            { type: '3', content: 'Time travel' },
-                            { type: '3', content: 'Enemies to lovers' },
-                            { type: '3', content: 'Drama' },
-                            { type: '4', content: '+'}
-                            */
-                        return {type: '3', content: tag};
+                        else {
+                            return {type: '3', content: tag};
+                        }
+                    });
+                    if(data[0][0].completed == 1){
+                        //put tag completed at the beginning
+                        tagsWithType.unshift({type: '1', content: 'Completada'});
                     }
-                    );
                     response.json({
                         message: "Success",
                         title: data[0][0].title,
@@ -803,7 +833,7 @@ app.get("/ficCompleteInfo", (request, response)=>{
 )
 app.get("/ficEditInfo", (request, response) => {
     const idfic = request.query.idfic;
-    db.query('CALL sp_get_fics("edit", null, null, null, ?, null, null, null)',
+    db.query('CALL sp_get_fics("edit", null, null, null, ?, null, null, null, null)',
         [idfic],
         (error, results) => {
             if(error) {
@@ -840,7 +870,7 @@ app.post("/viewFic", (request, response)=>{
     const iduser = request.body.iduser;
     const idfic = request.body.idfic;
     const lastread = request.body.lastread;
-    db.query('CALL sp_get_fics("view", ?, null, null, ?, null, null, ?)',
+    db.query('CALL sp_get_fics("view", ?, null, null, ?, null, null, null, ?)',
         [iduser, idfic, lastread],
         (error, data)=>{
             if(error){
@@ -861,7 +891,7 @@ app.post("/saveFic", (request, response)=>{
     console.log(request.body);
     const iduser = request.body.iduser;
     const idfic = request.body.idfic;
-    db.query('CALL sp_get_fics("save", ?, null, null, ?, null, null, null)',
+    db.query('CALL sp_get_fics("save", ?, null, null, ?, null, null, null, null)',
         [iduser, idfic],
         (error, data)=>{
             if(error){
@@ -883,7 +913,7 @@ app.post("/createFic", upload.single('cover'), (req, res) => {
     const title = req.body.title;
     const description = req.body.description;
     const iduser = req.body.iduser;
-    const completed = req.body.completed;
+    const completed = req.body.completed === 'true' ? 1 : 0;
     const img_route = req.file ? `/uploads/${req.file.filename}` : null;
 
     db.query('CALL sp_update_fics("create", ?, ?, ?, ?, ?, null)',
@@ -908,9 +938,11 @@ app.post("/updateFic", upload.single('cover'), (req, res) => {
     const idfic = req.body.idfic;
     const title = req.body.title;
     const description = req.body.description;
-    const completed = req.body.completed;
+    const completed = req.body.completed === 'true' ? 1 : 0;
     const img_route = req.file ? `/uploads/${req.file.filename}` : null;
-    
+    console.log("this fic was marked as completed= " + completed);
+    console.log("CALL sp_update_fics(\"update\", null, '" + title + "', '" + description + "', " + img_route + ", " + completed + ", " + idfic + ")");
+
     db.query('CALL sp_update_fics("update", null, ?, ?, ?, ?, ?)',
         [title, description, img_route, completed, idfic],
         (error, data) => {

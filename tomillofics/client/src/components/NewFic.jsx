@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useParams } from "react-router-dom";
 import { useEffect } from 'react';
+import { useState } from 'react';
 /*
 <Route path="/Fic" element={<NewFic/>}></Route>
 <Route path="/FicEdit/:id" element={<NewFic/>}></Route> */
@@ -19,10 +20,14 @@ function NewFic(){
     const nav = useNavigate();
     const { id: encodedId } = useParams();
     const id = decodeURIComponent(parseInt(encodedId, 10));
+    const [updated, setUpdated] = useState(false);
 
     useEffect(() => {
-        if (!isNaN(id)) {
-            axios.get(`http://localhost:3001/ficEditInfo?idfic=${id}`)
+        console.log("ID:", id);
+        console.log("FIC ID:", fic.id);
+        if (!isNaN(id) && !updated && fic.id === 0 ) {
+            console.log("Fetching data for id:", id);
+            axios.get(`/api/ficEditInfo?idfic=${id}`)
                 .then(resp => {
                     if (resp.data.message === "Success") {
                         setFic({
@@ -30,7 +35,7 @@ function NewFic(){
                             title: resp.data.title,
                             description: resp.data.description,
                             completed: resp.data.completed,
-                            img_route: `http://localhost:3001/public${resp.data.img_route}`,
+                            img_route: `/api/public${resp.data.img_route}`,
                             file: null,
                             tags: resp.data.tags.map(tag => ({
                                 idtag: tag.idtag,
@@ -75,8 +80,19 @@ function NewFic(){
                         text: 'No se pudo obtener la información del fic.'
                     });
                 });
+        } else if (isNaN(id) && fic.id !== 0 ){
+            setFic({
+                id: 0,
+                title: "",
+                description: "",
+                completed: false,
+                img_route: "/img/default-cover.png",
+                file: null,
+                tags: [],
+                chapters: [],
+            });
         }
-    }, [id, setFic]);
+    }, [id, setFic, updated, fic.id]);
 
     const handleAddChapter = () => {
         addChapter({
@@ -132,7 +148,8 @@ function NewFic(){
     }
 
     const handlePublish = () => {
-        if (fic.title === '' || fic.description === '' || fic.img_route === '') {
+        console.log(fic.img_route);
+        if (fic.title === '' || fic.description === '' || fic.img_route === '' || fic.img_route === '/img/default-cover.png') {
             Swal.fire({
                 color: '#4C0B0B',
                 background: '#EACDBD',
@@ -180,6 +197,38 @@ function NewFic(){
             });
             return;
         }
+        if(fic.title.length > 50){
+            Swal.fire({
+                color: '#4C0B0B',
+                background: '#EACDBD',
+                iconColor: '#4C0B0B',
+                customClass: {
+                    confirmButton: "btn-main",
+                    cancelButton: "btn-sec",
+                    title: 'title',
+                },
+                icon: 'error',
+                title: 'Error',
+                text: 'El título no puede tener más de 50 caracteres.'
+            });
+            return;
+        }
+        if(fic.description.length > 254){
+            Swal.fire({
+                color: '#4C0B0B',
+                background: '#EACDBD',
+                iconColor: '#4C0B0B',
+                customClass: {
+                    confirmButton: "btn-main",
+                    cancelButton: "btn-sec",
+                    title: 'title',
+                },
+                icon: 'error',
+                title: 'Error',
+                text: 'La descripción no puede tener más de 254 caracteres.'
+            });
+            return;
+        }
 
         const data = new FormData();
         data.append("title", fic.title);
@@ -190,7 +239,7 @@ function NewFic(){
 
         if (!isNaN(id)) {
             data.append("idfic", id);
-            axios.post("http://localhost:3001/updateFic", 
+            axios.post("/api/updateFic", 
                 data, {
                     headers: {
                         'Content-Type': 'multipart/form-data'
@@ -213,7 +262,7 @@ function NewFic(){
                     fic.tags.forEach((tag) => {
                         console.log(tag.idtag);
                         if ( parseInt(tag.idtag) === 0){
-                            axios.post("http://localhost:3001/createTag", {
+                            axios.post("/api/createTag", {
                                 name: tag.name
                             }).then(
                                 (resp)=>{
@@ -230,7 +279,7 @@ function NewFic(){
                                 }
                             ).then(
                                 () => {
-                                    axios.post("http://localhost:3001/tagFic", {
+                                    axios.post("/api/tagFic", {
                                         idtag: tag.idtag,
                                         idfic: fic.id
                                     }).then(
@@ -249,7 +298,7 @@ function NewFic(){
                                 }
                             )
                         } else {
-                            axios.post("http://localhost:3001/tagFic", {
+                            axios.post("/api/tagFic", {
                                 idtag: tag.idtag,
                                 idfic: fic.id
                             }).then(
@@ -270,7 +319,7 @@ function NewFic(){
     
                     fic.chapters.forEach((chapter) => {
                         if(chapter.previd){ //if the chapter has a previous id, it means it was already created and we need to update it
-                            axios.post("http://localhost:3001/updateChapter", {
+                            axios.post("/api/updateChapter", {
                                 title: chapter.title,
                                 text: chapter.text,
                                 idfic: fic.id,
@@ -291,7 +340,7 @@ function NewFic(){
                             ).then(
                                 () => {
                                     //once that finishes, i need to erase all the other chapters that are after the last one
-                                    axios.post("http://localhost:3001/deleteChapters", {
+                                    axios.post("/api/deleteChapters", {
                                         idfic: fic.id,
                                         idchapter: fic.chapters[fic.chapters.length - 1].id //this is the last chapter id
                                     }).then(
@@ -317,7 +366,7 @@ function NewFic(){
                 () => {
                     fic.chapters.forEach((chapter) => {
                         if(!chapter.previd){ //if the chapter doesn't have a previous id, it means it was just created and we need to create it
-                            axios.post("http://localhost:3001/createChapter", {
+                            axios.post("/api/createChapter", {
                                 title: chapter.title,
                                 text: chapter.text,
                                 idfic: fic.id,
@@ -351,8 +400,10 @@ function NewFic(){
                         },
                         icon: 'success',
                         title: 'Éxito',
-                        text: 'Tu historia ha sido publicada con éxito.'
+                        text: 'Tu historia ha sido editada con éxito.'
                     });
+
+                    setUpdated(true);
             
                     setFic({
                         id: 0,
@@ -369,7 +420,7 @@ function NewFic(){
                 }
             )
         } else {
-            axios.post("http://localhost:3001/createFic", 
+            axios.post("/api/createFic", 
                 data, {
                     headers: {
                         'Content-Type': 'multipart/form-data'
@@ -393,7 +444,7 @@ function NewFic(){
                     fic.tags.forEach((tag) => {
                         console.log(tag.idtag);
                         if ( parseInt(tag.idtag) === 0){
-                            axios.post("http://localhost:3001/createTag", {
+                            axios.post("/api/createTag", {
                                 name: tag.name
                             }).then(
                                 (resp)=>{
@@ -410,7 +461,7 @@ function NewFic(){
                                 }
                             ).then(
                                 () => {
-                                    axios.post("http://localhost:3001/tagFic", {
+                                    axios.post("/api/tagFic", {
                                         idtag: tag.idtag,
                                         idfic: fic.id
                                     }).then(
@@ -429,7 +480,7 @@ function NewFic(){
                                 }
                             )
                         } else {
-                            axios.post("http://localhost:3001/tagFic", {
+                            axios.post("/api/tagFic", {
                                 idtag: tag.idtag,
                                 idfic: fic.id
                             }).then(
@@ -449,7 +500,7 @@ function NewFic(){
                     })
     
                     fic.chapters.forEach((chapter) => {
-                        axios.post("http://localhost:3001/createChapter", {
+                        axios.post("/api/createChapter", {
                             title: chapter.title,
                             text: chapter.text,
                             idfic: fic.id,
@@ -484,6 +535,8 @@ function NewFic(){
                         title: 'Éxito',
                         text: 'Tu historia ha sido publicada con éxito.'
                     });
+
+                    setUpdated(true);
             
                     setFic({
                         id: 0,

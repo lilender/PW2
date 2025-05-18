@@ -11,7 +11,7 @@ function InicioSesion (){
 
 
     const sendData=()=>{
-        axios.post("http://localhost:3001/signinUser", 
+        axios.post("/api/signinUser", 
             {
                 email: email,
                 password: password

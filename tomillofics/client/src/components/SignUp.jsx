@@ -1,4 +1,3 @@
-import 'bootstrap/dist/css/bootstrap.css';
 import PrimeNavBar from './PrimeNavBar';
 import BTNMain from './BTNMain';
 import { useState } from 'react';
@@ -113,7 +112,7 @@ function SignUp(){
         data.append("email", email);
         data.append("password", password);
         
-        axios.post("http://localhost:3001/createUser", 
+        axios.post("/api/createUser", 
             data, {
                 headers: {
                     'Content-Type': 'multipart/form-data'

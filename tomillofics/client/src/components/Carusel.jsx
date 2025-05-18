@@ -1,4 +1,3 @@
-import 'bootstrap/dist/css/bootstrap.css';
 
 function Carusel(){
     return (

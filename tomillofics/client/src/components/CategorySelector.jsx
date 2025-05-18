@@ -10,7 +10,7 @@ function CategorySelector() {
     const { fic, setFic } = useFic();
 
     useEffect(() => {
-        axios.get(`http://localhost:3001/userTags?text=${query}&ntags=${5}`)
+        axios.get(`/api/userTags?text=${query}&ntags=${5}`)
             .then(resp => {
                 if (resp.data.message === "Success") {
                     setCategories(resp.data.tags);
@@ -31,7 +31,9 @@ function CategorySelector() {
     };
 
     const handleRemoveTag = (category) => {
-        setFic({...fic, tags: fic.tags.filter(c => c.name !== category.name)});
+        if(category.idtag > 13){
+            setFic({...fic, tags: fic.tags.filter(c => c.name !== category.name)});
+        }
     };
 
     return (
@@ -66,7 +68,7 @@ function CategorySelector() {
             <div className='d-flex p-0 m-0 mt-1 justify-content-start'>
                 {fic.tags.map((cat) => (
                     <div key={cat.idtag} onClick={() => handleRemoveTag(cat)} style={{ cursor: 'pointer' }}>
-                        <Tag type='5' content={`${cat.name} ✖`} />
+                        <Tag type={cat.idtag<14?'2':'5'} content={`${cat.name} ✖`} />
                     </div>
                 ))}
             </div>

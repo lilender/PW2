@@ -1,4 +1,3 @@
-import 'bootstrap/dist/css/bootstrap.css';
 
 function BTNMain(props){
     if (props.type === '1'){

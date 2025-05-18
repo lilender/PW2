@@ -19,7 +19,7 @@ function Chapter(){
     const nav = useNavigate();
 
     useEffect(() => {
-        axios.get(`http://localhost:3001/ficInfoWTag?idfic=${idFic}`)
+        axios.get(`/api/ficInfoWTag?idfic=${idFic}`)
             .then(resp => {
                 if (resp.data.message === "Success") {
                     setFicInfo(resp.data);
@@ -32,7 +32,7 @@ function Chapter(){
             console.error('Error fetching data:', error);
             Swal.fire('Error', 'No se pudo obtener la información del fic.', 'error');
         });
-        axios.get(`http://localhost:3001/ficChapters?idfic=${idFic}`)
+        axios.get(`/api/ficChapters?idfic=${idFic}`)
             .then(resp => {
                 if (resp.data.message === "Success") {
                     setFicInfo(prevState => ({
@@ -55,7 +55,7 @@ function Chapter(){
     , [idFic]);
 
     useEffect(() => {
-        axios.get(`http://localhost:3001/chapterText?idfic=${idFic}&idchapter=${idChapter}`)
+        axios.get(`/api/chapterText?idfic=${idFic}&idchapter=${idChapter}`)
             .then(resp => {
                 if (resp.data.message === "Success") {
                     setChapterInfo(resp.data);
@@ -70,7 +70,7 @@ function Chapter(){
                 Swal.fire('Error', 'No se pudo obtener el texto del capítulo.', 'error');
             });
 
-            axios.post(`http://localhost:3001/viewFic`, {
+            axios.post(`/api/viewFic`, {
                 idfic: idFic,
                 iduser: localStorage.getItem('iduser'),
                 lastread: idChapter
@@ -116,6 +116,10 @@ function Chapter(){
         nav("/Chapter/" + idFic + "/" + chapter);
     }
 
+    const handleClick = () => {
+        nav("/Profile/" + ficInfo.iduser );
+    }
+
     if (!ficInfo || ficInfo.length === 0 || !ficInfo.chapters || ficInfo.chapters.length === 0) {
         return <></>;
     }
@@ -127,7 +131,7 @@ function Chapter(){
             <div className='data-container px-5'>
                 <div className={`back-color-chapter ${isDarkMode ? 'dark' : 'light'} row justify-content-center px-5`}>
                     <h1 className='title row justify-content-center align-items-center mt-3 mb-0'>{ficInfo.title}</h1>
-                    <h1 className='author row justify-content-center align-items-center mt-1'>By {ficInfo.username}</h1>
+                    <h1 onClick={handleClick} className='author row justify-content-center align-items-center mt-1'>By {ficInfo.username}</h1>
                     <h1 className='chapter-title row justify-content-center align-items-center mt-2 mb-3'>Capítulo {idChapter}. {chapterInfo.title}</h1>
                     <BrownLine type='1'></BrownLine>
                     <div className='chapter-text mt-3' style={{ fontSize: `${fontSize}px` }}>
